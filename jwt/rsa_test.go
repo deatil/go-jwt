@@ -324,3 +324,21 @@ func Test_ParseRSAKeyFromDer2(t *testing.T) {
 		t.Error("ParseRSAPublicKeyFromDer should return error")
 	}
 }
+
+func Test_ParseRSAKeyFromDer3(t *testing.T) {
+	var prikey = "MHcCAQEEIEhYoZNv+yhRKnM2+SCgUzi9qH9dWM4MrqMQAKGOpqdpoAoGCCqGSM49AwEHoUQDQgAE9mdkEmwCjAkiIpa+MyWK7LqwZZWMv2Ft6eNXAKIFAaY11SaJBqLYIVCzewGQv/7yKkChKBDx6dvgfxR0Qm======"
+	var pubkey = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE9mdkEmwCjAkiIpa+MyWK7LqwZZWMv2Ft6eNXAKIFAaY11SaJBqLYIVCzewGQv/7yKkChKBDx6dvgfxR0Qm2E===="
+
+	var prikeyBytes = fromBase64(prikey)
+	var pubkeyBytes = fromBase64(pubkey)
+
+	_, err := ParseRSAPrivateKeyFromDer(prikeyBytes)
+	if err == nil {
+		t.Error("ParseRSAPrivateKeyFromDer should return error")
+	}
+
+	_, err = ParseRSAPublicKeyFromDer(pubkeyBytes)
+	if err == nil {
+		t.Error("ParseRSAPublicKeyFromDer should return error")
+	}
+}

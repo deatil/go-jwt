@@ -1,5 +1,6 @@
 package jwt
 
+// jwt token validator
 type Validator struct {
 	claims map[string]any
 	leeway int64

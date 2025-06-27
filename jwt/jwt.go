@@ -72,20 +72,13 @@ type IEncoder interface {
 }
 
 type JWTClaims struct {
-	// Issuer
-	Issuer string `json:"iss,omitempty"`
-	// Issued At
-	IssuedAt int64 `json:"iat,omitempty"`
-	// Expiration Time
-	ExpirationTime int64 `json:"exp,omitempty"`
-	// Audience
-	Audience string `json:"aud,omitempty"`
-	// Subject
-	Subject string `json:"sub,omitempty"`
-	// JWT ID
-	JwtId string `json:"jti,omitempty"`
-	// Not Before
-	NotBefore int64 `json:"bnf,omitempty"`
+	Issuer    string `json:"iss,omitempty"`
+	IssuedAt  int64  `json:"iat,omitempty"`
+	Expiry    int64  `json:"exp,omitempty"` // Expiration Time
+	Audience  string `json:"aud,omitempty"`
+	Subject   string `json:"sub,omitempty"`
+	ID        string `json:"jti,omitempty"` // JWT ID
+	NotBefore int64  `json:"bnf,omitempty"` // Not Before
 }
 
 type JWT[S any, V any] struct {

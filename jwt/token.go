@@ -17,8 +17,7 @@ type Token struct {
 	header    []byte
 	claims    []byte
 	signature []byte
-
-	encoder IEncoder
+	encoder   IEncoder
 }
 
 func NewToken(encoder IEncoder) *Token {
