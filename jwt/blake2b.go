@@ -17,6 +17,7 @@ var (
 	ErrSignBlake2bVerifyFail = errors.New("go-jwt: SignBlake2b Verify fail")
 )
 
+// SignBlake2b implements signing methods.
 type SignBlake2b struct {
 	NewHash func([]byte) (hash.Hash, error)
 	Name    string
@@ -29,15 +30,18 @@ func NewSignBlake2b(newHash func([]byte) (hash.Hash, error), name string) *SignB
 	}
 }
 
+// Signer algo name.
 func (s *SignBlake2b) Alg() string {
 	return s.Name
 }
 
+// Signer signed bytes length.
 func (s *SignBlake2b) SignLength() int {
 	h, _ := s.NewHash(nil)
 	return h.Size()
 }
 
+// Sign implements token signing for the Signer.
 func (s *SignBlake2b) Sign(msg []byte, key []byte) ([]byte, error) {
 	if len(key)*8 < 256 {
 		return nil, ErrVerifyKeyTooShort
@@ -55,6 +59,7 @@ func (s *SignBlake2b) Sign(msg []byte, key []byte) ([]byte, error) {
 	return data, nil
 }
 
+// Verify implements token verification for the Signer.
 func (s *SignBlake2b) Verify(msg []byte, signature []byte, key []byte) (bool, error) {
 	if len(key)*8 < 256 {
 		return false, ErrVerifyKeyTooShort

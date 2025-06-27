@@ -41,6 +41,7 @@ var (
 	ErrJWTVerifyFail  = errors.New("go-jwt: Verify fail")
 )
 
+// jwt singer driver interface
 type ISigner[S any, V any] interface {
 	// algo name
 	Alg() string
@@ -49,12 +50,13 @@ type ISigner[S any, V any] interface {
 	SignLength() int
 
 	// sign function
-	Sign(msg []byte, key S) ([]byte, error)
+	Sign(msg []byte, signKey S) ([]byte, error)
 
 	// verify function
-	Verify(msg []byte, signature []byte, key V) (bool, error)
+	Verify(msg []byte, signature []byte, verifyKey V) (bool, error)
 }
 
+// jwt encoder driver interface
 type IEncoder interface {
 	// Base64URL Encode function
 	Base64URLEncode(data []byte) (string, error)
@@ -71,19 +73,19 @@ type IEncoder interface {
 
 type JWTClaims struct {
 	// Issuer
-	Iss string `json:"iss,omitempty"`
+	Issuer string `json:"iss,omitempty"`
 	// Issued At
-	Iat int64 `json:"iat,omitempty"`
+	IssuedAt int64 `json:"iat,omitempty"`
 	// Expiration Time
-	Exp int64 `json:"exp,omitempty"`
+	ExpirationTime int64 `json:"exp,omitempty"`
 	// Audience
-	Aud string `json:"aud,omitempty"`
+	Audience string `json:"aud,omitempty"`
 	// Subject
-	Sub string `json:"sub,omitempty"`
+	Subject string `json:"sub,omitempty"`
 	// JWT ID
-	Jti string `json:"jti,omitempty"`
+	JwtId string `json:"jti,omitempty"`
 	// Not Before
-	Nbf int64 `json:"bnf,omitempty"`
+	NotBefore int64 `json:"bnf,omitempty"`
 }
 
 type JWT[S any, V any] struct {
@@ -98,6 +100,7 @@ func NewJWT[S any, V any](signer ISigner[S, V], encoder IEncoder) JWT[S, V] {
 	}
 }
 
+// return a clone JWT
 func (jwt JWT[S, V]) New() *JWT[S, V] {
 	return &JWT[S, V]{
 		signer:  jwt.signer,
@@ -105,19 +108,23 @@ func (jwt JWT[S, V]) New() *JWT[S, V] {
 	}
 }
 
+// Signer algo name.
 func (jwt *JWT[S, V]) Alg() string {
 	return jwt.signer.Alg()
 }
 
+// Signer signed bytes length.
 func (jwt *JWT[S, V]) SignLength() int {
 	return jwt.signer.SignLength()
 }
 
+// with new encoder
 func (jwt *JWT[S, V]) WithEncoder(encoder IEncoder) *JWT[S, V] {
 	jwt.encoder = encoder
 	return jwt
 }
 
+// Sign implements token signing for the Signer.
 func (jwt *JWT[S, V]) Sign(claims any, signKey S) (string, error) {
 	header := TokenHeader{
 		Typ: "JWT",
@@ -127,6 +134,7 @@ func (jwt *JWT[S, V]) Sign(claims any, signKey S) (string, error) {
 	return jwt.SignWithHeader(header, claims, signKey)
 }
 
+// SignWithHeader implements token signing for the Signer.
 func (jwt *JWT[S, V]) SignWithHeader(header any, claims any, signKey S) (string, error) {
 	t := NewToken(jwt.encoder)
 	t.SetHeader(header)
@@ -147,6 +155,7 @@ func (jwt *JWT[S, V]) SignWithHeader(header any, claims any, signKey S) (string,
 	return t.SignedString()
 }
 
+// Parse parses, validates, verifies the signature and returns the parsed token.
 func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 	t := NewToken(jwt.encoder)
 	t.Parse(tokenString)
@@ -179,6 +188,7 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 	return t, nil
 }
 
+// get token header from token string
 func GetTokenHeader(tokenString string, encoder ...IEncoder) (TokenHeader, error) {
 	var defaultEncoder IEncoder = NewJoseEncoder()
 	if len(encoder) > 0 {

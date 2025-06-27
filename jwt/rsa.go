@@ -14,6 +14,7 @@ var (
 	SigningRS512 = NewSignRSA(crypto.SHA512, "RS512")
 )
 
+// SignRSA implements the RSA family of signing methods.
 type SignRSA struct {
 	Name string
 	Hash crypto.Hash
@@ -26,15 +27,18 @@ func NewSignRSA(hash crypto.Hash, name string) *SignRSA {
 	}
 }
 
+// Signer algo name.
 func (s *SignRSA) Alg() string {
 	return s.Name
 }
 
+// Signer signed bytes length.
 // rsa sign size can get from rsa.PrivateKey.Size()
 func (s *SignRSA) SignLength() int {
 	return MaxModulusLen
 }
 
+// Sign implements token signing for the Signer.
 func (s *SignRSA) Sign(msg []byte, key *rsa.PrivateKey) ([]byte, error) {
 	hasher := s.Hash.New()
 	hasher.Write([]byte(msg))
@@ -47,6 +51,7 @@ func (s *SignRSA) Sign(msg []byte, key *rsa.PrivateKey) ([]byte, error) {
 	return sigBytes, nil
 }
 
+// Verify implements token verification for the Signer.
 func (s *SignRSA) Verify(msg []byte, signature []byte, key *rsa.PublicKey) (bool, error) {
 	hasher := s.Hash.New()
 	hasher.Write([]byte(msg))

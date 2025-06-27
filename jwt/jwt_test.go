@@ -1732,8 +1732,8 @@ func Test_SigningMethodES256_with_JWTClaims(t *testing.T) {
 	s := SigningMethodES256.New()
 
 	claims := JWTClaims{
-		Aud: "example.com",
-		Sub: "foo",
+		Audience: "example.com",
+		Subject:  "foo",
 	}
 
 	tokenString, err := s.Sign(claims, privateKey)
@@ -1752,11 +1752,11 @@ func Test_SigningMethodES256_with_JWTClaims(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if claims2["aud"].(string) != claims.Aud {
-		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims.Aud)
+	if claims2["aud"].(string) != claims.Audience {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims.Audience)
 	}
-	if claims2["sub"].(string) != claims.Sub {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims.Sub)
+	if claims2["sub"].(string) != claims.Subject {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims.Subject)
 	}
 
 }

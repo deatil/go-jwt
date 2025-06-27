@@ -6,12 +6,14 @@ import (
 
 var DefaultToken = NewToken(NewJoseEncoder())
 
+// Token Header data.
 type TokenHeader struct {
 	Typ string `json:"typ"`
 	Alg string `json:"alg"`
 	Kid string `json:"kid,omitempty"`
 }
 
+// Token represents a JWT Token.
 type Token struct {
 	raw       string
 	header    []byte
@@ -31,6 +33,7 @@ func (t *Token) WithHeader(header []byte) {
 	t.header = header
 }
 
+// Set header for json encode
 func (t *Token) SetHeader(header any) error {
 	encoded, err := t.encoder.JSONEncode(header)
 	if err != nil {
@@ -45,6 +48,7 @@ func (t *Token) WithClaims(claims []byte) {
 	t.claims = claims
 }
 
+// Set claims for json encode
 func (t *Token) SetClaims(claims any) error {
 	encoded, err := t.encoder.JSONEncode(claims)
 	if err != nil {
@@ -59,12 +63,14 @@ func (t *Token) WithSignature(signature []byte) {
 	t.signature = signature
 }
 
-func (t *Token) SigningString() (string, error) {
-	return t.signing(false)
-}
-
+// SignedString creates and returns a complete, signed JWT.
 func (t *Token) SignedString() (string, error) {
 	return t.signing(true)
+}
+
+// SigningString generates the signing string.
+func (t *Token) SigningString() (string, error) {
+	return t.signing(false)
 }
 
 func (t *Token) signing(needSign bool) (string, error) {
@@ -95,6 +101,7 @@ func (t *Token) signing(needSign bool) (string, error) {
 	return buf.String(), nil
 }
 
+// Parse token string and returns the parsed token.
 func (t *Token) Parse(tokenString string) {
 	if len(tokenString) == 0 {
 		return

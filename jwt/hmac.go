@@ -22,6 +22,7 @@ var (
 
 var ErrSignHmacVerifyFail = errors.New("go-jwt: SignHmac Verify fail")
 
+// SignHmac implements the Hmac family of signing methods.
 type SignHmac struct {
 	Hash func() hash.Hash
 	Name string
@@ -34,14 +35,17 @@ func NewSignHmac(hash func() hash.Hash, name string) *SignHmac {
 	}
 }
 
+// Signer algo name.
 func (s *SignHmac) Alg() string {
 	return s.Name
 }
 
+// Signer signed bytes length.
 func (s *SignHmac) SignLength() int {
 	return s.Hash().Size()
 }
 
+// Sign implements token signing for the Signer.
 func (s *SignHmac) Sign(msg []byte, key []byte) ([]byte, error) {
 	mac := hmac.New(s.Hash, key)
 	mac.Write(msg)
@@ -51,6 +55,7 @@ func (s *SignHmac) Sign(msg []byte, key []byte) ([]byte, error) {
 	return data, nil
 }
 
+// Verify implements token verification for the Signer.
 func (s *SignHmac) Verify(msg []byte, signature []byte, key []byte) (bool, error) {
 	mac := hmac.New(s.Hash, key)
 	mac.Write(msg)

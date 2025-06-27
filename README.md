@@ -1,4 +1,4 @@
-## go-jwt
+## Go-jwt
 
 <p align="center">
 <a href="https://pkg.go.dev/github.com/deatil/go-jwt" ><img src="https://pkg.go.dev/badge/deatil/go-jwt.svg" alt="Go Reference"></a>
@@ -91,13 +91,17 @@ import (
 )
 
 func main() {
-    var tokenString = "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3ODQyMzg4fQ.dGVzdC1zaWduYXR1cmU"
+    tokenString := "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3ODQyMzg4fQ.dGVzdC1zaWduYXR1cmU"
 
-    var token = jwt.DefaultToken
-    // var token = jwt.NewToken(jwt.NewJoseEncoder())
+    token := jwt.DefaultToken
+    // token := jwt.NewToken(jwt.NewJoseEncoder())
     token.parse(tokenString)
 
     validator, err := jwt.NewValidator(token)
+    if err != nil {
+        fmt.Printf("NewValidator: %s \n", err.Error())
+        return
+    }
 
     // validator.withLeeway(3)
 

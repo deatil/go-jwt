@@ -19,6 +19,7 @@ var (
 	ErrSignECDSAVerifyFail        = errors.New("go-jwt: SignECDSA Verify fail")
 )
 
+// SignECDSA implements the ECDSA family of signing methods.
 type SignECDSA struct {
 	Name    string
 	Hash    crypto.Hash
@@ -33,14 +34,17 @@ func NewSignECDSA(hash crypto.Hash, keySize int, name string) *SignECDSA {
 	}
 }
 
+// Signer algo name.
 func (s *SignECDSA) Alg() string {
 	return s.Name
 }
 
+// Signer signed bytes length.
 func (s *SignECDSA) SignLength() int {
 	return 2 * s.KeySize
 }
 
+// Sign implements token signing for the Signer.
 func (s *SignECDSA) Sign(msg []byte, key *ecdsa.PrivateKey) ([]byte, error) {
 	hasher := s.Hash.New()
 	hasher.Write([]byte(msg))
@@ -59,6 +63,7 @@ func (s *SignECDSA) Sign(msg []byte, key *ecdsa.PrivateKey) ([]byte, error) {
 	return signed, nil
 }
 
+// Verify implements token verification for the Signer.
 func (s *SignECDSA) Verify(msg []byte, signature []byte, key *ecdsa.PublicKey) (bool, error) {
 	signLength := s.SignLength()
 	if len(signature) != signLength {
