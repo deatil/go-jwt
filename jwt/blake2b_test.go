@@ -51,7 +51,7 @@ func Test_SigningBLAKE2B(t *testing.T) {
 	}
 
 	{
-    	var key = "test-key"
+		var key = "test-key"
 
 		_, err := h.Verify([]byte(msg), signed, []byte(key))
 		if err == nil {
@@ -60,17 +60,17 @@ func Test_SigningBLAKE2B(t *testing.T) {
 	}
 
 	{
-    	var key = "test-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-data"
+		var key = "test-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-data"
 
 		_, err := h.Verify([]byte(msg), signed, []byte(key))
 		if err == nil {
 			t.Error("Verify should return error")
 		}
 
-    	errcheck := "blake2b: invalid key size"
-    	if err.Error() != errcheck {
-    		t.Errorf("Verify Err got %s, want %s", err.Error(), errcheck)
-    	}
+		errcheck := "blake2b: invalid key size"
+		if err.Error() != errcheck {
+			t.Errorf("Verify Err got %s, want %s", err.Error(), errcheck)
+		}
 	}
 }
 

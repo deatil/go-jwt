@@ -412,9 +412,9 @@ func Test_Token5(t *testing.T) {
 	token6.Parse(check3)
 
 	sig61 := token6.GetRaw()
-    if len(sig61) > 0 {
+	if len(sig61) > 0 {
 		t.Error("GetRaw should empty")
-    }
+	}
 
 	if sig61 != check3 {
 		t.Errorf("GetRaw got %s, want %s", sig61, check3)
