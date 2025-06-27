@@ -14,6 +14,11 @@ var (
     SigningES512 = NewSignECDSA(crypto.SHA512, 66, "ES512")
 )
 
+var (
+    ErrSignECDSASignLengthInvalid = errors.New("go-jwt: sign length error")
+    ErrSignECDSAVerifyFail        = errors.New("go-jwt: SignECDSA Verify fail")
+)
+
 type SignECDSA struct {
     Name    string
     Hash    crypto.Hash
@@ -57,7 +62,7 @@ func (s *SignECDSA) Sign(msg []byte, key *ecdsa.PrivateKey) ([]byte, error) {
 func (s *SignECDSA) Verify(msg []byte, signature []byte, key *ecdsa.PublicKey) (bool, error) {
     signLength := s.SignLength()
     if len(signature) != signLength {
-        return false, errors.New("go-jwt: sign length error")
+        return false, ErrSignECDSASignLengthInvalid
     }
 
     rr := big.NewInt(0).SetBytes(signature[:s.KeySize])
@@ -66,6 +71,10 @@ func (s *SignECDSA) Verify(msg []byte, signature []byte, key *ecdsa.PublicKey) (
     hasher := s.Hash.New()
     hasher.Write([]byte(msg))
 
-    res := ecdsa.Verify(key, hasher.Sum(nil), rr, ss)
-    return res, nil
+    verifyStatus := ecdsa.Verify(key, hasher.Sum(nil), rr, ss)
+    if !verifyStatus {
+        return false, ErrSignECDSAVerifyFail
+    }
+
+    return true, nil
 }

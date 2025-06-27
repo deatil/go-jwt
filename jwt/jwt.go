@@ -35,6 +35,12 @@ var (
     SigningMethodNone = NewJWT[[]byte, []byte](SigningNone, NewJoseEncoder())
 )
 
+var (
+    ErrJWTTypeInvalid = errors.New("go-jwt: Type invalid")
+    ErrJWTAlgoInvalid = errors.New("go-jwt: Algo invalid")
+    ErrJWTVerifyFail  = errors.New("go-jwt: Verify fail")
+)
+
 type ISigner[S any, V any] interface {
     // algo name
     Alg() string
@@ -151,11 +157,11 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
     }
 
     if len(header.Typ) > 0 && header.Typ != "JWT" {
-        return nil, errors.New("go-jwt: Type invalid")
+        return nil, ErrJWTTypeInvalid
     }
 
     if header.Alg != jwt.signer.Alg() {
-        return nil, errors.New("go-jwt: Algo invalid")
+        return nil, ErrJWTAlgoInvalid
     }
 
     signature := t.GetSignature()
@@ -167,7 +173,7 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 
     ok, err := jwt.signer.Verify([]byte(signingString), signature, verifyKey)
     if !ok {
-        return nil, errors.New("go-jwt: Verify fail")
+        return nil, ErrJWTVerifyFail
     }
 
     return t, nil

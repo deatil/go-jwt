@@ -176,7 +176,7 @@ func (t *Token) GetHeader() (TokenHeader, error) {
     }, nil
 }
 
-func (t *Token) GetHeaderValue() (map[string]any, error) {
+func (t *Token) GetHeaders() (map[string]any, error) {
     var dst map[string]any
     err := t.encoder.JSONDecode(t.header, &dst)
     if err != nil {
@@ -186,7 +186,7 @@ func (t *Token) GetHeaderValue() (map[string]any, error) {
     return dst, nil
 }
 
-func (t *Token) GetHeaderT(dst any) error {
+func (t *Token) GetHeadersT(dst any) error {
     return t.encoder.JSONDecode(t.header, dst)
 }
 

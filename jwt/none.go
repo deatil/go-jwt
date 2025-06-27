@@ -8,6 +8,8 @@ var (
     SigningNone = NewSignNone("none")
 )
 
+var ErrSignNoneSignatureInvalid = errors.New("go-jwt: SignNone verify signature not empty")
+
 type SignNone struct {
     Name string
 }
@@ -32,7 +34,7 @@ func (s *SignNone) Sign(msg []byte, key []byte) ([]byte, error) {
 
 func (s *SignNone) Verify(msg []byte, signature []byte, key []byte) (bool, error) {
     if len(signature) > 0 {
-        return false, errors.New("go-jwt: SignNone verify signature not empty")
+        return false, ErrSignNoneSignatureInvalid
     }
 
     return true, nil

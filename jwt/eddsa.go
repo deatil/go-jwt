@@ -10,6 +10,11 @@ var (
     SigningED25519 = NewSignEdDSA("ED25519")
 )
 
+var (
+    ErrSignEdDSASignLengthInvalid = errors.New("go-jwt: sign length error")
+    ErrSignEdDSAVerifyFail        = errors.New("go-jwt: SignEdDSA Verify fail")
+)
+
 type SignEdDSA struct {
     Name string
 }
@@ -37,9 +42,13 @@ func (s *SignEdDSA) Sign(msg []byte, key ed25519.PrivateKey) ([]byte, error) {
 func (s *SignEdDSA) Verify(msg []byte, signature []byte, key ed25519.PublicKey) (bool, error) {
     signLength := s.SignLength()
     if len(signature) != signLength {
-        return false, errors.New("go-jwt: sign length error")
+        return false, ErrSignEdDSASignLengthInvalid
     }
 
-    res := ed25519.Verify(key, msg, signature)
-    return res, nil
+    verifyStatus := ed25519.Verify(key, msg, signature)
+    if !verifyStatus {
+        return false, ErrSignEdDSAVerifyFail
+    }
+
+    return true, nil
 }

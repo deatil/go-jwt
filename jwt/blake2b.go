@@ -12,6 +12,11 @@ var (
     SigningBLAKE2B = NewSignBlake2b(blake2b.New256, "BLAKE2B")
 )
 
+var (
+    ErrVerifyKeyTooShort     = errors.New("go-jwt: SignBlake2b key too short")
+    ErrSignBlake2bVerifyFail = errors.New("go-jwt: SignBlake2b Verify fail")
+)
+
 type SignBlake2b struct {
     NewHash func([]byte) (hash.Hash, error)
     Name    string
@@ -35,7 +40,7 @@ func (s *SignBlake2b) SignLength() int {
 
 func (s *SignBlake2b) Sign(msg []byte, key []byte) ([]byte, error) {
     if len(key) * 8 < 256 {
-        return nil, errors.New("go-jwt: SignBlake2b key too short")
+        return nil, ErrVerifyKeyTooShort
     }
 
     h, err := s.NewHash(key)
@@ -52,7 +57,7 @@ func (s *SignBlake2b) Sign(msg []byte, key []byte) ([]byte, error) {
 
 func (s *SignBlake2b) Verify(msg []byte, signature []byte, key []byte) (bool, error) {
     if len(key) * 8 < 256 {
-        return false, errors.New("go-jwt: SignBlake2b key too short")
+        return false, ErrVerifyKeyTooShort
     }
 
     h, err := s.NewHash(key)
@@ -67,5 +72,5 @@ func (s *SignBlake2b) Verify(msg []byte, signature []byte, key []byte) (bool, er
         return true, nil
     }
 
-    return false, errors.New("go-jwt: SignBlake2b Verify false")
+    return false, ErrSignBlake2bVerifyFail
 }

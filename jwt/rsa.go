@@ -30,6 +30,7 @@ func (s *SignRSA) Alg() string {
     return s.Name
 }
 
+// rsa sign size can get from rsa.PrivateKey.Size()
 func (s *SignRSA) SignLength() int {
     return MaxModulusLen
 }

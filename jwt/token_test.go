@@ -245,32 +245,32 @@ func Test_Token3(t *testing.T) {
     }
 
     var header3 headerT
-    err = token2.GetHeaderT(&header3)
+    err = token2.GetHeadersT(&header3)
     if err != nil {
         t.Fatal(err)
     }
     if header3.Typ != header.Typ {
-        t.Errorf("GetHeaderT Typ got %s, want %s", header3.Typ, header.Typ)
+        t.Errorf("GetHeadersT Typ got %s, want %s", header3.Typ, header.Typ)
     }
     if header3.Alg != header.Alg {
-        t.Errorf("GetHeaderT Alg got %s, want %s", header3.Alg, header.Alg)
+        t.Errorf("GetHeadersT Alg got %s, want %s", header3.Alg, header.Alg)
     }
     if header3.Kid != header.Kid {
-        t.Errorf("GetHeaderT Kid got %s, want %s", header3.Kid, header.Kid)
+        t.Errorf("GetHeadersT Kid got %s, want %s", header3.Kid, header.Kid)
     }
 
-    header33, err := token2.GetHeaderValue()
+    header33, err := token2.GetHeaders()
     if err != nil {
         t.Fatal(err)
     }
     if header33["typ"].(string) != header.Typ {
-        t.Errorf("GetHeaderValue Typ got %s, want %s", header33["typ"], header.Typ)
+        t.Errorf("GetHeaders Typ got %s, want %s", header33["typ"], header.Typ)
     }
     if header33["alg"].(string) != header.Alg {
-        t.Errorf("GetHeaderValue Alg got %s, want %s", header33["alg"], header.Alg)
+        t.Errorf("GetHeaders Alg got %s, want %s", header33["alg"], header.Alg)
     }
     if header33["kid"].(string) != header.Kid {
-        t.Errorf("GetHeaderValue Kid got %s, want %s", header33["kid"], header.Kid)
+        t.Errorf("GetHeaders Kid got %s, want %s", header33["kid"], header.Kid)
     }
 
 

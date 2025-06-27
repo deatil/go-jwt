@@ -20,6 +20,8 @@ var (
     SigningHS512 = NewSignHmac(sha512.New, "HS512")
 )
 
+var ErrSignHmacVerifyFail = errors.New("go-jwt: SignHmac Verify fail")
+
 type SignHmac struct {
     Hash func() hash.Hash
     Name string
@@ -58,5 +60,5 @@ func (s *SignHmac) Verify(msg []byte, signature []byte, key []byte) (bool, error
         return true, nil
     }
 
-    return false, errors.New("go-jwt: SignHmac Verify false")
+    return false, ErrSignHmacVerifyFail
 }
