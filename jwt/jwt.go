@@ -180,7 +180,7 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 		return nil, err
 	}
 
-	ok, err := jwt.signer.Verify([]byte(signingString), signature, verifyKey)
+	ok, _ := jwt.signer.Verify([]byte(signingString), signature, verifyKey)
 	if !ok {
 		return nil, ErrJWTVerifyFail
 	}
