@@ -50,6 +50,28 @@ func Test_SigningBLAKE2B(t *testing.T) {
 		}
 	}
 
+	{
+    	var key = "test-key"
+
+		_, err := h.Verify([]byte(msg), signed, []byte(key))
+		if err == nil {
+			t.Error("Verify should return error")
+		}
+	}
+
+	{
+    	var key = "test-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-data"
+
+		_, err := h.Verify([]byte(msg), signed, []byte(key))
+		if err == nil {
+			t.Error("Verify should return error")
+		}
+
+    	errcheck := "blake2b: invalid key size"
+    	if err.Error() != errcheck {
+    		t.Errorf("Verify Err got %s, want %s", err.Error(), errcheck)
+    	}
+	}
 }
 
 func Test_SigningBLAKE2B_KeyTooShort(t *testing.T) {
@@ -74,6 +96,23 @@ func Test_SigningBLAKE2B_KeyTooShort(t *testing.T) {
 	}
 
 	errcheck := "go-jwt: SignBlake2b key too short"
+	if err.Error() != errcheck {
+		t.Errorf("Sign Err got %s, want %s", err.Error(), errcheck)
+	}
+}
+
+func Test_SigningBLAKE2B_KeyTooLong(t *testing.T) {
+	h := SigningBLAKE2B
+
+	var msg = "test-data"
+	var key = "test-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-data"
+
+	_, err := h.Sign([]byte(msg), []byte(key))
+	if err == nil {
+		t.Error("Parse should return error")
+	}
+
+	errcheck := "blake2b: invalid key size"
 	if err.Error() != errcheck {
 		t.Errorf("Sign Err got %s, want %s", err.Error(), errcheck)
 	}
