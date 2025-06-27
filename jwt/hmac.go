@@ -1,64 +1,64 @@
 package jwt
 
 import (
-    "hash"
-    "bytes"
-    "errors"
-    "crypto/md5"
-    "crypto/sha1"
-    "crypto/hmac"
-    "crypto/sha256"
-    "crypto/sha512"
+	"bytes"
+	"crypto/hmac"
+	"crypto/md5"
+	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/sha512"
+	"errors"
+	"hash"
 )
 
 var (
-    SigningHMD5  = NewSignHmac(md5.New, "HMD5")
-    SigningHSHA1 = NewSignHmac(sha1.New, "HSHA1")
-    SigningHS224 = NewSignHmac(sha256.New224, "HS224")
-    SigningHS256 = NewSignHmac(sha256.New, "HS256")
-    SigningHS384 = NewSignHmac(sha512.New384, "HS384")
-    SigningHS512 = NewSignHmac(sha512.New, "HS512")
+	SigningHMD5  = NewSignHmac(md5.New, "HMD5")
+	SigningHSHA1 = NewSignHmac(sha1.New, "HSHA1")
+	SigningHS224 = NewSignHmac(sha256.New224, "HS224")
+	SigningHS256 = NewSignHmac(sha256.New, "HS256")
+	SigningHS384 = NewSignHmac(sha512.New384, "HS384")
+	SigningHS512 = NewSignHmac(sha512.New, "HS512")
 )
 
 var ErrSignHmacVerifyFail = errors.New("go-jwt: SignHmac Verify fail")
 
 type SignHmac struct {
-    Hash func() hash.Hash
-    Name string
+	Hash func() hash.Hash
+	Name string
 }
 
 func NewSignHmac(hash func() hash.Hash, name string) *SignHmac {
-    return &SignHmac{
-        Hash: hash,
-        Name: name,
-    }
+	return &SignHmac{
+		Hash: hash,
+		Name: name,
+	}
 }
 
 func (s *SignHmac) Alg() string {
-    return s.Name
+	return s.Name
 }
 
 func (s *SignHmac) SignLength() int {
-    return s.Hash().Size()
+	return s.Hash().Size()
 }
 
 func (s *SignHmac) Sign(msg []byte, key []byte) ([]byte, error) {
-    mac := hmac.New(s.Hash, key)
-    mac.Write(msg)
+	mac := hmac.New(s.Hash, key)
+	mac.Write(msg)
 
-    data := mac.Sum(nil)
+	data := mac.Sum(nil)
 
-    return data, nil
+	return data, nil
 }
 
 func (s *SignHmac) Verify(msg []byte, signature []byte, key []byte) (bool, error) {
-    mac := hmac.New(s.Hash, key)
-    mac.Write(msg)
+	mac := hmac.New(s.Hash, key)
+	mac.Write(msg)
 
-    data := mac.Sum(nil)
-    if bytes.Compare(data, signature) == 0 {
-        return true, nil
-    }
+	data := mac.Sum(nil)
+	if bytes.Compare(data, signature) == 0 {
+		return true, nil
+	}
 
-    return false, ErrSignHmacVerifyFail
+	return false, ErrSignHmacVerifyFail
 }
