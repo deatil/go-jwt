@@ -57,6 +57,7 @@ func main() {
     tokenString, err := s.Sign(claims, key)
     if err != nil {
         fmt.Printf("Sign: %s \n", err.Error())
+        return
     }
 
     fmt.Printf("Signed: %s \n", tokenString)
@@ -65,11 +66,13 @@ func main() {
     parsed, err := p.Parse(tokenString, key)
     if err != nil {
         fmt.Printf("Parse: %s \n", err.Error())
+        return
     }
 
     claims2, err := parsed.GetClaims()
     if err != nil {
         fmt.Printf("GetClaims: %s \n", err.Error())
+        return
     }
 
     aud := claims2["aud"].(string)
@@ -93,8 +96,7 @@ import (
 func main() {
     tokenString := "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3ODQyMzg4fQ.dGVzdC1zaWduYXR1cmU"
 
-    token := jwt.DefaultToken
-    // token := jwt.NewToken(jwt.NewJoseEncoder())
+    token := jwt.NewToken(jwt.NewJoseEncoder())
     token.parse(tokenString)
 
     validator, err := jwt.NewValidator(token)

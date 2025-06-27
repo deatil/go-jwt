@@ -4,8 +4,6 @@ import (
 	"strings"
 )
 
-var DefaultToken = NewToken(NewJoseEncoder())
-
 // Token Header data.
 type TokenHeader struct {
 	Typ string `json:"typ"`
