@@ -53,7 +53,7 @@ func main() {
     }
     key := []byte("test-key")
 
-    s := SigningMethodHMD5.New()
+    s := jwt.SigningMethodHMD5.New()
     tokenString, err := s.Sign(claims, key)
     if err != nil {
         fmt.Printf("Sign: %s \n", err.Error())
@@ -61,7 +61,7 @@ func main() {
 
     fmt.Printf("Signed: %s \n", tokenString)
 
-    p := SigningMethodHMD5.New()
+    p := jwt.SigningMethodHMD5.New()
     parsed, err := p.Parse(tokenString, key)
     if err != nil {
         fmt.Printf("Parse: %s \n", err.Error())
@@ -91,30 +91,30 @@ import (
 )
 
 func main() {
-    var token_string = "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3ODQyMzg4fQ.dGVzdC1zaWduYXR1cmU"
+    var tokenString = "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3ODQyMzg4fQ.dGVzdC1zaWduYXR1cmU"
 
     var token = jwt.DefaultToken
     // var token = jwt.NewToken(jwt.NewJoseEncoder())
-    token.parse(token_string)
+    token.parse(tokenString)
 
     validator, err := jwt.NewValidator(token)
 
     // validator.withLeeway(3)
 
     // output:
-    // hasBeenIssuedBy: true
-    fmt.Printf("hasBeenIssuedBy: %v \n", .{validator.hasBeenIssuedBy("iss")})
+    // HasBeenIssuedBy: true
+    fmt.Printf("HasBeenIssuedBy: %v \n", .{validator.HasBeenIssuedBy("iss")})
 
     // now := time.Now().Unix()
 
     // have functions:
-    // validator.hasBeenIssuedBy("iss") // iss
-    // validator.isRelatedTo("sub") // sub
-    // validator.isIdentifiedBy("jti rrr") // jti
-    // validator.isPermittedFor("example.com") // audience
-    // validator.hasBeenIssuedBefore(now) // iat, now is time timestamp
-    // validator.isMinimumTimeBefore(now) // nbf, now is time timestamp
-    // validator.isExpired(now) // exp, now is time timestamp
+    // validator.HasBeenIssuedBy("iss") // iss
+    // validator.IsRelatedTo("sub") // sub
+    // validator.IsIdentifiedBy("jti rrr") // jti
+    // validator.IsPermittedFor("example.com") // audience
+    // validator.HasBeenIssuedBefore(now) // iat, now is time timestamp
+    // validator.IsMinimumTimeBefore(now) // nbf, now is time timestamp
+    // validator.IsExpired(now) // exp, now is time timestamp
 }
 ~~~
 
@@ -168,7 +168,7 @@ import (
 var (
     SigningES256 = NewSignECDSA(crypto.SHA256, 32, "ES256")
 
-	// use the struct
+    // use the struct
     SigningMethodES256 = jwt.NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES256, jwt.NewJoseEncoder())
 )
 
