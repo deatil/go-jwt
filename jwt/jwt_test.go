@@ -2037,3 +2037,66 @@ t1pfOGUHtHvce8MEssueOxCHWJKql/sJ+JrJSfqOu5AWlDqGqp77ZA7JCw==
 	}
 
 }
+
+func Test_SigningMethodHS224_WithEncoder(t *testing.T) {
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+	key := []byte("test-key")
+
+	s := SigningMethodHS224.New()
+	s.WithEncoder(NewJoseEncoder())
+	tokenString, err := s.Sign(claims, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Error("Sign got fail")
+	}
+
+	alg := s.Alg()
+	signLength := s.SignLength()
+
+	if alg != "HS224" {
+		t.Errorf("Alg got %s, want %s", alg, "HS224")
+	}
+	if signLength != 28 {
+		t.Errorf("SignLength got %d, want %d", signLength, 28)
+	}
+
+	p := SigningMethodHS224.New()
+	p.WithEncoder(NewJoseEncoder())
+	parsed, err := p.Parse(tokenString, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
+func Test_GetTokenHeader_WithEncoder(t *testing.T) {
+	tokenStr := "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJmb28iOiJiYXIifQ.feG39E-bn8HXAKhzDZq7yEAPWYDhZlwTn3sePJnU9VrGMmwdXAIEyoOnrjreYlVM_Z4N13eK9-TmMTWyfKJtHQ"
+
+	header, err := GetTokenHeader(tokenStr, NewJoseEncoder())
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if header.Alg != "ES256" {
+		t.Errorf("GetTokenHeader Alg got %s, want %s", header.Alg, "ES256")
+	}
+
+}

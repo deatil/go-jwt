@@ -80,7 +80,7 @@ func main() {
 
 ### Token Validator
 
-~~~zig
+~~~go
 package main
 
 import (
@@ -152,7 +152,7 @@ The JWT library have signing methods:
 
 ### Custom Signing Method
 
-~~~zig
+~~~go
 package jwt
 
 import (
