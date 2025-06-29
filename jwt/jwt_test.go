@@ -2148,6 +2148,114 @@ func Test_SigningMethodBLAKE2B_Parse(t *testing.T) {
 
 }
 
+func Test_SigningMethodHMD5_Parse(t *testing.T) {
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+	key := []byte("test-key")
+
+	s := SigningMethodHMD5.New()
+	tokenString, err := s.Sign(claims, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Error("Sign got fail")
+	}
+
+	parsed, err := Parse[[]byte, []byte](tokenString, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
+func Test_SigningMethodHSHA1_Parse(t *testing.T) {
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+	key := []byte("test-key")
+
+	s := SigningMethodHSHA1.New()
+	tokenString, err := s.Sign(claims, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Error("Sign got fail")
+	}
+
+	parsed, err := Parse[[]byte, []byte](tokenString, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
+func Test_SigningMethodHS224_Parse(t *testing.T) {
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+	key := []byte("test-key")
+
+	s := SigningMethodHS224.New()
+	tokenString, err := s.Sign(claims, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Error("Sign got fail")
+	}
+
+	parsed, err := Parse[[]byte, []byte](tokenString, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
 func Test_SigningMethodHS256_Parse(t *testing.T) {
 	claims := map[string]string{
 		"aud": "example.com",
@@ -2173,6 +2281,78 @@ func Test_SigningMethodHS256_Parse(t *testing.T) {
 	}
 	if signLength != 32 {
 		t.Errorf("SignLength got %d, want %d", signLength, 32)
+	}
+
+	parsed, err := Parse[[]byte, []byte](tokenString, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
+func Test_SigningMethodHS384_Parse(t *testing.T) {
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+	key := []byte("test-key")
+
+	s := SigningMethodHS384.New()
+	tokenString, err := s.Sign(claims, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Error("Sign got fail")
+	}
+
+	parsed, err := Parse[[]byte, []byte](tokenString, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
+func Test_SigningMethodHS512_Parse(t *testing.T) {
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+	key := []byte("test-key")
+
+	s := SigningMethodHS512.New()
+	tokenString, err := s.Sign(claims, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Error("Sign got fail")
 	}
 
 	parsed, err := Parse[[]byte, []byte](tokenString, key)
@@ -2231,6 +2411,43 @@ func Test_SigningMethodEdDSA_Parse(t *testing.T) {
 
 }
 
+func Test_SigningMethodED25519_Parse(t *testing.T) {
+	publicKey, privateKey, err := ed25519.GenerateKey(rand.Reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s := SigningMethodED25519.New()
+
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	parsed, err := Parse[ed25519.PrivateKey, ed25519.PublicKey](tokenString, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
 func Test_SigningMethodES256_Parse(t *testing.T) {
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {
@@ -2240,6 +2457,84 @@ func Test_SigningMethodES256_Parse(t *testing.T) {
 	publicKey := &privateKey.PublicKey
 
 	s := SigningMethodES256.New()
+
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	parsed, err := Parse[*ecdsa.PrivateKey, *ecdsa.PublicKey](tokenString, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
+func Test_SigningMethodES384_Parse(t *testing.T) {
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey := &privateKey.PublicKey
+
+	s := SigningMethodES384.New()
+
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	parsed, err := Parse[*ecdsa.PrivateKey, *ecdsa.PublicKey](tokenString, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
+func Test_SigningMethodES512_Parse(t *testing.T) {
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey := &privateKey.PublicKey
+
+	s := SigningMethodES512.New()
 
 	claims := map[string]string{
 		"aud": "example.com",
@@ -2318,6 +2613,102 @@ func Test_SigningMethodRS256_Parse(t *testing.T) {
 
 }
 
+func Test_SigningMethodRS384_Parse(t *testing.T) {
+	var prikey = "MIIEowIBAAKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQABAoIBAQCwia1k7+2oZ2d3n6agCAbqIE1QXfCmh41ZqJHbOY3oRQG3X1wpcGH4Gk+O+zDVTV2JszdcOt7E5dAyMaomETAhRxB7hlIOnEN7WKm+dGNrKRvV0wDU5ReFMRHg31/Lnu8c+5BvGjZX+ky9POIhFFYJqwCRlopGSUIxmVj5rSgtzk3iWOQXr+ah1bjEXvlxDOWkHN6YfpV5ThdEKdBIPGEVqa63r9n2h+qazKrtiRqJqGnOrHzOECYbRFYhexsNFz7YT02xdfSHn7gMIvabDDP/Qp0PjE1jdouiMaFHYnLBbgvlnZW9yuVf/rpXTUq/njxIXMmvmEyyvSDnFcFikB8pAoGBAPF77hK4m3/rdGT7X8a/gwvZ2R121aBcdPwEaUhvj/36dx596zvYmEOjrWfZhF083/nYWE2kVquj2wjs+otCLfifEEgXcVPTnEOPO9Zg3uNSL0nNQghjFuD3iGLTUBCtM66oTe0jLSslHe8gLGEQqyMzHOzYxNqibxcOZIe8Qt0NAoGBAO+UI5+XWjWEgDmvyC3TrOSf/KCGjtu0TSv30ipv27bDLMrpvPmD/5lpptTFwcxvVhCs2b+chCjlghFSWFbBULBrfci2FtliClOVMYrlNBdUSJhf3aYSG2Doe6Bgt1n2CpNn/iu37Y3NfemZBJA7hNl4dYe+f+uzM87cdQ214+jrAoGAXA0XxX8ll2+ToOLJsaNTOvNB9h9Uc5qK5X5w+7G7O998BN2PC/MWp8H+2fVqpXgNENpNXttkRm1hk1dych86EunfdPuqsX+as44oCyJGFHVBnWpm33eWQw9YqANRI+pCJzP08I5WK3osnPiwshd+hR54yjgfYhBFNI7B95PmEQkCgYBzFSz7h1+s34Ycr8SvxsOBWxymG5zaCsUbPsL04aCgLScCHb9J+E86aVbbVFdglYa5Id7DPTL61ixhl7WZjujspeXZGSbmq0KcnckbmDgqkLECiOJW2NHP/j0McAkDLL4tysF8TLDO8gvuvzNC+WQ6drO2ThrypLVZQ+ryeBIPmwKBgEZxhqa0gVvHQG/7Od69KWj4eJP28kq13RhKay8JOoN0vPmspXJo1HY3CKuHRG+AP579dncdUnOMvfXOtkdM4vk0+hWASBQzM9xzVcztCa+koAugjVaLS9A+9uQoqEeVNTckxx0S2bYevRy7hGQmUJTyQm3j1zEUR5jpdbL83Fbq"
+	var pubkey = "MIIBCgKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQAB"
+
+	var prikeyBytes = fromBase64(prikey)
+	var pubkeyBytes = fromBase64(pubkey)
+
+	privateKey, err := ParseRSAPrivateKeyFromDer(prikeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseRSAPublicKeyFromDer(pubkeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s := SigningMethodRS384.New()
+
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	parsed, err := Parse[*rsa.PrivateKey, *rsa.PublicKey](tokenString, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
+func Test_SigningMethodRS512_Parse(t *testing.T) {
+	var prikey = "MIIEowIBAAKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQABAoIBAQCwia1k7+2oZ2d3n6agCAbqIE1QXfCmh41ZqJHbOY3oRQG3X1wpcGH4Gk+O+zDVTV2JszdcOt7E5dAyMaomETAhRxB7hlIOnEN7WKm+dGNrKRvV0wDU5ReFMRHg31/Lnu8c+5BvGjZX+ky9POIhFFYJqwCRlopGSUIxmVj5rSgtzk3iWOQXr+ah1bjEXvlxDOWkHN6YfpV5ThdEKdBIPGEVqa63r9n2h+qazKrtiRqJqGnOrHzOECYbRFYhexsNFz7YT02xdfSHn7gMIvabDDP/Qp0PjE1jdouiMaFHYnLBbgvlnZW9yuVf/rpXTUq/njxIXMmvmEyyvSDnFcFikB8pAoGBAPF77hK4m3/rdGT7X8a/gwvZ2R121aBcdPwEaUhvj/36dx596zvYmEOjrWfZhF083/nYWE2kVquj2wjs+otCLfifEEgXcVPTnEOPO9Zg3uNSL0nNQghjFuD3iGLTUBCtM66oTe0jLSslHe8gLGEQqyMzHOzYxNqibxcOZIe8Qt0NAoGBAO+UI5+XWjWEgDmvyC3TrOSf/KCGjtu0TSv30ipv27bDLMrpvPmD/5lpptTFwcxvVhCs2b+chCjlghFSWFbBULBrfci2FtliClOVMYrlNBdUSJhf3aYSG2Doe6Bgt1n2CpNn/iu37Y3NfemZBJA7hNl4dYe+f+uzM87cdQ214+jrAoGAXA0XxX8ll2+ToOLJsaNTOvNB9h9Uc5qK5X5w+7G7O998BN2PC/MWp8H+2fVqpXgNENpNXttkRm1hk1dych86EunfdPuqsX+as44oCyJGFHVBnWpm33eWQw9YqANRI+pCJzP08I5WK3osnPiwshd+hR54yjgfYhBFNI7B95PmEQkCgYBzFSz7h1+s34Ycr8SvxsOBWxymG5zaCsUbPsL04aCgLScCHb9J+E86aVbbVFdglYa5Id7DPTL61ixhl7WZjujspeXZGSbmq0KcnckbmDgqkLECiOJW2NHP/j0McAkDLL4tysF8TLDO8gvuvzNC+WQ6drO2ThrypLVZQ+ryeBIPmwKBgEZxhqa0gVvHQG/7Od69KWj4eJP28kq13RhKay8JOoN0vPmspXJo1HY3CKuHRG+AP579dncdUnOMvfXOtkdM4vk0+hWASBQzM9xzVcztCa+koAugjVaLS9A+9uQoqEeVNTckxx0S2bYevRy7hGQmUJTyQm3j1zEUR5jpdbL83Fbq"
+	var pubkey = "MIIBCgKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQAB"
+
+	var prikeyBytes = fromBase64(prikey)
+	var pubkeyBytes = fromBase64(pubkey)
+
+	privateKey, err := ParseRSAPrivateKeyFromDer(prikeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseRSAPublicKeyFromDer(pubkeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s := SigningMethodRS512.New()
+
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	parsed, err := Parse[*rsa.PrivateKey, *rsa.PublicKey](tokenString, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
 func Test_SigningMethodPS256_Parse(t *testing.T) {
 	var prikey = "MIIEowIBAAKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQABAoIBAQCwia1k7+2oZ2d3n6agCAbqIE1QXfCmh41ZqJHbOY3oRQG3X1wpcGH4Gk+O+zDVTV2JszdcOt7E5dAyMaomETAhRxB7hlIOnEN7WKm+dGNrKRvV0wDU5ReFMRHg31/Lnu8c+5BvGjZX+ky9POIhFFYJqwCRlopGSUIxmVj5rSgtzk3iWOQXr+ah1bjEXvlxDOWkHN6YfpV5ThdEKdBIPGEVqa63r9n2h+qazKrtiRqJqGnOrHzOECYbRFYhexsNFz7YT02xdfSHn7gMIvabDDP/Qp0PjE1jdouiMaFHYnLBbgvlnZW9yuVf/rpXTUq/njxIXMmvmEyyvSDnFcFikB8pAoGBAPF77hK4m3/rdGT7X8a/gwvZ2R121aBcdPwEaUhvj/36dx596zvYmEOjrWfZhF083/nYWE2kVquj2wjs+otCLfifEEgXcVPTnEOPO9Zg3uNSL0nNQghjFuD3iGLTUBCtM66oTe0jLSslHe8gLGEQqyMzHOzYxNqibxcOZIe8Qt0NAoGBAO+UI5+XWjWEgDmvyC3TrOSf/KCGjtu0TSv30ipv27bDLMrpvPmD/5lpptTFwcxvVhCs2b+chCjlghFSWFbBULBrfci2FtliClOVMYrlNBdUSJhf3aYSG2Doe6Bgt1n2CpNn/iu37Y3NfemZBJA7hNl4dYe+f+uzM87cdQ214+jrAoGAXA0XxX8ll2+ToOLJsaNTOvNB9h9Uc5qK5X5w+7G7O998BN2PC/MWp8H+2fVqpXgNENpNXttkRm1hk1dych86EunfdPuqsX+as44oCyJGFHVBnWpm33eWQw9YqANRI+pCJzP08I5WK3osnPiwshd+hR54yjgfYhBFNI7B95PmEQkCgYBzFSz7h1+s34Ycr8SvxsOBWxymG5zaCsUbPsL04aCgLScCHb9J+E86aVbbVFdglYa5Id7DPTL61ixhl7WZjujspeXZGSbmq0KcnckbmDgqkLECiOJW2NHP/j0McAkDLL4tysF8TLDO8gvuvzNC+WQ6drO2ThrypLVZQ+ryeBIPmwKBgEZxhqa0gVvHQG/7Od69KWj4eJP28kq13RhKay8JOoN0vPmspXJo1HY3CKuHRG+AP579dncdUnOMvfXOtkdM4vk0+hWASBQzM9xzVcztCa+koAugjVaLS9A+9uQoqEeVNTckxx0S2bYevRy7hGQmUJTyQm3j1zEUR5jpdbL83Fbq"
 	var pubkey = "MIIBCgKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQAB"
@@ -2336,6 +2727,102 @@ func Test_SigningMethodPS256_Parse(t *testing.T) {
 	}
 
 	s := SigningMethodPS256.New()
+
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	parsed, err := Parse[*rsa.PrivateKey, *rsa.PublicKey](tokenString, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
+func Test_SigningMethodPS384_Parse(t *testing.T) {
+	var prikey = "MIIEowIBAAKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQABAoIBAQCwia1k7+2oZ2d3n6agCAbqIE1QXfCmh41ZqJHbOY3oRQG3X1wpcGH4Gk+O+zDVTV2JszdcOt7E5dAyMaomETAhRxB7hlIOnEN7WKm+dGNrKRvV0wDU5ReFMRHg31/Lnu8c+5BvGjZX+ky9POIhFFYJqwCRlopGSUIxmVj5rSgtzk3iWOQXr+ah1bjEXvlxDOWkHN6YfpV5ThdEKdBIPGEVqa63r9n2h+qazKrtiRqJqGnOrHzOECYbRFYhexsNFz7YT02xdfSHn7gMIvabDDP/Qp0PjE1jdouiMaFHYnLBbgvlnZW9yuVf/rpXTUq/njxIXMmvmEyyvSDnFcFikB8pAoGBAPF77hK4m3/rdGT7X8a/gwvZ2R121aBcdPwEaUhvj/36dx596zvYmEOjrWfZhF083/nYWE2kVquj2wjs+otCLfifEEgXcVPTnEOPO9Zg3uNSL0nNQghjFuD3iGLTUBCtM66oTe0jLSslHe8gLGEQqyMzHOzYxNqibxcOZIe8Qt0NAoGBAO+UI5+XWjWEgDmvyC3TrOSf/KCGjtu0TSv30ipv27bDLMrpvPmD/5lpptTFwcxvVhCs2b+chCjlghFSWFbBULBrfci2FtliClOVMYrlNBdUSJhf3aYSG2Doe6Bgt1n2CpNn/iu37Y3NfemZBJA7hNl4dYe+f+uzM87cdQ214+jrAoGAXA0XxX8ll2+ToOLJsaNTOvNB9h9Uc5qK5X5w+7G7O998BN2PC/MWp8H+2fVqpXgNENpNXttkRm1hk1dych86EunfdPuqsX+as44oCyJGFHVBnWpm33eWQw9YqANRI+pCJzP08I5WK3osnPiwshd+hR54yjgfYhBFNI7B95PmEQkCgYBzFSz7h1+s34Ycr8SvxsOBWxymG5zaCsUbPsL04aCgLScCHb9J+E86aVbbVFdglYa5Id7DPTL61ixhl7WZjujspeXZGSbmq0KcnckbmDgqkLECiOJW2NHP/j0McAkDLL4tysF8TLDO8gvuvzNC+WQ6drO2ThrypLVZQ+ryeBIPmwKBgEZxhqa0gVvHQG/7Od69KWj4eJP28kq13RhKay8JOoN0vPmspXJo1HY3CKuHRG+AP579dncdUnOMvfXOtkdM4vk0+hWASBQzM9xzVcztCa+koAugjVaLS9A+9uQoqEeVNTckxx0S2bYevRy7hGQmUJTyQm3j1zEUR5jpdbL83Fbq"
+	var pubkey = "MIIBCgKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQAB"
+
+	var prikeyBytes = fromBase64(prikey)
+	var pubkeyBytes = fromBase64(pubkey)
+
+	privateKey, err := ParseRSAPrivateKeyFromDer(prikeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseRSAPublicKeyFromDer(pubkeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s := SigningMethodPS384.New()
+
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	parsed, err := Parse[*rsa.PrivateKey, *rsa.PublicKey](tokenString, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+	}
+
+}
+
+func Test_SigningMethodPS512_Parse(t *testing.T) {
+	var prikey = "MIIEowIBAAKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQABAoIBAQCwia1k7+2oZ2d3n6agCAbqIE1QXfCmh41ZqJHbOY3oRQG3X1wpcGH4Gk+O+zDVTV2JszdcOt7E5dAyMaomETAhRxB7hlIOnEN7WKm+dGNrKRvV0wDU5ReFMRHg31/Lnu8c+5BvGjZX+ky9POIhFFYJqwCRlopGSUIxmVj5rSgtzk3iWOQXr+ah1bjEXvlxDOWkHN6YfpV5ThdEKdBIPGEVqa63r9n2h+qazKrtiRqJqGnOrHzOECYbRFYhexsNFz7YT02xdfSHn7gMIvabDDP/Qp0PjE1jdouiMaFHYnLBbgvlnZW9yuVf/rpXTUq/njxIXMmvmEyyvSDnFcFikB8pAoGBAPF77hK4m3/rdGT7X8a/gwvZ2R121aBcdPwEaUhvj/36dx596zvYmEOjrWfZhF083/nYWE2kVquj2wjs+otCLfifEEgXcVPTnEOPO9Zg3uNSL0nNQghjFuD3iGLTUBCtM66oTe0jLSslHe8gLGEQqyMzHOzYxNqibxcOZIe8Qt0NAoGBAO+UI5+XWjWEgDmvyC3TrOSf/KCGjtu0TSv30ipv27bDLMrpvPmD/5lpptTFwcxvVhCs2b+chCjlghFSWFbBULBrfci2FtliClOVMYrlNBdUSJhf3aYSG2Doe6Bgt1n2CpNn/iu37Y3NfemZBJA7hNl4dYe+f+uzM87cdQ214+jrAoGAXA0XxX8ll2+ToOLJsaNTOvNB9h9Uc5qK5X5w+7G7O998BN2PC/MWp8H+2fVqpXgNENpNXttkRm1hk1dych86EunfdPuqsX+as44oCyJGFHVBnWpm33eWQw9YqANRI+pCJzP08I5WK3osnPiwshd+hR54yjgfYhBFNI7B95PmEQkCgYBzFSz7h1+s34Ycr8SvxsOBWxymG5zaCsUbPsL04aCgLScCHb9J+E86aVbbVFdglYa5Id7DPTL61ixhl7WZjujspeXZGSbmq0KcnckbmDgqkLECiOJW2NHP/j0McAkDLL4tysF8TLDO8gvuvzNC+WQ6drO2ThrypLVZQ+ryeBIPmwKBgEZxhqa0gVvHQG/7Od69KWj4eJP28kq13RhKay8JOoN0vPmspXJo1HY3CKuHRG+AP579dncdUnOMvfXOtkdM4vk0+hWASBQzM9xzVcztCa+koAugjVaLS9A+9uQoqEeVNTckxx0S2bYevRy7hGQmUJTyQm3j1zEUR5jpdbL83Fbq"
+	var pubkey = "MIIBCgKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQAB"
+
+	var prikeyBytes = fromBase64(prikey)
+	var pubkeyBytes = fromBase64(pubkey)
+
+	privateKey, err := ParseRSAPrivateKeyFromDer(prikeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseRSAPublicKeyFromDer(pubkeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s := SigningMethodPS512.New()
 
 	claims := map[string]string{
 		"aud": "example.com",
