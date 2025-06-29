@@ -8,6 +8,7 @@ import (
 )
 
 var (
+	// Hmac
 	SigningMethodHMD5  = NewJWT[[]byte, []byte](SigningHMD5, NewJoseEncoder())
 	SigningMethodHSHA1 = NewJWT[[]byte, []byte](SigningHSHA1, NewJoseEncoder())
 	SigningMethodHS224 = NewJWT[[]byte, []byte](SigningHS224, NewJoseEncoder())
@@ -15,30 +16,37 @@ var (
 	SigningMethodHS384 = NewJWT[[]byte, []byte](SigningHS384, NewJoseEncoder())
 	SigningMethodHS512 = NewJWT[[]byte, []byte](SigningHS512, NewJoseEncoder())
 
+	// RSA
 	SigningMethodRS256 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningRS256, NewJoseEncoder())
 	SigningMethodRS384 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningRS384, NewJoseEncoder())
 	SigningMethodRS512 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningRS512, NewJoseEncoder())
 
+	// RSA-PSS
 	SigningMethodPS256 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningPS256, NewJoseEncoder())
 	SigningMethodPS384 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningPS384, NewJoseEncoder())
 	SigningMethodPS512 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningPS512, NewJoseEncoder())
 
+	// ECDSA
 	SigningMethodES256 = NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES256, NewJoseEncoder())
 	SigningMethodES384 = NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES384, NewJoseEncoder())
 	SigningMethodES512 = NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES512, NewJoseEncoder())
 
+	// EdDSA
 	SigningMethodEdDSA   = NewJWT[ed25519.PrivateKey, ed25519.PublicKey](SigningEdDSA, NewJoseEncoder())
 	SigningMethodED25519 = NewJWT[ed25519.PrivateKey, ed25519.PublicKey](SigningED25519, NewJoseEncoder())
 
+	// Blake2b
 	SigningMethodBLAKE2B = NewJWT[[]byte, []byte](SigningBLAKE2B, NewJoseEncoder())
 
+	// None
 	SigningMethodNone = NewJWT[[]byte, []byte](SigningNone, NewJoseEncoder())
 )
 
 var (
-	ErrJWTTypeInvalid = errors.New("go-jwt: Type invalid")
-	ErrJWTAlgoInvalid = errors.New("go-jwt: Algo invalid")
-	ErrJWTVerifyFail  = errors.New("go-jwt: Verify fail")
+	ErrJWTTypeInvalid   = errors.New("go-jwt: Type invalid")
+	ErrJWTAlgoInvalid   = errors.New("go-jwt: Algo invalid")
+	ErrJWTMethodInvalid = errors.New("go-jwt: Method invalid")
+	ErrJWTVerifyFail    = errors.New("go-jwt: Verify fail")
 )
 
 // jwt singer driver interface
@@ -70,6 +78,22 @@ type IEncoder interface {
 	// JSON Decode function
 	JSONDecode(data []byte, dst any) error
 }
+
+const (
+	// Defines the list of claims that are registered in the IANA "JSON Web Token Claims" registry
+	RegisteredClaimsAudience       = "aud"
+	RegisteredClaimsExpirationTime = "exp"
+	RegisteredClaimsID             = "jti"
+	RegisteredClaimsIssuedAt       = "iat"
+	RegisteredClaimsIssuer         = "iss"
+	RegisteredClaimsNotBefore      = "nbf"
+	RegisteredClaimsSubject        = "sub"
+
+	// Defines the list of headers that are registered in the IANA "JSON Web Token Headers" registry
+	RegisteredHeadersType       = "typ"
+	RegisteredHeadersAlgorithm  = "alg"
+	RegisteredHeadersEncryption = "enc"
+)
 
 type JWTClaims struct {
 	Issuer    string `json:"iss,omitempty"`
@@ -148,7 +172,7 @@ func (jwt *JWT[S, V]) SignWithHeader(header any, claims any, signKey S) (string,
 	return t.SignedString()
 }
 
-// Parse parses, validates, verifies the signature and returns the parsed token.
+// Parse parses the signature and returns the parsed token.
 func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 	t := NewToken(jwt.encoder)
 	t.Parse(tokenString)
@@ -174,6 +198,49 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 	}
 
 	ok, _ := jwt.signer.Verify([]byte(signingString), signature, verifyKey)
+	if !ok {
+		return nil, ErrJWTVerifyFail
+	}
+
+	return t, nil
+}
+
+// Parse parses the signature and returns the parsed token.
+func Parse[S any, V any](tokenString string, key V, encoder ...IEncoder) (*Token, error) {
+	var defaultEncoder IEncoder = NewJoseEncoder()
+	if len(encoder) > 0 {
+		defaultEncoder = encoder[0]
+	}
+
+	t := NewToken(defaultEncoder)
+	t.Parse(tokenString)
+
+	header, err := t.GetHeader()
+	if err != nil {
+		return nil, err
+	}
+
+	if len(header.Typ) > 0 && header.Typ != "JWT" {
+		return nil, ErrJWTTypeInvalid
+	}
+
+	signer := GetSigningMethod[S, V](header.Alg)
+	if signer == nil {
+		return nil, ErrJWTMethodInvalid
+	}
+
+	if header.Alg != signer.Alg() {
+		return nil, ErrJWTAlgoInvalid
+	}
+
+	signature := t.GetSignature()
+
+	signingString, err := t.SigningString()
+	if err != nil {
+		return nil, err
+	}
+
+	ok, _ := signer.Verify([]byte(signingString), signature, key)
 	if !ok {
 		return nil, ErrJWTVerifyFail
 	}

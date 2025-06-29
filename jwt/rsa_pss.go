@@ -7,27 +7,39 @@ import (
 )
 
 var (
-	SigningPS256 = NewSignRSAPss(crypto.SHA256, &rsa.PSSOptions{
+	SigningPS256 = NewSignRSAPSS(crypto.SHA256, &rsa.PSSOptions{
 		SaltLength: rsa.PSSSaltLengthEqualsHash,
 	}, &rsa.PSSOptions{
 		SaltLength: rsa.PSSSaltLengthAuto,
 	}, "PS256")
 
-	SigningPS384 = NewSignRSAPss(crypto.SHA384, &rsa.PSSOptions{
+	SigningPS384 = NewSignRSAPSS(crypto.SHA384, &rsa.PSSOptions{
 		SaltLength: rsa.PSSSaltLengthEqualsHash,
 	}, &rsa.PSSOptions{
 		SaltLength: rsa.PSSSaltLengthAuto,
 	}, "PS384")
 
-	SigningPS512 = NewSignRSAPss(crypto.SHA512, &rsa.PSSOptions{
+	SigningPS512 = NewSignRSAPSS(crypto.SHA512, &rsa.PSSOptions{
 		SaltLength: rsa.PSSSaltLengthEqualsHash,
 	}, &rsa.PSSOptions{
 		SaltLength: rsa.PSSSaltLengthAuto,
 	}, "PS512")
 )
 
+func init() {
+	RegisterSigningMethod(SigningPS256.Alg(), func() any {
+		return SigningPS256
+	})
+	RegisterSigningMethod(SigningPS384.Alg(), func() any {
+		return SigningPS384
+	})
+	RegisterSigningMethod(SigningPS512.Alg(), func() any {
+		return SigningPS512
+	})
+}
+
 // SignRSA implements the RSA family of signing methods.
-type SignRSAPss struct {
+type SignRSAPSS struct {
 	Name string
 	Hash crypto.Hash
 
@@ -35,31 +47,34 @@ type SignRSAPss struct {
 	VerifyOptions *rsa.PSSOptions
 }
 
-func NewSignRSAPss(
+func NewSignRSAPSS(
 	hash crypto.Hash,
-	Options *rsa.PSSOptions,
-	VerifyOptions *rsa.PSSOptions,
+	options *rsa.PSSOptions,
+	verifyOptions *rsa.PSSOptions,
 	name string,
-) *SignRSAPss {
-	return &SignRSAPss{
+) *SignRSAPSS {
+	return &SignRSAPSS{
 		Name: name,
 		Hash: hash,
+
+		Options:       options,
+		VerifyOptions: verifyOptions,
 	}
 }
 
 // Signer algo name.
-func (s *SignRSAPss) Alg() string {
+func (s *SignRSAPSS) Alg() string {
 	return s.Name
 }
 
 // Signer signed bytes length.
 // rsa sign size can get from rsa.PrivateKey.Size()
-func (s *SignRSAPss) SignLength() int {
+func (s *SignRSAPSS) SignLength() int {
 	return MaxModulusLen
 }
 
 // Sign implements token signing for the Signer.
-func (s *SignRSAPss) Sign(msg []byte, key *rsa.PrivateKey) ([]byte, error) {
+func (s *SignRSAPSS) Sign(msg []byte, key *rsa.PrivateKey) ([]byte, error) {
 	hasher := s.Hash.New()
 	hasher.Write([]byte(msg))
 
@@ -72,7 +87,7 @@ func (s *SignRSAPss) Sign(msg []byte, key *rsa.PrivateKey) ([]byte, error) {
 }
 
 // Verify implements token verification for the Signer.
-func (s *SignRSAPss) Verify(msg []byte, signature []byte, key *rsa.PublicKey) (bool, error) {
+func (s *SignRSAPSS) Verify(msg []byte, signature []byte, key *rsa.PublicKey) (bool, error) {
 	hasher := s.Hash.New()
 	hasher.Write([]byte(msg))
 

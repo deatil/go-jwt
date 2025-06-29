@@ -14,6 +14,18 @@ var (
 	SigningRS512 = NewSignRSA(crypto.SHA512, "RS512")
 )
 
+func init() {
+	RegisterSigningMethod(SigningRS256.Alg(), func() any {
+		return SigningRS256
+	})
+	RegisterSigningMethod(SigningRS384.Alg(), func() any {
+		return SigningRS384
+	})
+	RegisterSigningMethod(SigningRS512.Alg(), func() any {
+		return SigningRS512
+	})
+}
+
 // SignRSA implements the RSA family of signing methods.
 type SignRSA struct {
 	Name string

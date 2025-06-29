@@ -23,10 +23,14 @@ func (v *Validator) WithLeeway(leeway int64) *Validator {
 	return v
 }
 
-func (v *Validator) IsPermittedFor(audience string) bool {
+func (v *Validator) IsPermittedFor(audiences ...string) bool {
 	if val, ok := v.claims["aud"]; ok {
-		if vv, ok2 := val.(string); ok2 && vv == audience {
-			return true
+		if vv, ok := val.(string); ok {
+			for _, audience := range audiences {
+				if vv == audience {
+					return true
+				}
+			}
 		}
 	}
 
@@ -35,7 +39,7 @@ func (v *Validator) IsPermittedFor(audience string) bool {
 
 func (v *Validator) IsIdentifiedBy(id string) bool {
 	if val, ok := v.claims["jti"]; ok {
-		if vv, ok2 := val.(string); ok2 && vv == id {
+		if vv, ok := val.(string); ok && vv == id {
 			return true
 		}
 	}
@@ -45,7 +49,7 @@ func (v *Validator) IsIdentifiedBy(id string) bool {
 
 func (v *Validator) IsRelatedTo(subject string) bool {
 	if val, ok := v.claims["sub"]; ok {
-		if vv, ok2 := val.(string); ok2 && vv == subject {
+		if vv, ok := val.(string); ok && vv == subject {
 			return true
 		}
 	}
@@ -55,7 +59,7 @@ func (v *Validator) IsRelatedTo(subject string) bool {
 
 func (v *Validator) HasBeenIssuedBy(issuer string) bool {
 	if val, ok := v.claims["iss"]; ok {
-		if vv, ok2 := val.(string); ok2 && vv == issuer {
+		if vv, ok := val.(string); ok && vv == issuer {
 			return true
 		}
 	}
@@ -65,7 +69,7 @@ func (v *Validator) HasBeenIssuedBy(issuer string) bool {
 
 func (v *Validator) HasBeenIssuedBefore(now int64) bool {
 	if val, ok := v.claims["iat"]; ok {
-		if vv, ok2 := val.(float64); ok2 {
+		if vv, ok := val.(float64); ok {
 			if now+v.leeway > int64(vv) {
 				return true
 			}
@@ -79,7 +83,7 @@ func (v *Validator) HasBeenIssuedBefore(now int64) bool {
 
 func (v *Validator) IsMinimumTimeBefore(now int64) bool {
 	if val, ok := v.claims["nbf"]; ok {
-		if vv, ok2 := val.(float64); ok2 {
+		if vv, ok := val.(float64); ok {
 			if now+v.leeway > int64(vv) {
 				return true
 			}
@@ -93,7 +97,7 @@ func (v *Validator) IsMinimumTimeBefore(now int64) bool {
 
 func (v *Validator) IsExpired(now int64) bool {
 	if val, ok := v.claims["exp"]; ok {
-		if vv, ok2 := val.(float64); ok2 {
+		if vv, ok := val.(float64); ok {
 			if now-v.leeway < int64(vv) {
 				return false
 			}

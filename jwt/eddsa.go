@@ -10,6 +10,15 @@ var (
 	SigningED25519 = NewSignEdDSA("ED25519")
 )
 
+func init() {
+	RegisterSigningMethod(SigningEdDSA.Alg(), func() any {
+		return SigningEdDSA
+	})
+	RegisterSigningMethod(SigningED25519.Alg(), func() any {
+		return SigningED25519
+	})
+}
+
 var (
 	ErrSignEdDSASignLengthInvalid = errors.New("go-jwt: sign length error")
 	ErrSignEdDSAVerifyFail        = errors.New("go-jwt: SignEdDSA Verify fail")

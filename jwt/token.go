@@ -154,21 +154,21 @@ func (t *Token) GetHeader() (TokenHeader, error) {
 
 	var typ = ""
 	if val, ok := parsedHeader["typ"]; ok {
-		if typVal, ok2 := val.(string); ok2 {
+		if typVal, ok := val.(string); ok {
 			typ = typVal
 		}
 	}
 
 	var alg = ""
 	if val, ok := parsedHeader["alg"]; ok {
-		if algVal, ok2 := val.(string); ok2 {
+		if algVal, ok := val.(string); ok {
 			alg = algVal
 		}
 	}
 
 	var kid = ""
 	if val, ok := parsedHeader["kid"]; ok {
-		if kidVal, ok2 := val.(string); ok2 {
+		if kidVal, ok := val.(string); ok {
 			kid = kidVal
 		}
 	}
@@ -194,8 +194,8 @@ func (t *Token) GetHeadersT(dst any) error {
 	return t.encoder.JSONDecode(t.header, dst)
 }
 
-func (t *Token) GetClaims() (map[string]any, error) {
-	var dst map[string]any
+func (t *Token) GetClaims() (MapClaims, error) {
+	var dst MapClaims
 	err := t.encoder.JSONDecode(t.claims, &dst)
 	if err != nil {
 		return map[string]any{}, err

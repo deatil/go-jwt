@@ -14,6 +14,18 @@ var (
 	SigningES512 = NewSignECDSA(crypto.SHA512, 66, "ES512")
 )
 
+func init() {
+	RegisterSigningMethod(SigningES256.Alg(), func() any {
+		return SigningES256
+	})
+	RegisterSigningMethod(SigningES384.Alg(), func() any {
+		return SigningES384
+	})
+	RegisterSigningMethod(SigningES512.Alg(), func() any {
+		return SigningES512
+	})
+}
+
 var (
 	ErrSignECDSASignLengthInvalid = errors.New("go-jwt: sign length error")
 	ErrSignECDSAVerifyFail        = errors.New("go-jwt: SignECDSA Verify fail")

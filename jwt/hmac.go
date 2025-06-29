@@ -20,6 +20,27 @@ var (
 	SigningHS512 = NewSignHmac(sha512.New, "HS512")
 )
 
+func init() {
+	RegisterSigningMethod(SigningHMD5.Alg(), func() any {
+		return SigningHMD5
+	})
+	RegisterSigningMethod(SigningHSHA1.Alg(), func() any {
+		return SigningHSHA1
+	})
+	RegisterSigningMethod(SigningHS224.Alg(), func() any {
+		return SigningHS224
+	})
+	RegisterSigningMethod(SigningHS256.Alg(), func() any {
+		return SigningHS256
+	})
+	RegisterSigningMethod(SigningHS384.Alg(), func() any {
+		return SigningHS384
+	})
+	RegisterSigningMethod(SigningHS512.Alg(), func() any {
+		return SigningHS512
+	})
+}
+
 var ErrSignHmacVerifyFail = errors.New("go-jwt: SignHmac Verify fail")
 
 // SignHmac implements the Hmac family of signing methods.

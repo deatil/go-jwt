@@ -8,6 +8,12 @@ var (
 	SigningNone = NewSignNone("none")
 )
 
+func init() {
+	RegisterSigningMethod(SigningNone.Alg(), func() any {
+		return SigningNone
+	})
+}
+
 var ErrSignNoneSignatureInvalid = errors.New("go-jwt: SignNone verify signature not empty")
 
 // SignNone implements signing methods.

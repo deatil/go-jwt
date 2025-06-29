@@ -12,6 +12,12 @@ var (
 	SigningBLAKE2B = NewSignBlake2b(blake2b.New256, "BLAKE2B")
 )
 
+func init() {
+	RegisterSigningMethod(SigningBLAKE2B.Alg(), func() any {
+		return SigningBLAKE2B
+	})
+}
+
 var (
 	ErrVerifyKeyTooShort     = errors.New("go-jwt: SignBlake2b key too short")
 	ErrSignBlake2bVerifyFail = errors.New("go-jwt: SignBlake2b Verify fail")
