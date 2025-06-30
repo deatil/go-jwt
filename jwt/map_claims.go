@@ -76,6 +76,24 @@ type ClaimStrings struct {
 	AsString bool
 }
 
+// NewClaimStrings constructs a new ClaimStrings.
+func NewClaimStrings(val []string, asString bool) ClaimStrings {
+	return ClaimStrings{
+		Value:    val,
+		AsString: asString,
+	}
+}
+
+// NewClaimSingleString constructs a new ClaimStrings.
+func NewClaimSingleString(val string) ClaimStrings {
+	return NewClaimStrings([]string{val}, true)
+}
+
+// NewClaimStringArray constructs a new ClaimStrings.
+func NewClaimStringArray(val []string) ClaimStrings {
+	return NewClaimStrings(val, false)
+}
+
 func (s *ClaimStrings) UnmarshalJSON(data []byte) (err error) {
 	var value any
 

@@ -6,8 +6,6 @@ import (
 	"crypto/rsa"
 )
 
-const MaxModulusLen = 512
-
 var (
 	SigningRS256 = NewSignRSA(crypto.SHA256, "RS256")
 	SigningRS384 = NewSignRSA(crypto.SHA384, "RS384")
@@ -25,6 +23,8 @@ func init() {
 		return SigningRS512
 	})
 }
+
+const MaxModulusLen = 512
 
 // SignRSA implements the RSA family of signing methods.
 type SignRSA struct {

@@ -398,6 +398,108 @@ func Test_MarshalJSON(t *testing.T) {
 
 }
 
+func Test_MarshalJSON2(t *testing.T) {
+	now := time.Now()
+	exp := now.AddDate(0, 0, 5)
+
+	claims := testRegisteredClaims{
+		ExpiresAt: NewNumericDate(exp),
+		IssuedAt:  NewNumericDate(now),
+		Audience: NewClaimStringArray([]string{
+			"aud test",
+		}),
+		Issuer: NewClaimSingleString("iss test"),
+		Subject: NewClaimStrings([]string{
+			"sub11 test",
+			"sub22 test",
+		}, false),
+		String: "string test",
+	}
+
+	data, err := json.Marshal(claims)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// =================
+
+	var dst testRegisteredClaims
+	err = json.Unmarshal(data, &dst)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// =================
+
+	getExp := dst.ExpiresAt
+
+	expu := getExp.Time.Unix()
+	checkexp := exp.Unix()
+	if expu != checkexp {
+		t.Errorf("GetNumericDate exp, got %v, want %v", expu, checkexp)
+	}
+
+	// =================
+
+	getiat := dst.IssuedAt
+
+	iatu := getiat.Time.Unix()
+	checkiat := now.Unix()
+	if iatu != checkiat {
+		t.Errorf("GetNumericDate iat, got %v, want %v", iatu, checkiat)
+	}
+
+	// =================
+
+	res1 := claims.String
+
+	checkres := "string test"
+	if res1 != checkres {
+		t.Errorf("GetString, got %v, want %v", res1, checkres)
+	}
+
+	// =================
+
+	res := claims.Audience
+
+	checkres = "aud test"
+	if res.Value[0] != checkres {
+		t.Errorf("GetClaimsString aud, got %v, want %v", res.Value[1], checkres)
+	}
+	if res.AsString {
+		t.Errorf("GetClaimsString aud AsString, got %v, want %v", res.AsString, "false")
+	}
+
+	// =================
+
+	res = claims.Issuer
+
+	checkres = "iss test"
+	if res.Value[0] != checkres {
+		t.Errorf("GetClaimsString iss, got %v, want %v", res.Value[0], checkres)
+	}
+	if !res.AsString {
+		t.Errorf("GetClaimsString iss AsString, got %v, want %v", res.AsString, "true")
+	}
+
+	// =================
+
+	res = claims.Subject
+
+	checkres1 := "sub11 test"
+	if res.Value[0] != checkres1 {
+		t.Errorf("GetClaimsString sub, got %v, want %v", res.Value[0], checkres1)
+	}
+	checkres2 := "sub22 test"
+	if res.Value[1] != checkres2 {
+		t.Errorf("GetClaimsString sub, got %v, want %v", res.Value[1], checkres2)
+	}
+	if res.AsString {
+		t.Errorf("GetClaimsString sub AsString, got %v, want %v", res.AsString, "false")
+	}
+
+}
+
 func Test_RegisteredClaims_MarshalJSON(t *testing.T) {
 	now := time.Now()
 	exp := now.AddDate(0, 0, 5)

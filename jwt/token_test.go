@@ -18,7 +18,7 @@ func Test_Token(t *testing.T) {
 	var check1 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJleGFtcGxlLmNvbSIsImlhdCI6ImZvbyJ9"
 	var check2 = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJleGFtcGxlLmNvbSIsImlhdCI6ImZvbyJ9.dGVzdC1zaWduYXR1cmU"
 
-	var token = NewToken(NewJoseEncoder())
+	var token = NewToken(JWTEncoder)
 	token.SetHeader(header)
 	token.SetClaims(claims)
 	token.WithSignature([]byte(signature))
@@ -41,7 +41,7 @@ func Test_Token(t *testing.T) {
 
 	// ====================
 
-	var token2 = NewToken(NewJoseEncoder())
+	var token2 = NewToken(JWTEncoder)
 	token2.Parse(check1)
 
 	header2, err := token2.GetHeader()
@@ -74,7 +74,7 @@ func Test_Token(t *testing.T) {
 
 	// ====================
 
-	var token3 = NewToken(NewJoseEncoder())
+	var token3 = NewToken(JWTEncoder)
 	token3.Parse(check2)
 
 	header3, err := token3.GetHeader()
@@ -119,7 +119,7 @@ func Test_Token(t *testing.T) {
 
 	check3 := "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9"
 
-	var token6 = NewToken(NewJoseEncoder())
+	var token6 = NewToken(JWTEncoder)
 	token6.Parse(check3)
 
 	sig61 := token6.GetRaw()
@@ -147,7 +147,7 @@ func Test_Token2(t *testing.T) {
 
 	var check1 = "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJleGFtcGxlLmNvbSIsImlhdCI6ImZvbyJ9.dGVzdC1zaWduYXR1cmU"
 
-	var token = NewToken(NewJoseEncoder())
+	var token = NewToken(JWTEncoder)
 	token.SetHeader(header)
 	token.SetClaims(claims)
 	token.WithSignature([]byte(signature))
@@ -162,7 +162,7 @@ func Test_Token2(t *testing.T) {
 
 	// ======
 
-	var token2 = NewToken(NewJoseEncoder())
+	var token2 = NewToken(JWTEncoder)
 	token2.WithHeader([]byte("ase123"))
 	token2.WithClaims([]byte("tyh78"))
 	token2.WithSignature([]byte("qwe"))
@@ -193,7 +193,7 @@ func Test_Token3(t *testing.T) {
 
 	var check1 = "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJhdWQiOiJleGFtcGxlLmNvbSIsImlhdCI6ImZvbyJ9.dGVzdC1zaWduYXR1cmU"
 
-	var token = NewToken(NewJoseEncoder())
+	var token = NewToken(JWTEncoder)
 	token.SetHeader(header)
 	token.SetClaims(claims)
 	token.WithSignature([]byte(signature))
@@ -208,7 +208,7 @@ func Test_Token3(t *testing.T) {
 
 	// ======
 
-	var token2 = NewToken(NewJoseEncoder())
+	var token2 = NewToken(JWTEncoder)
 	token2.Parse(check1)
 
 	header2, err := token2.GetHeader()
@@ -278,7 +278,7 @@ func Test_Token3(t *testing.T) {
 func Test_Token5(t *testing.T) {
 	check3 := ""
 
-	var token6 = NewToken(NewJoseEncoder())
+	var token6 = NewToken(JWTEncoder)
 	token6.Parse(check3)
 
 	sig61 := token6.GetRaw()

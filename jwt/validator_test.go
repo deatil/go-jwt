@@ -9,7 +9,7 @@ func Test_Validator_isExpired(t *testing.T) {
 	check1 := "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3Mzk4MTAzOTB9.dGVzdC1zaWduYXR1cmU"
 	now := time.Now().Unix()
 
-	var token = NewToken(NewJoseEncoder())
+	var token = NewToken(JWTEncoder)
 	token.Parse(check1)
 
 	validator, err := NewValidator(token)
@@ -39,7 +39,7 @@ func Test_Validator(t *testing.T) {
 	check1 := "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3ODQyMzg4fQ.dGVzdC1zaWduYXR1cmU"
 	now := time.Now().Unix()
 
-	var token = NewToken(NewJoseEncoder())
+	var token = NewToken(JWTEncoder)
 	token.Parse(check1)
 
 	validator, err := NewValidator(token)
@@ -105,7 +105,7 @@ func Test_Validator(t *testing.T) {
 
 	// ======
 
-	var token2 = NewToken(NewJoseEncoder())
+	var token2 = NewToken(JWTEncoder)
 	token2.Parse(check1)
 
 	validator2, err := NewValidator(token2)
@@ -146,7 +146,7 @@ func Test_Validator_Error(t *testing.T) {
 	{
 		check1 := "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3O321Mzg4fQ.dGVzdC1zaWduYXR1cmU"
 
-		var token = NewToken(NewJoseEncoder())
+		var token = NewToken(JWTEncoder)
 		token.Parse(check1)
 
 		_, err := NewValidator(token)
@@ -163,7 +163,7 @@ func Test_Validator_Error(t *testing.T) {
 	{
 		check1 := "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3ODQyMzg4fQ.dGVzdC1zaWduYXR1cmU"
 
-		var token = NewToken(NewJoseEncoder())
+		var token = NewToken(JWTEncoder)
 		token.Parse(check1)
 
 		validator, err := NewValidator(token)
@@ -192,7 +192,7 @@ func Test_Validator_Error(t *testing.T) {
 	{
 		check1 := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkIjoxNzExNTMxMTg4LCJ1c2VyX2lkIjoxMzM0fQ.CM4ZhL1vQ38p5hNo4Sody0ZYDo5_mSw16RsguC68664"
 
-		var token = NewToken(NewJoseEncoder())
+		var token = NewToken(JWTEncoder)
 		token.Parse(check1)
 
 		validator, err := NewValidator(token)

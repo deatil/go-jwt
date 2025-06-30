@@ -1723,7 +1723,7 @@ func Test_SigningMethodEdDSA_JWTAlgoInvalid(t *testing.T) {
 
 }
 
-func Test_SigningMethodES256_with_JWTClaims(t *testing.T) {
+func Test_SigningMethodES256_with_RegisteredClaims(t *testing.T) {
 	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	if err != nil {
 		t.Fatal(err)
@@ -1733,9 +1733,14 @@ func Test_SigningMethodES256_with_JWTClaims(t *testing.T) {
 
 	s := SigningMethodES256.New()
 
-	claims := JWTClaims{
-		Audience: "example.com",
-		Subject:  "foo",
+	claims := RegisteredClaims{
+		Audience: ClaimStrings{
+			Value: []string{
+				"example.com",
+			},
+			AsString: true,
+		},
+		Subject: "foo",
 	}
 
 	tokenString, err := s.Sign(claims, privateKey)
@@ -1754,8 +1759,9 @@ func Test_SigningMethodES256_with_JWTClaims(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if claims2["aud"].(string) != claims.Audience {
-		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims.Audience)
+	checkaud := "example.com"
+	if claims2["aud"].(string) != checkaud {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), checkaud)
 	}
 	if claims2["sub"].(string) != claims.Subject {
 		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims.Subject)
@@ -2048,7 +2054,7 @@ func Test_SigningMethodHS224_WithEncoder(t *testing.T) {
 	key := []byte("test-key")
 
 	s := SigningMethodHS224.New()
-	s.WithEncoder(NewJoseEncoder())
+	s.WithEncoder(JWTEncoder)
 	tokenString, err := s.Sign(claims, key)
 	if err != nil {
 		t.Fatal(err)
@@ -2069,7 +2075,7 @@ func Test_SigningMethodHS224_WithEncoder(t *testing.T) {
 	}
 
 	p := SigningMethodHS224.New()
-	p.WithEncoder(NewJoseEncoder())
+	p.WithEncoder(JWTEncoder)
 	parsed, err := p.Parse(tokenString, key)
 	if err != nil {
 		t.Fatal(err)
@@ -2092,7 +2098,7 @@ func Test_SigningMethodHS224_WithEncoder(t *testing.T) {
 func Test_GetTokenHeader_WithEncoder(t *testing.T) {
 	tokenStr := "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJmb28iOiJiYXIifQ.feG39E-bn8HXAKhzDZq7yEAPWYDhZlwTn3sePJnU9VrGMmwdXAIEyoOnrjreYlVM_Z4N13eK9-TmMTWyfKJtHQ"
 
-	header, err := GetTokenHeader(tokenStr, NewJoseEncoder())
+	header, err := GetTokenHeader(tokenStr, JWTEncoder)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2927,7 +2933,7 @@ func Test_SigningMethodHS256_Parse_With_Encoder(t *testing.T) {
 		t.Errorf("SignLength got %d, want %d", signLength, 32)
 	}
 
-	parsed, err := Parse[[]byte, []byte](tokenString, key, NewJoseEncoder())
+	parsed, err := Parse[[]byte, []byte](tokenString, key, JWTEncoder)
 	if err != nil {
 		t.Fatal(err)
 	}

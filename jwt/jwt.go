@@ -9,37 +9,37 @@ import (
 
 var (
 	// Hmac
-	SigningMethodHMD5  = NewJWT[[]byte, []byte](SigningHMD5, NewJoseEncoder())
-	SigningMethodHSHA1 = NewJWT[[]byte, []byte](SigningHSHA1, NewJoseEncoder())
-	SigningMethodHS224 = NewJWT[[]byte, []byte](SigningHS224, NewJoseEncoder())
-	SigningMethodHS256 = NewJWT[[]byte, []byte](SigningHS256, NewJoseEncoder())
-	SigningMethodHS384 = NewJWT[[]byte, []byte](SigningHS384, NewJoseEncoder())
-	SigningMethodHS512 = NewJWT[[]byte, []byte](SigningHS512, NewJoseEncoder())
+	SigningMethodHMD5  = NewJWT[[]byte, []byte](SigningHMD5, JWTEncoder)
+	SigningMethodHSHA1 = NewJWT[[]byte, []byte](SigningHSHA1, JWTEncoder)
+	SigningMethodHS224 = NewJWT[[]byte, []byte](SigningHS224, JWTEncoder)
+	SigningMethodHS256 = NewJWT[[]byte, []byte](SigningHS256, JWTEncoder)
+	SigningMethodHS384 = NewJWT[[]byte, []byte](SigningHS384, JWTEncoder)
+	SigningMethodHS512 = NewJWT[[]byte, []byte](SigningHS512, JWTEncoder)
 
 	// RSA
-	SigningMethodRS256 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningRS256, NewJoseEncoder())
-	SigningMethodRS384 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningRS384, NewJoseEncoder())
-	SigningMethodRS512 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningRS512, NewJoseEncoder())
+	SigningMethodRS256 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningRS256, JWTEncoder)
+	SigningMethodRS384 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningRS384, JWTEncoder)
+	SigningMethodRS512 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningRS512, JWTEncoder)
 
 	// RSA-PSS
-	SigningMethodPS256 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningPS256, NewJoseEncoder())
-	SigningMethodPS384 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningPS384, NewJoseEncoder())
-	SigningMethodPS512 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningPS512, NewJoseEncoder())
+	SigningMethodPS256 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningPS256, JWTEncoder)
+	SigningMethodPS384 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningPS384, JWTEncoder)
+	SigningMethodPS512 = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningPS512, JWTEncoder)
 
 	// ECDSA
-	SigningMethodES256 = NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES256, NewJoseEncoder())
-	SigningMethodES384 = NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES384, NewJoseEncoder())
-	SigningMethodES512 = NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES512, NewJoseEncoder())
+	SigningMethodES256 = NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES256, JWTEncoder)
+	SigningMethodES384 = NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES384, JWTEncoder)
+	SigningMethodES512 = NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES512, JWTEncoder)
 
 	// EdDSA
-	SigningMethodEdDSA   = NewJWT[ed25519.PrivateKey, ed25519.PublicKey](SigningEdDSA, NewJoseEncoder())
-	SigningMethodED25519 = NewJWT[ed25519.PrivateKey, ed25519.PublicKey](SigningED25519, NewJoseEncoder())
+	SigningMethodEdDSA   = NewJWT[ed25519.PrivateKey, ed25519.PublicKey](SigningEdDSA, JWTEncoder)
+	SigningMethodED25519 = NewJWT[ed25519.PrivateKey, ed25519.PublicKey](SigningED25519, JWTEncoder)
 
 	// Blake2b
-	SigningMethodBLAKE2B = NewJWT[[]byte, []byte](SigningBLAKE2B, NewJoseEncoder())
+	SigningMethodBLAKE2B = NewJWT[[]byte, []byte](SigningBLAKE2B, JWTEncoder)
 
 	// None
-	SigningMethodNone = NewJWT[[]byte, []byte](SigningNone, NewJoseEncoder())
+	SigningMethodNone = NewJWT[[]byte, []byte](SigningNone, JWTEncoder)
 )
 
 var (
@@ -94,16 +94,6 @@ const (
 	RegisteredHeadersAlgorithm  = "alg"
 	RegisteredHeadersEncryption = "enc"
 )
-
-type JWTClaims struct {
-	Issuer    string `json:"iss,omitempty"`
-	IssuedAt  int64  `json:"iat,omitempty"`
-	Expiry    int64  `json:"exp,omitempty"` // Expiration Time
-	Audience  string `json:"aud,omitempty"`
-	Subject   string `json:"sub,omitempty"`
-	ID        string `json:"jti,omitempty"` // JWT ID
-	NotBefore int64  `json:"bnf,omitempty"` // Not Before
-}
 
 type JWT[S any, V any] struct {
 	signer  ISigner[S, V]
@@ -211,7 +201,7 @@ func Parse[S any, V any](tokenString string, key V, encoder ...IEncoder) (*Token
 	if len(encoder) > 0 {
 		useEncoder = encoder[0]
 	} else {
-		useEncoder = NewJoseEncoder()
+		useEncoder = JWTEncoder
 	}
 
 	t := NewToken(useEncoder)
@@ -248,12 +238,14 @@ func Parse[S any, V any](tokenString string, key V, encoder ...IEncoder) (*Token
 
 // get token header from token string
 func GetTokenHeader(tokenString string, encoder ...IEncoder) (TokenHeader, error) {
-	var defaultEncoder IEncoder = NewJoseEncoder()
+	var useEncoder IEncoder
 	if len(encoder) > 0 {
-		defaultEncoder = encoder[0]
+		useEncoder = encoder[0]
+	} else {
+		useEncoder = JWTEncoder
 	}
 
-	var t = NewToken(defaultEncoder)
+	var t = NewToken(useEncoder)
 	t.Parse(tokenString)
 
 	return t.GetHeader()
