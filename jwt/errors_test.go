@@ -18,14 +18,14 @@ func Test_newError(t *testing.T) {
 		wantMessage string
 	}{
 		{
-			name:        "single error",
-			args:        args{
-                message: "something is wrong",
-                err: ErrInvalidType,
-                more: []error{
-                    errors.New("test err"),
-                },
-            },
+			name: "single error",
+			args: args{
+				message: "something is wrong",
+				err:     ErrInvalidType,
+				more: []error{
+					errors.New("test err"),
+				},
+			},
 			wantMessage: "invalid type for claim: something is wrong: test err",
 			wantErrors:  []error{ErrInvalidType},
 		},

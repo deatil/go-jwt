@@ -2,7 +2,7 @@ package jwt
 
 // jwt token validator
 type Validator struct {
-	claims map[string]any
+	claims MapClaims
 	leeway int64
 }
 
@@ -23,14 +23,15 @@ func (v *Validator) WithLeeway(leeway int64) *Validator {
 	return v
 }
 
-func (v *Validator) IsPermittedFor(audiences ...string) bool {
-	if val, ok := v.claims["aud"]; ok {
-		if vv, ok := val.(string); ok {
-			for _, audience := range audiences {
-				if vv == audience {
-					return true
-				}
-			}
+func (v *Validator) IsPermittedFor(audience string) bool {
+	audiences, err := v.claims.GetAudience()
+	if err != nil {
+		return false
+	}
+
+	for _, val := range audiences.Value {
+		if val == audience {
+			return true
 		}
 	}
 
@@ -38,30 +39,39 @@ func (v *Validator) IsPermittedFor(audiences ...string) bool {
 }
 
 func (v *Validator) IsIdentifiedBy(id string) bool {
-	if val, ok := v.claims["jti"]; ok {
-		if vv, ok := val.(string); ok && vv == id {
-			return true
-		}
+	val, err := v.claims.GetString("jti")
+	if err != nil {
+		return false
+	}
+
+	if val == id {
+		return true
 	}
 
 	return false
 }
 
 func (v *Validator) IsRelatedTo(subject string) bool {
-	if val, ok := v.claims["sub"]; ok {
-		if vv, ok := val.(string); ok && vv == subject {
-			return true
-		}
+	val, err := v.claims.GetSubject()
+	if err != nil {
+		return false
+	}
+
+	if val == subject {
+		return true
 	}
 
 	return false
 }
 
 func (v *Validator) HasBeenIssuedBy(issuer string) bool {
-	if val, ok := v.claims["iss"]; ok {
-		if vv, ok := val.(string); ok && vv == issuer {
-			return true
-		}
+	val, err := v.claims.GetIssuer()
+	if err != nil {
+		return false
+	}
+
+	if val == issuer {
+		return true
 	}
 
 	return false
