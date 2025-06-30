@@ -207,12 +207,14 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 
 // Parse parses the signature and returns the parsed token.
 func Parse[S any, V any](tokenString string, key V, encoder ...IEncoder) (*Token, error) {
-	var defaultEncoder IEncoder = NewJoseEncoder()
+	var useEncoder IEncoder
 	if len(encoder) > 0 {
-		defaultEncoder = encoder[0]
+		useEncoder = encoder[0]
+	} else {
+		useEncoder = NewJoseEncoder()
 	}
 
-	t := NewToken(defaultEncoder)
+	t := NewToken(useEncoder)
 	t.Parse(tokenString)
 
 	header, err := t.GetHeader()
