@@ -3,6 +3,7 @@ package jwt
 import (
 	"crypto/rand"
 	"crypto/rsa"
+	"errors"
 	"fmt"
 	"testing"
 )
@@ -335,6 +336,27 @@ func Test_ParseRSAKeyFromDer3(t *testing.T) {
 	_, err := ParseRSAPrivateKeyFromDer(prikeyBytes)
 	if err == nil {
 		t.Error("ParseRSAPrivateKeyFromDer should return error")
+	}
+
+	_, err = ParseRSAPublicKeyFromDer(pubkeyBytes)
+	if err == nil {
+		t.Error("ParseRSAPublicKeyFromDer should return error")
+	}
+}
+
+func Test_ParseRSAKeyFromDer5(t *testing.T) {
+	var prikey = "MC4CAQAwBQYDK2VwBCIEIE7YvvGJzvKQ3uZOQ6qAPkRsK7nkpmjPOaqsZKqrFQMw"
+	var pubkey = "MCowBQYDK2VwAyEAgbbl7UO5W8ZMmOm+Kw9X2y9PyblBTDcZIRaR/kDFoA0="
+
+	var prikeyBytes = fromBase64(prikey)
+	var pubkeyBytes = fromBase64(pubkey)
+
+	_, err := ParseRSAPrivateKeyFromDer(prikeyBytes)
+	if err == nil {
+		t.Error("ParseRSAPrivateKeyFromDer should return error")
+	}
+	if !errors.Is(err, ErrNotRSAPrivateKey) {
+		t.Errorf("ParseRSAPrivateKeyFromDer error, got %s, want %s", err, ErrNotRSAPrivateKey)
 	}
 
 	_, err = ParseRSAPublicKeyFromDer(pubkeyBytes)

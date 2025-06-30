@@ -229,10 +229,6 @@ func Parse[S any, V any](tokenString string, key V, encoder ...IEncoder) (*Token
 		return nil, ErrJWTMethodInvalid
 	}
 
-	if header.Alg != signer.Alg() {
-		return nil, ErrJWTAlgoInvalid
-	}
-
 	signature := t.GetSignature()
 
 	signingString, err := t.SigningString()

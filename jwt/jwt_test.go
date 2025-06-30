@@ -6,6 +6,7 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 	"crypto/rsa"
+	"errors"
 	"testing"
 )
 
@@ -2949,6 +2950,154 @@ func Test_GetSigningMethodAlgs(t *testing.T) {
 	algs := GetSigningMethodAlgs()
 	if len(algs) <= 0 {
 		t.Error("GetSigningMethodAlgs should not empty")
+	}
+
+}
+
+func Test_JWTParse_Error(t *testing.T) {
+	var check1 = "eyJ0eXAiO123V0UiLCJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJleGFtcGxlLmNvbSIsImlhdCI6ImZvbyJ9.dGVzdC1zaWduYXR1cmU"
+
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey := &privateKey.PublicKey
+
+	_, err = SigningMethodES256.Parse(check1, publicKey)
+	if err == nil {
+		t.Error("Parse should return error")
+	}
+	checkerr := "invalid character ';' after object key"
+	if err.Error() != checkerr {
+		t.Errorf("Parse got %s, want %s", err.Error(), checkerr)
+	}
+}
+
+func Test_Parse_Error(t *testing.T) {
+	{
+		var check1 = "eyJ0eXAiO123V0UiLCJhbGciOiJFUzI1NiJ9.eyJhdWQiOiJleGFtcGxlLmNvbSIsImlhdCI6ImZvbyJ9.dGVzdC1zaWduYXR1cmU"
+
+		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		publicKey := &privateKey.PublicKey
+
+		_, err = Parse[*ecdsa.PrivateKey, *ecdsa.PublicKey](check1, publicKey)
+		if err == nil {
+			t.Error("Parse should return error")
+		}
+		checkerr := "invalid character ';' after object key"
+		if err.Error() != checkerr {
+			t.Errorf("Parse got %s, want %s", err.Error(), checkerr)
+		}
+
+	}
+
+	{
+		publicKey, privateKey, err := ed25519.GenerateKey(rand.Reader)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		s := SigningMethodEdDSA.New()
+
+		claims := map[string]string{
+			"aud": "example.com",
+			"sub": "foo",
+		}
+		header := map[string]string{
+			"alg": "EdDSA",
+		}
+
+		tokenString, err := s.SignWithHeader(header, claims, privateKey)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		parsed, err := Parse[ed25519.PrivateKey, ed25519.PublicKey](tokenString, publicKey)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		claims2, err := parsed.GetClaims()
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if claims2["aud"].(string) != claims["aud"] {
+			t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+		}
+		if claims2["sub"].(string) != claims["sub"] {
+			t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		}
+
+	}
+
+	{
+		publicKey, privateKey, err := ed25519.GenerateKey(rand.Reader)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		s := SigningMethodEdDSA.New()
+
+		claims := map[string]string{
+			"aud": "example.com",
+			"sub": "foo",
+		}
+		header := map[string]string{
+			"alg": "EdDST",
+		}
+
+		tokenString, err := s.SignWithHeader(header, claims, privateKey)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		_, err = Parse[ed25519.PrivateKey, ed25519.PublicKey](tokenString, publicKey)
+		if err == nil {
+			t.Error("Parse should return error")
+		}
+		if !errors.Is(err, ErrJWTMethodInvalid) {
+			t.Errorf("Parse error, got %s, want %s", err, ErrJWTMethodInvalid)
+		}
+
+	}
+
+	{
+		publicKey, privateKey, err := ed25519.GenerateKey(rand.Reader)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		s := SigningMethodEdDSA.New()
+
+		claims := map[string]string{
+			"aud": "example.com",
+			"sub": "foo",
+		}
+		header := map[string]string{
+			"alg": "EdDSA",
+		}
+
+		tokenString, err := s.SignWithHeader(header, claims, privateKey)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		newTokenString := tokenString[:len(tokenString)-6] + "00000"
+
+		_, err = Parse[ed25519.PrivateKey, ed25519.PublicKey](newTokenString, publicKey)
+		if err == nil {
+			t.Error("Parse should return error")
+		}
+		if !errors.Is(err, ErrJWTVerifyFail) {
+			t.Errorf("Parse error, got %s, want %s", err, ErrJWTVerifyFail)
+		}
+
 	}
 
 }

@@ -141,3 +141,92 @@ func Test_Validator(t *testing.T) {
 	}
 
 }
+
+func Test_Validator_Error(t *testing.T) {
+	{
+		check1 := "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3O321Mzg4fQ.dGVzdC1zaWduYXR1cmU"
+
+		var token = NewToken(NewJoseEncoder())
+		token.Parse(check1)
+
+		_, err := NewValidator(token)
+		if err == nil {
+			t.Error("NewValidator err")
+		}
+
+		checkerr := "invalid character ';' after object key:value pair"
+		if err.Error() != checkerr {
+			t.Errorf("NewValidator err, got %s, want %s", err.Error(), checkerr)
+		}
+	}
+
+	{
+		check1 := "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3ODQyMzg4fQ.dGVzdC1zaWduYXR1cmU"
+
+		var token = NewToken(NewJoseEncoder())
+		token.Parse(check1)
+
+		validator, err := NewValidator(token)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		status := validator.IsPermittedFor("example123.com")
+		if status {
+			t.Errorf("IsPermittedFor true")
+		}
+		status = validator.IsIdentifiedBy("jti rrr222")
+		if status {
+			t.Errorf("IsIdentifiedBy true")
+		}
+		status = validator.IsRelatedTo("sub22")
+		if status {
+			t.Errorf("IsRelatedTo true")
+		}
+		status = validator.HasBeenIssuedBy("iss22")
+		if status {
+			t.Errorf("HasBeenIssuedBy true")
+		}
+	}
+
+	{
+		check1 := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVkIjoxNzExNTMxMTg4LCJ1c2VyX2lkIjoxMzM0fQ.CM4ZhL1vQ38p5hNo4Sody0ZYDo5_mSw16RsguC68664"
+
+		var token = NewToken(NewJoseEncoder())
+		token.Parse(check1)
+
+		validator, err := NewValidator(token)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		status := validator.IsPermittedFor("example123.com")
+		if status {
+			t.Errorf("IsPermittedFor true")
+		}
+		status = validator.IsIdentifiedBy("jti rrr222")
+		if status {
+			t.Errorf("IsIdentifiedBy true")
+		}
+		status = validator.IsRelatedTo("sub22")
+		if status {
+			t.Errorf("IsRelatedTo true")
+		}
+		status = validator.HasBeenIssuedBy("iss22")
+		if status {
+			t.Errorf("HasBeenIssuedBy true")
+		}
+		status = validator.HasBeenIssuedBefore(1567842384)
+		if !status {
+			t.Errorf("HasBeenIssuedBefore false")
+		}
+		status = validator.IsMinimumTimeBefore(1567842391)
+		if !status {
+			t.Errorf("IsMinimumTimeBefore false")
+		}
+		status = validator.IsExpired(1767842392)
+		if status {
+			t.Errorf("IsExpired true")
+		}
+	}
+}
