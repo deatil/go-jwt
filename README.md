@@ -63,13 +63,13 @@ func main() {
     fmt.Printf("Signed: %s \n", tokenString)
 
     p := jwt.SigningMethodHMD5.New()
-    parsed, err := p.Parse(tokenString, key)
+    parsedToken, err := p.Parse(tokenString, key)
     if err != nil {
         fmt.Printf("Parse: %s \n", err.Error())
         return
     }
 
-    claims2, err := parsed.GetClaims()
+    claims2, err := parsedToken.GetClaims()
     if err != nil {
         fmt.Printf("GetClaims: %s \n", err.Error())
         return
@@ -96,7 +96,7 @@ import (
 func main() {
     tokenString := "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3ODQyMzg4fQ.dGVzdC1zaWduYXR1cmU"
 
-    token := jwt.NewToken(jwt.NewJoseEncoder())
+    token := jwt.NewToken(jwt.JWTEncoder)
     token.parse(tokenString)
 
     validator, err := jwt.NewValidator(token)
@@ -175,7 +175,7 @@ var (
     SigningES256 = NewSignECDSA(crypto.SHA256, 32, "ES256")
 
     // use the struct
-    SigningMethodES256 = jwt.NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES256, jwt.NewJoseEncoder())
+    SigningMethodES256 = jwt.NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES256, jwt.JWTEncoder)
 )
 
 type SignECDSA struct {
