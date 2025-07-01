@@ -13,7 +13,8 @@ type TokenHeader struct {
 
 // Token represents a JWT Token.
 type Token struct {
-	raw       string
+	raw       string // full token string
+	msg       string // token string without signature
 	header    []byte
 	claims    []byte
 	signature []byte
@@ -26,11 +27,12 @@ func NewToken(encoder IEncoder) *Token {
 	}
 }
 
+// Set header raw
 func (t *Token) WithHeader(header []byte) {
 	t.header = header
 }
 
-// Set header for json encode
+// Set header with json encode
 func (t *Token) SetHeader(header any) error {
 	encoded, err := t.encoder.JSONEncode(header)
 	if err != nil {
@@ -41,11 +43,12 @@ func (t *Token) SetHeader(header any) error {
 	return nil
 }
 
+// Set claims raw
 func (t *Token) WithClaims(claims []byte) {
 	t.claims = claims
 }
 
-// Set claims for json encode
+// Set claims with json encode
 func (t *Token) SetClaims(claims any) error {
 	encoded, err := t.encoder.JSONEncode(claims)
 	if err != nil {
@@ -56,6 +59,7 @@ func (t *Token) SetClaims(claims any) error {
 	return nil
 }
 
+// Set signature raw
 func (t *Token) WithSignature(signature []byte) {
 	t.signature = signature
 }
@@ -105,9 +109,9 @@ func (t *Token) Parse(tokenString string) {
 	}
 
 	t.raw = tokenString
-	t.header = []byte("")
-	t.claims = []byte("")
-	t.signature = []byte("")
+	t.header = []byte{}
+	t.claims = []byte{}
+	t.signature = []byte{}
 
 	list := strings.Split(tokenString, ".")
 	if len(list) > 0 {
@@ -119,32 +123,30 @@ func (t *Token) Parse(tokenString string) {
 	if len(list) > 2 {
 		t.signature, _ = t.encoder.Base64URLDecode(list[2])
 	}
+
+	if len(list) > 1 {
+		t.msg = strings.Join([]string{list[0], list[1]}, ".")
+	} else {
+		t.msg = tokenString
+	}
 }
 
+// return token raw
 func (t *Token) GetRaw() string {
 	return t.raw
 }
 
-func (t *Token) GetRawNoSignature() string {
-	count := strings.Count(t.raw, ".")
-	if count <= 1 {
-		return t.raw
-	}
-
-	var header = ""
-	var claims = ""
-
-	list := strings.Split(t.raw, ".")
-	if len(list) > 0 {
-		header = list[0]
-	}
-	if len(list) > 1 {
-		claims = list[1]
-	}
-
-	return strings.Join([]string{header, claims}, ".")
+// return token without signature
+func (t *Token) GetMsg() string {
+	return t.msg
 }
 
+// return token string part count
+func (t *Token) GetPartCount() int {
+	return len(strings.Split(t.raw, "."))
+}
+
+// return token TokenHeader struct
 func (t *Token) GetHeader() (TokenHeader, error) {
 	var parsedHeader map[string]any
 	err := t.encoder.JSONDecode(t.header, &parsedHeader)
@@ -180,6 +182,7 @@ func (t *Token) GetHeader() (TokenHeader, error) {
 	}, nil
 }
 
+// return token header map
 func (t *Token) GetHeaders() (map[string]any, error) {
 	var dst map[string]any
 	err := t.encoder.JSONDecode(t.header, &dst)
@@ -190,10 +193,12 @@ func (t *Token) GetHeaders() (map[string]any, error) {
 	return dst, nil
 }
 
+// return token header with custom type
 func (t *Token) GetHeadersT(dst any) error {
 	return t.encoder.JSONDecode(t.header, dst)
 }
 
+// return token claims map
 func (t *Token) GetClaims() (MapClaims, error) {
 	var dst MapClaims
 	err := t.encoder.JSONDecode(t.claims, &dst)
@@ -204,10 +209,12 @@ func (t *Token) GetClaims() (MapClaims, error) {
 	return dst, nil
 }
 
+// return token claims with custom type
 func (t *Token) GetClaimsT(dst any) error {
 	return t.encoder.JSONDecode(t.claims, dst)
 }
 
+// return token signature
 func (t *Token) GetSignature() []byte {
 	return t.signature
 }

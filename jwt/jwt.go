@@ -43,6 +43,7 @@ var (
 )
 
 var (
+	ErrJWTTokenInvalid  = errors.New("go-jwt: Token invalid")
 	ErrJWTTypeInvalid   = errors.New("go-jwt: Type invalid")
 	ErrJWTAlgoInvalid   = errors.New("go-jwt: Algo invalid")
 	ErrJWTMethodInvalid = errors.New("go-jwt: Method invalid")
@@ -167,6 +168,10 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 	t := NewToken(jwt.encoder)
 	t.Parse(tokenString)
 
+	if t.GetPartCount() < 2 {
+		return nil, ErrJWTTokenInvalid
+	}
+
 	header, err := t.GetHeader()
 	if err != nil {
 		return nil, err
@@ -181,11 +186,7 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 	}
 
 	signature := t.GetSignature()
-
-	signingString, err := t.SigningString()
-	if err != nil {
-		return nil, err
-	}
+	signingString := t.GetMsg()
 
 	ok, _ := jwt.signer.Verify([]byte(signingString), signature, verifyKey)
 	if !ok {
@@ -206,6 +207,10 @@ func Parse[S any, V any](tokenString string, key V, encoder ...IEncoder) (*Token
 
 	t := NewToken(useEncoder)
 	t.Parse(tokenString)
+
+	if t.GetPartCount() < 2 {
+		return nil, ErrJWTTokenInvalid
+	}
 
 	header, err := t.GetHeader()
 	if err != nil {

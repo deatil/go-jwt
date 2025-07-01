@@ -44,6 +44,10 @@ func Test_Token(t *testing.T) {
 	var token2 = NewToken(JWTEncoder)
 	token2.Parse(check1)
 
+	if token2.GetPartCount() != 2 {
+		t.Errorf("GetPartCount got %d, want %s", token2.GetPartCount(), "2")
+	}
+
 	header2, err := token2.GetHeader()
 	if err != nil {
 		t.Fatal(err)
@@ -76,6 +80,10 @@ func Test_Token(t *testing.T) {
 
 	var token3 = NewToken(JWTEncoder)
 	token3.Parse(check2)
+
+	if token3.GetPartCount() != 3 {
+		t.Errorf("GetPartCount got %d, want %s", token3.GetPartCount(), "3")
+	}
 
 	header3, err := token3.GetHeader()
 	if err != nil {
@@ -110,9 +118,9 @@ func Test_Token(t *testing.T) {
 		t.Errorf("GetRaw got %s, want %s", token51, check2)
 	}
 
-	token5 := token3.GetRawNoSignature()
+	token5 := token3.GetMsg()
 	if token5 != check1 {
-		t.Errorf("GetRawNoSignature got %s, want %s", token5, check1)
+		t.Errorf("GetMsg got %s, want %s", token5, check1)
 	}
 
 	// ====================
@@ -127,9 +135,9 @@ func Test_Token(t *testing.T) {
 		t.Errorf("GetRaw got %s, want %s", sig61, check3)
 	}
 
-	sig6 := token6.GetRawNoSignature()
+	sig6 := token6.GetMsg()
 	if sig6 != check3 {
-		t.Errorf("GetRawNoSignature got %s, want %s", sig6, check3)
+		t.Errorf("GetMsg got %s, want %s", sig6, check3)
 	}
 
 }

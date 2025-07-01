@@ -742,13 +742,12 @@ func Test_SigningMethodES256(t *testing.T) {
 
 	publicKey := &privateKey.PublicKey
 
-	s := SigningMethodES256.New()
-
 	claims := map[string]string{
 		"aud": "example.com",
 		"sub": "foo",
 	}
 
+	s := SigningMethodES256.New()
 	tokenString, err := s.Sign(claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
@@ -2463,13 +2462,12 @@ func Test_SigningMethodES256_Parse(t *testing.T) {
 
 	publicKey := &privateKey.PublicKey
 
-	s := SigningMethodES256.New()
-
 	claims := map[string]string{
 		"aud": "example.com",
 		"sub": "foo",
 	}
 
+	s := SigningMethodES256.New()
 	tokenString, err := s.Sign(claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
@@ -3102,6 +3100,47 @@ func Test_Parse_Error(t *testing.T) {
 		}
 		if !errors.Is(err, ErrJWTVerifyFail) {
 			t.Errorf("Parse error, got %s, want %s", err, ErrJWTVerifyFail)
+		}
+
+	}
+
+	{
+		var check1 = "eyJ0eXAiO123V0UiLCJhbGciOiJFUzI1NiJ9"
+
+		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		publicKey := &privateKey.PublicKey
+
+		_, err = Parse[*ecdsa.PrivateKey, *ecdsa.PublicKey](check1, publicKey)
+		if err == nil {
+			t.Error("Parse should return error")
+		}
+		if !errors.Is(err, ErrJWTTokenInvalid) {
+			t.Errorf("Parse got %s, want %s", err.Error(), ErrJWTTokenInvalid)
+		}
+
+	}
+
+	{
+		var check1 = "eyJ0eXAiO123V0UiLCJhbGciOiJFUzI1NiJ9"
+
+		privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		publicKey := &privateKey.PublicKey
+
+		p := SigningMethodES256.New()
+		_, err = p.Parse(check1, publicKey)
+		if err == nil {
+			t.Error("Parse should return error")
+		}
+		if !errors.Is(err, ErrJWTTokenInvalid) {
+			t.Errorf("Parse got %s, want %s", err.Error(), ErrJWTTokenInvalid)
 		}
 
 	}
