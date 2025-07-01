@@ -52,7 +52,7 @@ func Test_SigningMethodHMD5(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -99,7 +99,7 @@ func Test_SigningMethodHSHA1(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -146,7 +146,7 @@ func Test_SigningMethodHS224(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -193,7 +193,7 @@ func Test_SigningMethodHS256(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -240,7 +240,7 @@ func Test_SigningMethodHS384(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -287,7 +287,7 @@ func Test_SigningMethodHS512(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -334,7 +334,7 @@ func Test_SigningMethodNone(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -523,7 +523,7 @@ func Test_SigningMethodBLAKE2B(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -691,7 +691,7 @@ func Test_SigningMethodEdDSA_signWithHeader(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -729,7 +729,7 @@ func Test_SigningMethodEdDSA(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -768,7 +768,7 @@ func Test_SigningMethodES256(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -808,7 +808,7 @@ func Test_SigningMethodES384(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -848,7 +848,7 @@ func Test_SigningMethodES512(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -897,7 +897,7 @@ func Test_SigningMethodRS256(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -946,7 +946,7 @@ func Test_SigningMethodRS384(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -995,7 +995,7 @@ func Test_SigningMethodRS512(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -1044,7 +1044,7 @@ func Test_SigningMethodPS256(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -1093,7 +1093,7 @@ func Test_SigningMethodPS384(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -1142,7 +1142,7 @@ func Test_SigningMethodPS512(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -1641,7 +1641,7 @@ func Test_SigningMethodEdDSA_type(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -1872,7 +1872,7 @@ func Test_SigningMethodRS256_with_pkcs8_key(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -1921,7 +1921,7 @@ func Test_SigningMethodPS256_with_pkcs8_key(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2089,7 +2089,7 @@ func Test_SigningMethodHS224_WithEncoder(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2149,7 +2149,7 @@ func Test_SigningMethodBLAKE2B_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2185,7 +2185,7 @@ func Test_SigningMethodHMD5_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2221,7 +2221,7 @@ func Test_SigningMethodHSHA1_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2257,7 +2257,7 @@ func Test_SigningMethodHS224_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2303,7 +2303,7 @@ func Test_SigningMethodHS256_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2339,7 +2339,7 @@ func Test_SigningMethodHS384_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2375,7 +2375,7 @@ func Test_SigningMethodHS512_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2412,7 +2412,7 @@ func Test_SigningMethodEdDSA_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2449,7 +2449,7 @@ func Test_SigningMethodED25519_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2487,7 +2487,7 @@ func Test_SigningMethodES256_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2526,7 +2526,7 @@ func Test_SigningMethodES384_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2565,7 +2565,7 @@ func Test_SigningMethodES512_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2613,7 +2613,7 @@ func Test_SigningMethodRS256_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2661,7 +2661,7 @@ func Test_SigningMethodRS384_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2709,7 +2709,7 @@ func Test_SigningMethodRS512_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2757,7 +2757,7 @@ func Test_SigningMethodPS256_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2805,7 +2805,7 @@ func Test_SigningMethodPS384_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2853,7 +2853,7 @@ func Test_SigningMethodPS512_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2899,7 +2899,7 @@ func Test_SigningMethodNone_Parse(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -2945,7 +2945,7 @@ func Test_SigningMethodHS256_Parse_With_Encoder(t *testing.T) {
 		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 	}
 	if claims2["sub"].(string) != claims["sub"] {
-		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 	}
 
 }
@@ -3035,7 +3035,7 @@ func Test_Parse_Error(t *testing.T) {
 			t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
 		}
 		if claims2["sub"].(string) != claims["sub"] {
-			t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["iat"])
+			t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
 		}
 
 	}

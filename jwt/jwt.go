@@ -196,6 +196,11 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 	return t, nil
 }
 
+// return a new *Builder.
+func (jwt *JWT[S, V]) Build() *Builder[S, V] {
+	return NewBuilder[S, V](jwt.signer, jwt.encoder)
+}
+
 // Parse parses the signature and returns the parsed token.
 func Parse[S any, V any](tokenString string, key V, encoder ...IEncoder) (*Token, error) {
 	var useEncoder IEncoder
