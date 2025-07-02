@@ -232,11 +232,7 @@ func Parse[S any, V any](tokenString string, key V, encoder ...IEncoder) (*Token
 	}
 
 	signature := t.GetSignature()
-
-	signingString, err := t.SigningString()
-	if err != nil {
-		return nil, err
-	}
+	signingString := t.GetMsg()
 
 	ok, _ := signer.Verify([]byte(signingString), signature, key)
 	if !ok {
