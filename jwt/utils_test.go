@@ -1,6 +1,7 @@
 package jwt
 
 import (
+    "errors"
 	"encoding/base64"
 	"encoding/hex"
 	"testing"
@@ -40,6 +41,25 @@ cT+KvIIC8W/e9k0W7Cm72M1P9jU7SLf/vg==
 
 	if res2 != check {
 		t.Errorf("ParsePEM got %s, want %s", res2, check)
+	}
+
+}
+
+func Test_ParsePEM_Error(t *testing.T) {
+	d := `
+-----BEGINE EC PRIVATE KEY-----
+MHcCAQEEIAh5qA3rmqQQuu0vbKV/+zouz/y/Iy2pLpIcWUSyImSwoAoGCCqGSM49
+AwEHoUQDQgAEYD54V/vp+54P9DXarYqx4MPcm+HKRIQzNasYSoRQHQ/6S6Ps8tpM
+cT+KvIIC8W/e9k0W7Cm72M1P9jU7SLf/vg==
+-----END EC PRIVATE KEY-----
+    `
+
+	_, err := ParsePEM([]byte(d))
+	if err == nil {
+		t.Error("ParsePEM should return error")
+	}
+	if !errors.Is(err, ErrPEMInvalid) {
+		t.Errorf("ParsePEM got %s, want %s", err.Error(), ErrPEMInvalid)
 	}
 
 }

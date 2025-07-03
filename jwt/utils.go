@@ -5,7 +5,7 @@ import (
 	"errors"
 )
 
-var ErrPEMInvalid = errors.New("go-jwt: PEM encoded invalid")
+var ErrPEMInvalid = errors.New("go-jwt: PEM parse invalid")
 
 func ParsePEM(data []byte) ([]byte, error) {
 	var block *pem.Block
