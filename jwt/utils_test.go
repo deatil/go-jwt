@@ -1,8 +1,25 @@
 package jwt
 
 import (
+	"encoding/base64"
+	"encoding/hex"
 	"testing"
 )
+
+func fromHex(s string) []byte {
+	h, _ := hex.DecodeString(s)
+	return h
+}
+
+func fromBase64(data string) []byte {
+	buffer, _ := base64.StdEncoding.DecodeString(data)
+	return buffer
+}
+
+func toBase64(data []byte) string {
+	res := base64.StdEncoding.EncodeToString(data)
+	return res
+}
 
 func Test_ParsePEM(t *testing.T) {
 	d := `

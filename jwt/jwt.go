@@ -5,6 +5,9 @@ import (
 	"crypto/ed25519"
 	"crypto/rsa"
 	"errors"
+	"fmt"
+
+	"github.com/deatil/go-jwt/encoder"
 )
 
 var (
@@ -43,11 +46,12 @@ var (
 )
 
 var (
-	ErrJWTTokenInvalid  = errors.New("go-jwt: Token invalid")
-	ErrJWTTypeInvalid   = errors.New("go-jwt: Type invalid")
-	ErrJWTAlgoInvalid   = errors.New("go-jwt: Algo invalid")
-	ErrJWTMethodInvalid = errors.New("go-jwt: Method invalid")
-	ErrJWTVerifyFail    = errors.New("go-jwt: Verify fail")
+	ErrJWTTokenInvalid       = errors.New("go-jwt: Token invalid")
+	ErrJWTTypeInvalid        = errors.New("go-jwt: Type invalid")
+	ErrJWTAlgoInvalid        = errors.New("go-jwt: Algo invalid")
+	ErrTokenSignatureInvalid = errors.New("token signature is invalid")
+	ErrJWTMethodInvalid      = errors.New("go-jwt: Method invalid")
+	ErrJWTVerifyFail         = errors.New("go-jwt: Verify fail")
 )
 
 const (
@@ -65,6 +69,12 @@ const (
 	RegisteredClaimsNotBefore      = "nbf"
 	RegisteredClaimsSubject        = "sub"
 )
+
+// jwt default encoder
+var JWTEncoder = encoder.NewJoseEncoder()
+
+// jwt encoder for strict decoding
+var JWTStrictEncoder = encoder.NewJoseEncoder(encoder.WithStrictDecoding())
 
 // jwt singer driver interface
 type ISigner[S any, V any] interface {
@@ -116,6 +126,12 @@ func (jwt JWT[S, V]) New() *JWT[S, V] {
 	}
 }
 
+// with new encoder
+func (jwt *JWT[S, V]) WithEncoder(encoder IEncoder) *JWT[S, V] {
+	jwt.encoder = encoder
+	return jwt
+}
+
 // Signer algo name.
 func (jwt *JWT[S, V]) Alg() string {
 	return jwt.signer.Alg()
@@ -124,12 +140,6 @@ func (jwt *JWT[S, V]) Alg() string {
 // Signer signed bytes length.
 func (jwt *JWT[S, V]) SignLength() int {
 	return jwt.signer.SignLength()
-}
-
-// with new encoder
-func (jwt *JWT[S, V]) WithEncoder(encoder IEncoder) *JWT[S, V] {
-	jwt.encoder = encoder
-	return jwt
 }
 
 // Sign implements token signing for the Signer.
@@ -201,16 +211,32 @@ func (jwt *JWT[S, V]) Build() *Builder[S, V] {
 	return NewBuilder[S, V](jwt.signer, jwt.encoder)
 }
 
+// jwt ParserOption for Parse function
+type ParserOption struct {
+	// jwt encoder
+	Encoder IEncoder
+
+	// jwt valid methods
+	ValidMethods []string
+}
+
+// default ParserOption
+var JWTParserOption = ParserOption{
+	Encoder: JWTEncoder,
+}
+
 // Parse parses the signature and returns the parsed token.
-func Parse[S any, V any](tokenString string, key V, encoder ...IEncoder) (*Token, error) {
-	var useEncoder IEncoder
-	if len(encoder) > 0 {
-		useEncoder = encoder[0]
+func Parse[S any, V any](tokenString string, key V, opt ...ParserOption) (*Token, error) {
+	var parserOpt ParserOption
+	if len(opt) > 0 {
+		parserOpt = opt[0]
 	} else {
-		useEncoder = JWTEncoder
+		parserOpt = ParserOption{
+			Encoder: JWTEncoder,
+		}
 	}
 
-	t := NewToken(useEncoder)
+	t := NewToken(parserOpt.Encoder)
 	t.Parse(tokenString)
 
 	if t.GetPartCount() < 2 {
@@ -224,6 +250,22 @@ func Parse[S any, V any](tokenString string, key V, encoder ...IEncoder) (*Token
 
 	if len(header.Typ) > 0 && header.Typ != "JWT" {
 		return nil, ErrJWTTypeInvalid
+	}
+
+	// Verify signing method is in the required set
+	if parserOpt.ValidMethods != nil {
+		var signingMethodValid = false
+		var alg = header.Alg
+		for _, m := range parserOpt.ValidMethods {
+			if m == alg {
+				signingMethodValid = true
+				break
+			}
+		}
+
+		if !signingMethodValid {
+			return nil, newError(fmt.Sprintf("signing method %v is invalid", alg), ErrTokenSignatureInvalid)
+		}
 	}
 
 	signer := GetSigningMethod[S, V](header.Alg)

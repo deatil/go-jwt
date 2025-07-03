@@ -2931,7 +2931,7 @@ func Test_SigningMethodHS256_Parse_With_Encoder(t *testing.T) {
 		t.Errorf("SignLength got %d, want %d", signLength, 32)
 	}
 
-	parsed, err := Parse[[]byte, []byte](tokenString, key, JWTEncoder)
+	parsed, err := Parse[[]byte, []byte](tokenString, key, JWTParserOption)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -3143,6 +3143,142 @@ func Test_Parse_Error(t *testing.T) {
 			t.Errorf("Parse got %s, want %s", err.Error(), ErrJWTTokenInvalid)
 		}
 
+	}
+
+}
+
+func Test_SigningMethodES256_JWTStrictEncoder(t *testing.T) {
+	privateKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey := &privateKey.PublicKey
+
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+
+	s := SigningMethodES256.New()
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	p := SigningMethodES256.New()
+	p.WithEncoder(JWTStrictEncoder)
+	parsed, err := p.Parse(tokenString, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
+	}
+
+}
+
+func Test_SigningMethodHS256_Parse_With_Encoder2(t *testing.T) {
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+	key := []byte("test-key")
+
+	s := SigningMethodHS256.New()
+	tokenString, err := s.Sign(claims, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Error("Sign got fail")
+	}
+
+	alg := s.Alg()
+	signLength := s.SignLength()
+
+	if alg != "HS256" {
+		t.Errorf("Alg got %s, want %s", alg, "HS256")
+	}
+	if signLength != 32 {
+		t.Errorf("SignLength got %d, want %d", signLength, 32)
+	}
+
+	parsed, err := Parse[[]byte, []byte](tokenString, key, ParserOption{
+		Encoder: JWTStrictEncoder,
+		ValidMethods: []string{
+			"HS256",
+			"HS384",
+		},
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
+	}
+
+}
+
+func Test_SigningMethodHS256_Parse_With_Encoder2_Error(t *testing.T) {
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+	key := []byte("test-key")
+
+	s := SigningMethodHS256.New()
+	tokenString, err := s.Sign(claims, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Error("Sign got fail")
+	}
+
+	alg := s.Alg()
+	signLength := s.SignLength()
+
+	if alg != "HS256" {
+		t.Errorf("Alg got %s, want %s", alg, "HS256")
+	}
+	if signLength != 32 {
+		t.Errorf("SignLength got %d, want %d", signLength, 32)
+	}
+
+	_, err = Parse[[]byte, []byte](tokenString, key, ParserOption{
+		Encoder: JWTEncoder,
+		ValidMethods: []string{
+			"HS384",
+			"HS512",
+		},
+	})
+	if err == nil {
+		t.Error("Parse should return error")
+	}
+	checkerr := "token signature is invalid: signing method HS256 is invalid"
+	if err.Error() != checkerr {
+		t.Errorf("Parse got %s, want %s", err.Error(), checkerr)
 	}
 
 }
