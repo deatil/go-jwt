@@ -1,9 +1,9 @@
 package jwt
 
 import (
-    "errors"
 	"encoding/base64"
 	"encoding/hex"
+	"errors"
 	"testing"
 )
 
