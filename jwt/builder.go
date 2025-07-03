@@ -13,6 +13,7 @@ func NewBuilder[S any, V any](signer ISigner[S, V], encoder IEncoder) *Builder[S
 	return &Builder[S, V]{
 		headers: map[string]any{},
 		claims:  map[string]any{},
+
 		signer:  signer,
 		encoder: encoder,
 	}
@@ -87,7 +88,16 @@ func (b *Builder[S, V]) RelatedTo(subject string) *Builder[S, V] {
 // Returns the resultant token
 func (b *Builder[S, V]) GetToken(key S) (*Token, error) {
 	t := NewToken(b.encoder)
-	t.SetHeader(b.headers)
+
+	headers := b.headers
+	if _, ok := headers[RegisteredHeadersType]; !ok {
+		headers[RegisteredHeadersType] = "JWT"
+	}
+	if _, ok := headers[RegisteredHeadersAlgorithm]; !ok {
+		headers[RegisteredHeadersAlgorithm] = b.signer.Alg()
+	}
+
+	t.SetHeader(headers)
 	t.SetClaims(b.claims)
 
 	signingString, err := t.SigningString()

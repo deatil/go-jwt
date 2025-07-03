@@ -50,6 +50,22 @@ var (
 	ErrJWTVerifyFail    = errors.New("go-jwt: Verify fail")
 )
 
+const (
+	// Defines the list of headers that are registered in the IANA "JSON Web Token Headers" registry
+	RegisteredHeadersType       = "typ"
+	RegisteredHeadersAlgorithm  = "alg"
+	RegisteredHeadersEncryption = "enc"
+
+	// Defines the list of claims that are registered in the IANA "JSON Web Token Claims" registry
+	RegisteredClaimsAudience       = "aud"
+	RegisteredClaimsExpirationTime = "exp"
+	RegisteredClaimsID             = "jti"
+	RegisteredClaimsIssuedAt       = "iat"
+	RegisteredClaimsIssuer         = "iss"
+	RegisteredClaimsNotBefore      = "nbf"
+	RegisteredClaimsSubject        = "sub"
+)
+
 // jwt singer driver interface
 type ISigner[S any, V any] interface {
 	// algo name
@@ -79,22 +95,6 @@ type IEncoder interface {
 	// JSON Decode function
 	JSONDecode(data []byte, dst any) error
 }
-
-const (
-	// Defines the list of claims that are registered in the IANA "JSON Web Token Claims" registry
-	RegisteredClaimsAudience       = "aud"
-	RegisteredClaimsExpirationTime = "exp"
-	RegisteredClaimsID             = "jti"
-	RegisteredClaimsIssuedAt       = "iat"
-	RegisteredClaimsIssuer         = "iss"
-	RegisteredClaimsNotBefore      = "nbf"
-	RegisteredClaimsSubject        = "sub"
-
-	// Defines the list of headers that are registered in the IANA "JSON Web Token Headers" registry
-	RegisteredHeadersType       = "typ"
-	RegisteredHeadersAlgorithm  = "alg"
-	RegisteredHeadersEncryption = "enc"
-)
 
 type JWT[S any, V any] struct {
 	signer  ISigner[S, V]
