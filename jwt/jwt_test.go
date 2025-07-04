@@ -3276,9 +3276,63 @@ func Test_SigningMethodHS256_Parse_With_Encoder2_Error(t *testing.T) {
 	if err == nil {
 		t.Error("Parse should return error")
 	}
-	checkerr := "token signature is invalid: signing method HS256 is invalid"
+	checkerr := "go-jwt: token signature is invalid: signing method HS256 is invalid"
 	if err.Error() != checkerr {
 		t.Errorf("Parse got %s, want %s", err.Error(), checkerr)
 	}
 
+}
+
+func Test_SigningMethodHS256_Parse_With_Encoder2_Error2(t *testing.T) {
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+	key := []byte("test-key")
+
+	s := SigningMethodHS256.New()
+	tokenString, err := s.Sign(claims, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = Parse[[]byte, []byte](tokenString, key, ParserOption{})
+	if err == nil {
+		t.Error("Parse should return error")
+	}
+	checkerr := "go-jwt: Encoder invalid"
+	if err.Error() != checkerr {
+		t.Errorf("Parse got %s, want %s", err.Error(), checkerr)
+	}
+
+}
+
+func Test_NewJWT_Error(t *testing.T) {
+	defer func() {
+		if err := recover(); err == nil {
+			t.Error("should throw panic")
+		} else {
+			checkerr := "go-jwt: Signer invalid"
+			if err.(error).Error() != checkerr {
+				t.Errorf("NewJWT got %s, want %s", err.(error).Error(), checkerr)
+			}
+		}
+	}()
+
+	_ = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](nil, nil)
+}
+
+func Test_NewJWT_Error2(t *testing.T) {
+	defer func() {
+		if err := recover(); err == nil {
+			t.Error("should throw panic")
+		} else {
+			checkerr := "go-jwt: Encoder invalid"
+			if err.(error).Error() != checkerr {
+				t.Errorf("NewJWT got %s, want %s", err.(error).Error(), checkerr)
+			}
+		}
+	}()
+
+	_ = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningRS256, nil)
 }

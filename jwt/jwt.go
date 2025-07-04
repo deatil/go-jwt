@@ -46,10 +46,13 @@ var (
 )
 
 var (
+	ErrInvalidType           = errors.New("go-jwt: invalid type for claim")
+	ErrJWTSignerInvalid      = errors.New("go-jwt: Signer invalid")
+	ErrJWTEncoderInvalid     = errors.New("go-jwt: Encoder invalid")
 	ErrJWTTokenInvalid       = errors.New("go-jwt: Token invalid")
 	ErrJWTTypeInvalid        = errors.New("go-jwt: Type invalid")
 	ErrJWTAlgoInvalid        = errors.New("go-jwt: Algo invalid")
-	ErrTokenSignatureInvalid = errors.New("token signature is invalid")
+	ErrTokenSignatureInvalid = errors.New("go-jwt: token signature is invalid")
 	ErrJWTMethodInvalid      = errors.New("go-jwt: Method invalid")
 	ErrJWTVerifyFail         = errors.New("go-jwt: Verify fail")
 )
@@ -112,6 +115,13 @@ type JWT[S any, V any] struct {
 }
 
 func NewJWT[S any, V any](signer ISigner[S, V], encoder IEncoder) JWT[S, V] {
+	if signer == nil {
+		panic(ErrJWTSignerInvalid)
+	}
+	if encoder == nil {
+		panic(ErrJWTEncoderInvalid)
+	}
+
 	return JWT[S, V]{
 		signer:  signer,
 		encoder: encoder,
@@ -236,6 +246,11 @@ func Parse[S any, V any](tokenString string, key V, opt ...ParserOption) (*Token
 		}
 	}
 
+	// if not set encoder, return error
+	if parserOpt.Encoder == nil {
+		return nil, ErrJWTEncoderInvalid
+	}
+
 	t := NewToken(parserOpt.Encoder)
 	t.Parse(tokenString)
 
@@ -248,6 +263,7 @@ func Parse[S any, V any](tokenString string, key V, opt ...ParserOption) (*Token
 		return nil, err
 	}
 
+	// if token type not empty and not equal JWT, return error
 	if len(header.Typ) > 0 && header.Typ != "JWT" {
 		return nil, ErrJWTTypeInvalid
 	}
@@ -264,7 +280,7 @@ func Parse[S any, V any](tokenString string, key V, opt ...ParserOption) (*Token
 		}
 
 		if !signingMethodValid {
-			return nil, newError(fmt.Sprintf("signing method %v is invalid", alg), ErrTokenSignatureInvalid)
+			return nil, NewError(fmt.Sprintf("signing method %v is invalid", alg), ErrTokenSignatureInvalid)
 		}
 	}
 
@@ -276,6 +292,7 @@ func Parse[S any, V any](tokenString string, key V, opt ...ParserOption) (*Token
 	signature := t.GetSignature()
 	signingString := t.GetMsg()
 
+	// check signature
 	ok, _ := signer.Verify([]byte(signingString), signature, key)
 	if !ok {
 		return nil, ErrJWTVerifyFail

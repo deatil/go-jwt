@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test_newError(t *testing.T) {
+func Test_NewError(t *testing.T) {
 	type args struct {
 		message string
 		err     error
@@ -26,33 +26,33 @@ func Test_newError(t *testing.T) {
 					errors.New("test err"),
 				},
 			},
-			wantMessage: "invalid type for claim: something is wrong: test err",
+			wantMessage: "go-jwt: invalid type for claim: something is wrong: test err",
 			wantErrors:  []error{ErrInvalidType},
 		},
 		{
 			name:        "single error",
 			args:        args{message: "something is wrong", err: ErrInvalidType},
-			wantMessage: "invalid type for claim: something is wrong",
+			wantMessage: "go-jwt: invalid type for claim: something is wrong",
 			wantErrors:  []error{ErrInvalidType},
 		},
 		{
 			name:        "single error",
 			args:        args{err: ErrInvalidType},
-			wantMessage: "invalid type for claim",
+			wantMessage: "go-jwt: invalid type for claim",
 			wantErrors:  []error{ErrInvalidType},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := newError(tt.args.message, tt.args.err, tt.args.more...)
+			err := NewError(tt.args.message, tt.args.err, tt.args.more...)
 			for _, wantErr := range tt.wantErrors {
 				if !errors.Is(err, wantErr) {
-					t.Errorf("newError() error = %v, does not contain %v", err, wantErr)
+					t.Errorf("NewError() error = %v, does not contain %v", err, wantErr)
 				}
 			}
 
 			if err.Error() != tt.wantMessage {
-				t.Errorf("newError() error.Error() = %v, wantMessage %v", err, tt.wantMessage)
+				t.Errorf("NewError() error.Error() = %v, wantMessage %v", err, tt.wantMessage)
 			}
 		})
 	}

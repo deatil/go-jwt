@@ -193,7 +193,7 @@ func (m MapClaims) GetString(name string) (string, error) {
 func (m MapClaims) parseNumericDate(key string) (*NumericDate, error) {
 	v, ok := m[key]
 	if !ok {
-		return nil, newError(fmt.Sprintf("%s is not exists", key), ErrInvalidType)
+		return nil, NewError(fmt.Sprintf("%s is not exists", key), ErrInvalidType)
 	}
 
 	switch exp := v.(type) {
@@ -215,7 +215,7 @@ func (m MapClaims) parseNumericDate(key string) (*NumericDate, error) {
 		return newNumericDateFromSeconds(v), nil
 	}
 
-	return nil, newError(fmt.Sprintf("%s is invalid", key), ErrInvalidType)
+	return nil, NewError(fmt.Sprintf("%s is invalid", key), ErrInvalidType)
 }
 
 // parseClaimsString tries to parse a key in the map claims type as a
@@ -235,7 +235,7 @@ func (m MapClaims) parseClaimsString(key string) (ClaimStrings, error) {
 		for _, a := range v {
 			vs, ok := a.(string)
 			if !ok {
-				return ClaimStrings{}, newError(fmt.Sprintf("%s is invalid", key), ErrInvalidType)
+				return ClaimStrings{}, NewError(fmt.Sprintf("%s is invalid", key), ErrInvalidType)
 			}
 
 			cs = append(cs, vs)
@@ -264,7 +264,7 @@ func (m MapClaims) parseString(key string) (string, error) {
 
 	iss, ok = raw.(string)
 	if !ok {
-		return "", newError(fmt.Sprintf("%s is invalid", key), ErrInvalidType)
+		return "", NewError(fmt.Sprintf("%s is invalid", key), ErrInvalidType)
 	}
 
 	return iss, nil

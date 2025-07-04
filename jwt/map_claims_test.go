@@ -193,7 +193,7 @@ func Test_GET_Datas_error(t *testing.T) {
 	if err == nil {
 		t.Error("GetIssuedAt err")
 	}
-	checkerr := "invalid type for claim: iat is invalid"
+	checkerr := "go-jwt: invalid type for claim: iat is invalid"
 	if err.Error() != checkerr {
 		t.Errorf("GetIssuedAt err, got %s, want %s", err.Error(), checkerr)
 	}
@@ -204,7 +204,7 @@ func Test_GET_Datas_error(t *testing.T) {
 	if err == nil {
 		t.Error("GetNotBefore err")
 	}
-	checkerr = "invalid type for claim: nbf is invalid"
+	checkerr = "go-jwt: invalid type for claim: nbf is invalid"
 	if err.Error() != checkerr {
 		t.Errorf("GetNotBefore err, got %s, want %s", err.Error(), checkerr)
 	}
@@ -216,7 +216,7 @@ func Test_GET_Datas_error(t *testing.T) {
 		t.Error("GetNumericDate should return error")
 	}
 
-	checkerr = "invalid type for claim: date2222 is not exists"
+	checkerr = "go-jwt: invalid type for claim: date2222 is not exists"
 	if err.Error() != checkerr {
 		t.Errorf("GetNumericDate err, got %v, want %v", err.Error(), checkerr)
 	}
