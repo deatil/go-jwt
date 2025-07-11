@@ -61,7 +61,6 @@ func (s *SignBlake2b) Sign(msg []byte, key []byte) ([]byte, error) {
 	h.Write(msg)
 
 	data := h.Sum(nil)
-
 	return data, nil
 }
 

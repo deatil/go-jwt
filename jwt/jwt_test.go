@@ -672,14 +672,14 @@ func Test_SigningMethodEdDSA_signWithHeader(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if header2["typ"].(string) != header["typ"] {
-		t.Errorf("GetHeaders typ got %s, want %s", header2["typ"].(string), header["typ"])
+	if header2["typ"] != header["typ"] {
+		t.Errorf("GetHeaders typ got %s, want %s", header2["typ"], header["typ"])
 	}
-	if header2["alg"].(string) != header["alg"] {
-		t.Errorf("GetHeaders alg got %s, want %s", header2["alg"].(string), header["alg"])
+	if header2["alg"] != header["alg"] {
+		t.Errorf("GetHeaders alg got %s, want %s", header2["alg"], header["alg"])
 	}
-	if header2["tuy"].(string) != header["tuy"] {
-		t.Errorf("GetHeaders tuy got %s, want %s", header2["tuy"].(string), header["tuy"])
+	if header2["tuy"] != header["tuy"] {
+		t.Errorf("GetHeaders tuy got %s, want %s", header2["tuy"], header["tuy"])
 	}
 
 	claims2, err := parsed.GetClaims()

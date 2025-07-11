@@ -46,15 +46,15 @@ var (
 )
 
 var (
-	ErrInvalidType           = errors.New("go-jwt: invalid type for claim")
-	ErrJWTSignerInvalid      = errors.New("go-jwt: Signer invalid")
-	ErrJWTEncoderInvalid     = errors.New("go-jwt: Encoder invalid")
-	ErrJWTTokenInvalid       = errors.New("go-jwt: Token invalid")
-	ErrJWTTypeInvalid        = errors.New("go-jwt: Type invalid")
-	ErrJWTAlgoInvalid        = errors.New("go-jwt: Algo invalid")
-	ErrTokenSignatureInvalid = errors.New("go-jwt: token signature is invalid")
-	ErrJWTMethodInvalid      = errors.New("go-jwt: Method invalid")
-	ErrJWTVerifyFail         = errors.New("go-jwt: Verify fail")
+	ErrJWTInvalidType           = errors.New("go-jwt: invalid type for claim")
+	ErrJWTSignerInvalid         = errors.New("go-jwt: Signer invalid")
+	ErrJWTEncoderInvalid        = errors.New("go-jwt: Encoder invalid")
+	ErrJWTTokenInvalid          = errors.New("go-jwt: Token invalid")
+	ErrJWTTypeInvalid           = errors.New("go-jwt: Type invalid")
+	ErrJWTAlgoInvalid           = errors.New("go-jwt: Algo invalid")
+	ErrJWTTokenSignatureInvalid = errors.New("go-jwt: token signature is invalid")
+	ErrJWTMethodInvalid         = errors.New("go-jwt: Method invalid")
+	ErrJWTVerifyFail            = errors.New("go-jwt: Verify fail")
 )
 
 const (
@@ -280,7 +280,7 @@ func Parse[S any, V any](tokenString string, key V, opt ...ParserOption) (*Token
 		}
 
 		if !signingMethodValid {
-			return nil, NewError(fmt.Sprintf("signing method %v is invalid", alg), ErrTokenSignatureInvalid)
+			return nil, NewError(fmt.Sprintf("signing method %v is invalid", alg), ErrJWTTokenSignatureInvalid)
 		}
 	}
 

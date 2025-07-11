@@ -126,14 +126,14 @@ func Test_SigningMethodES256_Builder2(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if header2["typ"].(string) != "JWT" {
-		t.Errorf("GetHeaders typ got %s, want %s", header2["typ"].(string), "JWT")
+	if header2["typ"] != "JWT" {
+		t.Errorf("GetHeaders typ got %s, want %s", header2["typ"], "JWT")
 	}
-	if header2["alg"].(string) != "ES256" {
-		t.Errorf("GetHeaders alg got %s, want %s", header2["alg"].(string), "ES256")
+	if header2["alg"] != "ES256" {
+		t.Errorf("GetHeaders alg got %s, want %s", header2["alg"], "ES256")
 	}
-	if header2["ui"].(string) != "JWK" {
-		t.Errorf("GetHeaders ui got %s, want %s", header2["ui"].(string), "JWK")
+	if header2["ui"] != "JWK" {
+		t.Errorf("GetHeaders ui got %s, want %s", header2["ui"], "JWK")
 	}
 
 	claims2, err := parsed.GetClaims()
@@ -214,14 +214,14 @@ func Test_SigningMethodES256_Builder3(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if header2["typ"].(string) != "JWT" {
-		t.Errorf("GetHeaders typ got %s, want %s", header2["typ"].(string), "JWT")
+	if header2["typ"] != "JWT" {
+		t.Errorf("GetHeaders typ got %s, want %s", header2["typ"], "JWT")
 	}
-	if header2["alg"].(string) != "ES256" {
-		t.Errorf("GetHeaders alg got %s, want %s", header2["alg"].(string), "ES256")
+	if header2["alg"] != "ES256" {
+		t.Errorf("GetHeaders alg got %s, want %s", header2["alg"], "ES256")
 	}
-	if header2["ui"].(string) != "JWK" {
-		t.Errorf("GetHeaders ui got %s, want %s", header2["ui"].(string), "JWK")
+	if header2["ui"] != "JWK" {
+		t.Errorf("GetHeaders ui got %s, want %s", header2["ui"], "JWK")
 	}
 
 	claims2, err := parsed.GetClaims()

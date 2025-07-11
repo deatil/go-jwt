@@ -21,25 +21,25 @@ func Test_NewError(t *testing.T) {
 			name: "single error",
 			args: args{
 				message: "something is wrong",
-				err:     ErrInvalidType,
+				err:     ErrJWTInvalidType,
 				more: []error{
 					errors.New("test err"),
 				},
 			},
 			wantMessage: "go-jwt: invalid type for claim: something is wrong: test err",
-			wantErrors:  []error{ErrInvalidType},
+			wantErrors:  []error{ErrJWTInvalidType},
 		},
 		{
 			name:        "single error",
-			args:        args{message: "something is wrong", err: ErrInvalidType},
+			args:        args{message: "something is wrong", err: ErrJWTInvalidType},
 			wantMessage: "go-jwt: invalid type for claim: something is wrong",
-			wantErrors:  []error{ErrInvalidType},
+			wantErrors:  []error{ErrJWTInvalidType},
 		},
 		{
 			name:        "single error",
-			args:        args{err: ErrInvalidType},
+			args:        args{err: ErrJWTInvalidType},
 			wantMessage: "go-jwt: invalid type for claim",
-			wantErrors:  []error{ErrInvalidType},
+			wantErrors:  []error{ErrJWTInvalidType},
 		},
 	}
 	for _, tt := range tests {

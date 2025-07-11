@@ -271,13 +271,13 @@ func Test_Token3(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if header33["typ"].(string) != header.Typ {
+	if header33["typ"] != header.Typ {
 		t.Errorf("GetHeaders Typ got %s, want %s", header33["typ"], header.Typ)
 	}
-	if header33["alg"].(string) != header.Alg {
+	if header33["alg"] != header.Alg {
 		t.Errorf("GetHeaders Alg got %s, want %s", header33["alg"], header.Alg)
 	}
-	if header33["kid"].(string) != header.Kid {
+	if header33["kid"] != header.Kid {
 		t.Errorf("GetHeaders Kid got %s, want %s", header33["kid"], header.Kid)
 	}
 
