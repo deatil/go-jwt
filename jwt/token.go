@@ -4,6 +4,8 @@ import (
 	"strings"
 )
 
+const tokenDelimiter = "."
+
 // Token Header data.
 type TokenHeader struct {
 	Typ string `json:"typ"`
@@ -87,7 +89,7 @@ func (t *Token) signing(needSign bool) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	buf.WriteString(".")
+	buf.WriteString(tokenDelimiter)
 	buf.WriteString(claims)
 
 	if needSign {
@@ -95,7 +97,7 @@ func (t *Token) signing(needSign bool) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		buf.WriteString(".")
+		buf.WriteString(tokenDelimiter)
 		buf.WriteString(signature)
 	}
 
@@ -113,7 +115,7 @@ func (t *Token) Parse(tokenString string) {
 	t.claims = []byte{}
 	t.signature = []byte{}
 
-	list := strings.Split(tokenString, ".")
+	list := strings.Split(tokenString, tokenDelimiter)
 	if len(list) > 0 {
 		t.header, _ = t.encoder.Base64URLDecode(list[0])
 	}
@@ -125,7 +127,7 @@ func (t *Token) Parse(tokenString string) {
 	}
 
 	if len(list) > 1 {
-		t.msg = strings.Join([]string{list[0], list[1]}, ".")
+		t.msg = strings.Join([]string{list[0], list[1]}, tokenDelimiter)
 	} else {
 		t.msg = tokenString
 	}
@@ -143,7 +145,7 @@ func (t *Token) GetMsg() string {
 
 // return token string part count
 func (t *Token) GetPartCount() int {
-	return len(strings.Split(t.raw, "."))
+	return len(strings.Split(t.raw, tokenDelimiter))
 }
 
 // return token TokenHeader struct
