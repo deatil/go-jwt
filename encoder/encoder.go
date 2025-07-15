@@ -39,6 +39,7 @@ func (e *JoseEncoder) Base64URLDecode(data string) ([]byte, error) {
 		if l := len(data) % 4; l > 0 {
 			data += strings.Repeat("=", 4-l)
 		}
+
 		encoding = base64.URLEncoding
 	}
 

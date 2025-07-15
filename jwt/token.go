@@ -106,14 +106,14 @@ func (t *Token) signing(needSign bool) (string, error) {
 
 // Parse token string and returns the parsed token.
 func (t *Token) Parse(tokenString string) {
-	if len(tokenString) == 0 {
-		return
-	}
-
 	t.raw = tokenString
 	t.header = []byte{}
 	t.claims = []byte{}
 	t.signature = []byte{}
+
+	if len(tokenString) == 0 {
+		return
+	}
 
 	list := strings.Split(tokenString, tokenDelimiter)
 	if len(list) > 0 {
