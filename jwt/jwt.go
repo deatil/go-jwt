@@ -53,6 +53,7 @@ var (
 	ErrJWTTypeInvalid           = errors.New("go-jwt: Type invalid")
 	ErrJWTAlgoInvalid           = errors.New("go-jwt: Algo invalid")
 	ErrJWTTokenSignatureInvalid = errors.New("go-jwt: token signature is invalid")
+	ErrJWTMethodExists          = errors.New("go-jwt: Method not exists")
 	ErrJWTMethodInvalid         = errors.New("go-jwt: Method invalid")
 	ErrJWTVerifyFail            = errors.New("go-jwt: Verify fail")
 )
@@ -79,13 +80,34 @@ var JWTEncoder = encoder.NewJoseEncoder()
 // jwt encoder for strict decoding
 var JWTStrictEncoder = encoder.NewJoseEncoder(encoder.WithStrictDecoding())
 
-// jwt singer driver interface
-type ISigner[S any, V any] interface {
+// jwt sing algo interface
+type ISignAlgo interface {
 	// algo name
 	Alg() string
 
 	// sign length
 	SignLength() int
+}
+
+// jwt singing driver interface
+type ISigning[S any] interface {
+	ISignAlgo
+
+	// sign function
+	Sign(msg []byte, signKey S) ([]byte, error)
+}
+
+// jwt verifying driver interface
+type IVerifying[V any] interface {
+	ISignAlgo
+
+	// verify function
+	Verify(msg []byte, signature []byte, verifyKey V) (bool, error)
+}
+
+// jwt singer driver interface
+type ISigner[S any, V any] interface {
+	ISignAlgo
 
 	// sign function
 	Sign(msg []byte, signKey S) ([]byte, error)
@@ -217,8 +239,8 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 }
 
 // return a new *Builder.
-func (jwt *JWT[S, V]) Build() *Builder[S, V] {
-	return NewBuilder[S, V](jwt.signer, jwt.encoder)
+func (jwt *JWT[S, V]) Build() *Builder[S] {
+	return NewBuilder[S](jwt.signer, jwt.encoder)
 }
 
 // jwt ParserOption for Parse function
@@ -236,7 +258,7 @@ var JWTParserOption = ParserOption{
 }
 
 // Parse parses the signature and returns the parsed token.
-func Parse[S any, V any](tokenString string, key V, opt ...ParserOption) (*Token, error) {
+func Parse[V any](tokenString string, key V, opt ...ParserOption) (*Token, error) {
 	var parserOpt ParserOption
 	if len(opt) > 0 {
 		parserOpt = opt[0]
@@ -284,8 +306,13 @@ func Parse[S any, V any](tokenString string, key V, opt ...ParserOption) (*Token
 		}
 	}
 
-	signer := GetSigningMethod[S, V](header.Alg)
-	if signer == nil {
+	signingMethod := GetSigningMethod(header.Alg)
+	if signingMethod == nil {
+		return nil, ErrJWTMethodExists
+	}
+
+	signer, ok := signingMethod.(IVerifying[V])
+	if !ok {
 		return nil, ErrJWTMethodInvalid
 	}
 
@@ -293,8 +320,8 @@ func Parse[S any, V any](tokenString string, key V, opt ...ParserOption) (*Token
 	signingString := t.GetMsg()
 
 	// check signature
-	ok, _ := signer.Verify([]byte(signingString), signature, key)
-	if !ok {
+	verifyStatus, _ := signer.Verify([]byte(signingString), signature, key)
+	if !verifyStatus {
 		return nil, ErrJWTVerifyFail
 	}
 

@@ -16,15 +16,13 @@ func RegisterSigningMethod(alg string, f func() any) {
 }
 
 // GetSigningMethod retrieves a signing method from an "alg" string
-func GetSigningMethod[S any, V any](alg string) (method ISigner[S, V]) {
+func GetSigningMethod(alg string) (method any) {
 	signingMethodLock.RLock()
 	defer signingMethodLock.RUnlock()
 
 	if methodFunc, ok := signingMethods[alg]; ok {
-		if newMethod, ok := methodFunc().(ISigner[S, V]); ok {
-			method = newMethod
-			return
-		}
+		method = methodFunc()
+		return
 	}
 
 	return
