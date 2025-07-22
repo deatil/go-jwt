@@ -4,7 +4,6 @@ package jwt
 type Builder[S any] struct {
 	headers map[string]any
 	claims  map[string]any
-
 	signer  ISigning[S]
 	encoder IEncoder
 }
@@ -13,7 +12,6 @@ func NewBuilder[S any](signer ISigning[S], encoder IEncoder) *Builder[S] {
 	return &Builder[S]{
 		headers: map[string]any{},
 		claims:  map[string]any{},
-
 		signer:  signer,
 		encoder: encoder,
 	}
@@ -87,8 +85,6 @@ func (b *Builder[S]) RelatedTo(subject string) *Builder[S] {
 
 // Returns the resultant token
 func (b *Builder[S]) GetToken(key S) (*Token, error) {
-	t := NewToken(b.encoder)
-
 	headers := b.headers
 	if _, ok := headers[RegisteredHeadersType]; !ok {
 		headers[RegisteredHeadersType] = "JWT"
@@ -97,6 +93,7 @@ func (b *Builder[S]) GetToken(key S) (*Token, error) {
 		headers[RegisteredHeadersAlgorithm] = b.signer.Alg()
 	}
 
+	t := NewToken(b.encoder)
 	t.SetHeader(headers)
 	t.SetClaims(b.claims)
 
