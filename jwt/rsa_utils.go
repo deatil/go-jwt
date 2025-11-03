@@ -22,13 +22,11 @@ func ParseRSAPrivateKeyFromDer(der []byte) (*rsa.PrivateKey, error) {
 		}
 	}
 
-	var pkey *rsa.PrivateKey
-	var ok bool
-	if pkey, ok = parsedKey.(*rsa.PrivateKey); !ok {
-		return nil, ErrNotRSAPrivateKey
+	if pkey, ok := parsedKey.(*rsa.PrivateKey); ok {
+		return pkey, nil
 	}
 
-	return pkey, nil
+	return nil, ErrNotRSAPrivateKey
 }
 
 // ParseRSAPublicKeyFromDer parses a PEM encoded PKCS1 or PKCS8 public key

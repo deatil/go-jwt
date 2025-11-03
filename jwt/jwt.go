@@ -9,6 +9,8 @@ import (
 	"github.com/deatil/go-jwt/encoder"
 )
 
+const Version = "1.0.10021"
+
 var (
 	// Hmac
 	SigningMethodHMD5  = NewJWT[[]byte, []byte](SigningHMD5, JWTEncoder)
@@ -44,19 +46,6 @@ var (
 	SigningMethodNone = NewJWT[[]byte, []byte](SigningNone, JWTEncoder)
 )
 
-var (
-	ErrJWTInvalidType           = errors.New("go-jwt: invalid type for claim")
-	ErrJWTSignerInvalid         = errors.New("go-jwt: Signer invalid")
-	ErrJWTEncoderInvalid        = errors.New("go-jwt: Encoder invalid")
-	ErrJWTTokenInvalid          = errors.New("go-jwt: Token invalid")
-	ErrJWTTypeInvalid           = errors.New("go-jwt: Type invalid")
-	ErrJWTAlgoInvalid           = errors.New("go-jwt: Algo invalid")
-	ErrJWTTokenSignatureInvalid = errors.New("go-jwt: token signature is invalid")
-	ErrJWTMethodExists          = errors.New("go-jwt: Method not exists")
-	ErrJWTMethodInvalid         = errors.New("go-jwt: Method invalid")
-	ErrJWTVerifyFail            = errors.New("go-jwt: Verify fail")
-)
-
 const (
 	// Defines the list of headers that are registered in the IANA "JSON Web Token Headers" registry
 	RegisteredHeadersType       = "typ"
@@ -71,6 +60,19 @@ const (
 	RegisteredClaimsIssuer         = "iss"
 	RegisteredClaimsNotBefore      = "nbf"
 	RegisteredClaimsSubject        = "sub"
+)
+
+var (
+	ErrJWTInvalidType           = errors.New("go-jwt: invalid type for claim")
+	ErrJWTSignerInvalid         = errors.New("go-jwt: Signer invalid")
+	ErrJWTEncoderInvalid        = errors.New("go-jwt: Encoder invalid")
+	ErrJWTTokenInvalid          = errors.New("go-jwt: Token invalid")
+	ErrJWTTypeInvalid           = errors.New("go-jwt: Type invalid")
+	ErrJWTAlgoInvalid           = errors.New("go-jwt: Algo invalid")
+	ErrJWTTokenSignatureInvalid = errors.New("go-jwt: token signature is invalid")
+	ErrJWTMethodExists          = errors.New("go-jwt: Method not exists")
+	ErrJWTMethodInvalid         = errors.New("go-jwt: Method invalid")
+	ErrJWTVerifyFail            = errors.New("go-jwt: Verify fail")
 )
 
 // jwt default encoder
