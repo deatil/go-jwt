@@ -19,7 +19,7 @@ var JWTParserOption = ParserOption{
 }
 
 // Parse parses the signature and returns the parsed token.
-func Parse[V any](tokenString string, key V, opt ...ParserOption) (*Token, error) {
+func Parse[V any](tokenString string, keyFunc func(t *Token) (key V, err error), opt ...ParserOption) (*Token, error) {
 	var parserOpt ParserOption
 	if len(opt) > 0 {
 		parserOpt = opt[0]
@@ -39,6 +39,11 @@ func Parse[V any](tokenString string, key V, opt ...ParserOption) (*Token, error
 
 	if t.GetPartCount() < 2 {
 		return nil, ErrJWTTokenInvalid
+	}
+
+	key, err := keyFunc(t)
+	if err != nil {
+		return nil, err
 	}
 
 	header, err := t.GetHeader()

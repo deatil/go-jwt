@@ -37,7 +37,9 @@ func Test_SigningMethodBLAKE2B_Parse(t *testing.T) {
 		t.Errorf("SignLength got %d, want %d", signLength, 32)
 	}
 
-	parsed, err := Parse[[]byte](tokenString, key)
+	parsed, err := Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -73,7 +75,9 @@ func Test_SigningMethodHMD5_Parse(t *testing.T) {
 		t.Error("Sign got fail")
 	}
 
-	parsed, err := Parse[[]byte](tokenString, key)
+	parsed, err := Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -109,7 +113,9 @@ func Test_SigningMethodHSHA1_Parse(t *testing.T) {
 		t.Error("Sign got fail")
 	}
 
-	parsed, err := Parse[[]byte](tokenString, key)
+	parsed, err := Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -145,7 +151,9 @@ func Test_SigningMethodHS224_Parse(t *testing.T) {
 		t.Error("Sign got fail")
 	}
 
-	parsed, err := Parse[[]byte](tokenString, key)
+	parsed, err := Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -191,7 +199,9 @@ func Test_SigningMethodHS256_Parse(t *testing.T) {
 		t.Errorf("SignLength got %d, want %d", signLength, 32)
 	}
 
-	parsed, err := Parse[[]byte](tokenString, key)
+	parsed, err := Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -227,7 +237,9 @@ func Test_SigningMethodHS384_Parse(t *testing.T) {
 		t.Error("Sign got fail")
 	}
 
-	parsed, err := Parse[[]byte](tokenString, key)
+	parsed, err := Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -263,7 +275,9 @@ func Test_SigningMethodHS512_Parse(t *testing.T) {
 		t.Error("Sign got fail")
 	}
 
-	parsed, err := Parse[[]byte](tokenString, key)
+	parsed, err := Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -300,7 +314,9 @@ func Test_SigningMethodEdDSA_Parse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	parsed, err := Parse[ed25519.PublicKey](tokenString, publicKey)
+	parsed, err := Parse[ed25519.PublicKey](tokenString, func(t *Token) (ed25519.PublicKey, error) {
+		return publicKey, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -337,7 +353,9 @@ func Test_SigningMethodED25519_Parse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	parsed, err := Parse[ed25519.PublicKey](tokenString, publicKey)
+	parsed, err := Parse[ed25519.PublicKey](tokenString, func(t *Token) (ed25519.PublicKey, error) {
+		return publicKey, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -375,7 +393,9 @@ func Test_SigningMethodES256_Parse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	parsed, err := Parse[*ecdsa.PublicKey](tokenString, publicKey)
+	parsed, err := Parse[*ecdsa.PublicKey](tokenString, func(t *Token) (*ecdsa.PublicKey, error) {
+		return publicKey, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -414,7 +434,9 @@ func Test_SigningMethodES384_Parse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	parsed, err := Parse[*ecdsa.PublicKey](tokenString, publicKey)
+	parsed, err := Parse[*ecdsa.PublicKey](tokenString, func(t *Token) (*ecdsa.PublicKey, error) {
+		return publicKey, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -453,7 +475,9 @@ func Test_SigningMethodES512_Parse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	parsed, err := Parse[*ecdsa.PublicKey](tokenString, publicKey)
+	parsed, err := Parse[*ecdsa.PublicKey](tokenString, func(t *Token) (*ecdsa.PublicKey, error) {
+		return publicKey, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -501,7 +525,9 @@ func Test_SigningMethodRS256_Parse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	parsed, err := Parse[*rsa.PublicKey](tokenString, publicKey)
+	parsed, err := Parse[*rsa.PublicKey](tokenString, func(t *Token) (*rsa.PublicKey, error) {
+		return publicKey, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -549,7 +575,9 @@ func Test_SigningMethodRS384_Parse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	parsed, err := Parse[*rsa.PublicKey](tokenString, publicKey)
+	parsed, err := Parse[*rsa.PublicKey](tokenString, func(t *Token) (*rsa.PublicKey, error) {
+		return publicKey, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -597,7 +625,9 @@ func Test_SigningMethodRS512_Parse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	parsed, err := Parse[*rsa.PublicKey](tokenString, publicKey)
+	parsed, err := Parse[*rsa.PublicKey](tokenString, func(t *Token) (*rsa.PublicKey, error) {
+		return publicKey, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -645,7 +675,9 @@ func Test_SigningMethodPS256_Parse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	parsed, err := Parse[*rsa.PublicKey](tokenString, publicKey)
+	parsed, err := Parse[*rsa.PublicKey](tokenString, func(t *Token) (*rsa.PublicKey, error) {
+		return publicKey, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -693,7 +725,9 @@ func Test_SigningMethodPS384_Parse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	parsed, err := Parse[*rsa.PublicKey](tokenString, publicKey)
+	parsed, err := Parse[*rsa.PublicKey](tokenString, func(t *Token) (*rsa.PublicKey, error) {
+		return publicKey, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -741,7 +775,9 @@ func Test_SigningMethodPS512_Parse(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	parsed, err := Parse[*rsa.PublicKey](tokenString, publicKey)
+	parsed, err := Parse[*rsa.PublicKey](tokenString, func(t *Token) (*rsa.PublicKey, error) {
+		return publicKey, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -787,7 +823,9 @@ func Test_SigningMethodNone_Parse(t *testing.T) {
 		t.Errorf("SignLength got %d, want %d", signLength, 0)
 	}
 
-	parsed, err := Parse[[]byte](tokenString, key)
+	parsed, err := Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -833,7 +871,9 @@ func Test_SigningMethodHS256_Parse_With_Encoder(t *testing.T) {
 		t.Errorf("SignLength got %d, want %d", signLength, 32)
 	}
 
-	parsed, err := Parse[[]byte](tokenString, key, JWTParserOption)
+	parsed, err := Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	}, JWTParserOption)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -915,7 +955,9 @@ func Test_Parse_Error(t *testing.T) {
 
 		publicKey := &privateKey.PublicKey
 
-		_, err = Parse[*ecdsa.PublicKey](check1, publicKey)
+		_, err = Parse[*ecdsa.PublicKey](check1, func(t *Token) (*ecdsa.PublicKey, error) {
+			return publicKey, nil
+		})
 		if err == nil {
 			t.Error("Parse should return error")
 		}
@@ -947,7 +989,9 @@ func Test_Parse_Error(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		parsed, err := Parse[ed25519.PublicKey](tokenString, publicKey)
+		parsed, err := Parse[ed25519.PublicKey](tokenString, func(t *Token) (ed25519.PublicKey, error) {
+			return publicKey, nil
+		})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -987,7 +1031,9 @@ func Test_Parse_Error(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		_, err = Parse[ed25519.PublicKey](tokenString, publicKey)
+		_, err = Parse[ed25519.PublicKey](tokenString, func(t *Token) (ed25519.PublicKey, error) {
+			return publicKey, nil
+		})
 		if err == nil {
 			t.Error("Parse should return error")
 		}
@@ -1020,7 +1066,9 @@ func Test_Parse_Error(t *testing.T) {
 
 		newTokenString := tokenString[:len(tokenString)-6] + "00000"
 
-		_, err = Parse[ed25519.PublicKey](newTokenString, publicKey)
+		_, err = Parse[ed25519.PublicKey](newTokenString, func(t *Token) (ed25519.PublicKey, error) {
+			return publicKey, nil
+		})
 		if err == nil {
 			t.Error("Parse should return error")
 		}
@@ -1040,7 +1088,9 @@ func Test_Parse_Error(t *testing.T) {
 
 		publicKey := &privateKey.PublicKey
 
-		_, err = Parse[*ecdsa.PublicKey](check1, publicKey)
+		_, err = Parse[*ecdsa.PublicKey](check1, func(t *Token) (*ecdsa.PublicKey, error) {
+			return publicKey, nil
+		})
 		if err == nil {
 			t.Error("Parse should return error")
 		}
@@ -1096,7 +1146,9 @@ func Test_Parse_Error(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		_, err = Parse[ed25519.PublicKey](tokenString, publicKey)
+		_, err = Parse[ed25519.PublicKey](tokenString, func(t *Token) (ed25519.PublicKey, error) {
+			return publicKey, nil
+		})
 		if err == nil {
 			t.Error("Parse should return error")
 		}
@@ -1175,7 +1227,9 @@ func Test_SigningMethodHS256_Parse_With_Encoder2(t *testing.T) {
 		t.Errorf("SignLength got %d, want %d", signLength, 32)
 	}
 
-	parsed, err := Parse[[]byte](tokenString, key, ParserOption{
+	parsed, err := Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	}, ParserOption{
 		Encoder: JWTStrictEncoder,
 		ValidMethods: []string{
 			"HS256",
@@ -1227,7 +1281,9 @@ func Test_SigningMethodHS256_Parse_With_Encoder2_Error(t *testing.T) {
 		t.Errorf("SignLength got %d, want %d", signLength, 32)
 	}
 
-	_, err = Parse[[]byte](tokenString, key, ParserOption{
+	_, err = Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	}, ParserOption{
 		Encoder: JWTEncoder,
 		ValidMethods: []string{
 			"HS384",
@@ -1257,11 +1313,68 @@ func Test_SigningMethodHS256_Parse_With_Encoder2_Error2(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	_, err = Parse[[]byte](tokenString, key, ParserOption{})
+	_, err = Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		return key, nil
+	}, ParserOption{})
 	if err == nil {
 		t.Error("Parse should return error")
 	}
 	checkerr := "go-jwt: Encoder invalid"
+	if err.Error() != checkerr {
+		t.Errorf("Parse got %s, want %s", err.Error(), checkerr)
+	}
+
+}
+
+func Test_SigningMethodHS256_Parse_With_Encoder2_Error3(t *testing.T) {
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+	key := []byte("test-key")
+
+	s := SigningMethodHS256.New()
+	tokenString, err := s.Sign(claims, key)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Error("Sign got fail")
+	}
+
+	alg := s.Alg()
+	signLength := s.SignLength()
+
+	if alg != "HS256" {
+		t.Errorf("Alg got %s, want %s", alg, "HS256")
+	}
+	if signLength != 32 {
+		t.Errorf("SignLength got %d, want %d", signLength, 32)
+	}
+
+	_, err = Parse[[]byte](tokenString, func(t *Token) ([]byte, error) {
+		header, err := t.GetHeader()
+		if err != nil {
+			return nil, err
+		}
+
+		if header.Alg != "HS257" {
+			return nil, errors.New("should alg HS257")
+		}
+
+		return key, nil
+	}, ParserOption{
+		Encoder: JWTEncoder,
+		ValidMethods: []string{
+			"HS384",
+			"HS512",
+		},
+	})
+	if err == nil {
+		t.Error("Parse should return error")
+	}
+	checkerr := "should alg HS257"
 	if err.Error() != checkerr {
 		t.Errorf("Parse got %s, want %s", err.Error(), checkerr)
 	}
