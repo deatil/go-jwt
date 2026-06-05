@@ -37,7 +37,8 @@ func Test_Validator_isExpired(t *testing.T) {
 
 func Test_Validator(t *testing.T) {
 	check1 := "eyJ0eXAiOiJKV0UiLCJhbGciOiJFUzI1NiIsImtpZCI6ImtpZHMifQ.eyJpc3MiOiJpc3MiLCJpYXQiOjE1Njc4NDIzODgsImV4cCI6MTc2Nzg0MjM4OCwiYXVkIjoiZXhhbXBsZS5jb20iLCJzdWIiOiJzdWIiLCJqdGkiOiJqdGkgcnJyIiwibmJmIjoxNTY3ODQyMzg4fQ.dGVzdC1zaWduYXR1cmU"
-	now := time.Now().Unix()
+	// now := time.Now().Unix()
+	now := int64(1767812388)
 
 	var token = NewToken(JWTEncoder)
 	token.Parse(check1)
