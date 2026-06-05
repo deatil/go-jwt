@@ -2,6 +2,7 @@
 
 A JWT (JSON Web Token) library for go.
 
+
 <p align="center">
 <a href="https://pkg.go.dev/github.com/deatil/go-jwt" ><img src="https://pkg.go.dev/badge/deatil/go-jwt.svg" alt="Go Reference"></a>
 <a href="https://codecov.io/gh/deatil/go-jwt" ><img src="https://codecov.io/gh/deatil/go-jwt/graph/badge.svg?token=SS2Z1IY0XL"/></a>
