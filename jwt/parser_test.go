@@ -1607,3 +1607,42 @@ func Test_SigningMethodEdDSA_Parse_No_Type(t *testing.T) {
 	}
 
 }
+
+func Test_SigningMethodEdDSA_Parse_No_Type_With_Function(t *testing.T) {
+	publicKey, privateKey, err := ed25519.GenerateKey(rand.Reader)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+
+	tokenString, err := Sign(SigningMethodEdDSA.New(), claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	parsed, err := Parse(tokenString, func(t *Token) (ed25519.PublicKey, error) {
+		return publicKey, nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
+	}
+
+}
+
+

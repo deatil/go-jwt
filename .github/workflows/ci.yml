@@ -1,4 +1,4 @@
-name: CI
+name: Tests
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  test_only:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -15,19 +15,43 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set timezone
+        uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Asia/Shanghai"
+
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.25.0
 
-      - name: Go mod tidy
-        run: go mod tidy
+      - name: Unit tests
+        run: go test ./...
+
+  test_cover:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set timezone
+        uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Asia/Shanghai"
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.26.4
 
       - name: Unit tests
-        run: go test -coverprofile=coverage.txt ./...
+        run: go test -coverprofile=cover.out ./...
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-
+          files: cover.out
