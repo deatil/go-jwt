@@ -1,8 +1,6 @@
 package jwt
 
 type ISigned[S any] interface {
-	Alg() string
-	SignLength() int
 	Sign(claims any, signKey S) (string, error)
 }
 
