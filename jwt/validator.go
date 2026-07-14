@@ -23,15 +23,17 @@ func (v *Validator) WithLeeway(leeway int64) *Validator {
 	return v
 }
 
-func (v *Validator) IsPermittedFor(audience string) bool {
-	audiences, err := v.claims.GetAudience()
+func (v *Validator) IsPermittedFor(audiences []string) bool {
+	getAudiences, err := v.claims.GetAudience()
 	if err != nil {
 		return false
 	}
 
-	for _, val := range audiences.Value {
-		if val == audience {
-			return true
+	for _, val := range getAudiences.Value {
+		for _, audience := range audiences {
+			if val == audience {
+				return true
+			}	
 		}
 	}
 
@@ -51,27 +53,31 @@ func (v *Validator) IsIdentifiedBy(id string) bool {
 	return false
 }
 
-func (v *Validator) IsRelatedTo(subject string) bool {
+func (v *Validator) IsRelatedTo(subjects []string) bool {
 	val, err := v.claims.GetSubject()
 	if err != nil {
 		return false
 	}
 
-	if val == subject {
-		return true
+	for _, subject := range subjects {
+		if val == subject {
+			return true
+		}
 	}
 
 	return false
 }
 
-func (v *Validator) HasBeenIssuedBy(issuer string) bool {
+func (v *Validator) HasBeenIssuedBy(issuers []string) bool {
 	val, err := v.claims.GetIssuer()
 	if err != nil {
 		return false
 	}
 
-	if val == issuer {
-		return true
+	for _, issuer := range issuers {
+		if val == issuer {
+			return true
+		}	
 	}
 
 	return false

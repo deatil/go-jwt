@@ -112,10 +112,10 @@ func main() {
     // now := time.Now().Unix()
 
     // have functions:
-    // validator.HasBeenIssuedBy("iss") // iss
-    // validator.IsRelatedTo("sub") // sub
+    // validator.HasBeenIssuedBy([]string{"iss"}) // iss
+    // validator.IsRelatedTo([]string{"sub"}) // sub
     // validator.IsIdentifiedBy("jti rrr") // jti
-    // validator.IsPermittedFor("example.com") // audience
+    // validator.IsPermittedFor([]string{"example.com"}) // audience
     // validator.HasBeenIssuedBefore(now) // iat, now is time timestamp
     // validator.IsMinimumTimeBefore(now) // nbf, now is time timestamp
     // validator.IsExpired(now) // exp, now is time timestamp

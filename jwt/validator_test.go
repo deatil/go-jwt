@@ -48,11 +48,11 @@ func Test_Validator(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	status := validator.HasBeenIssuedBy("iss")
+	status := validator.HasBeenIssuedBy([]string{"iss"})
 	if !status {
 		t.Errorf("HasBeenIssuedBy false")
 	}
-	status = validator.IsRelatedTo("sub")
+	status = validator.IsRelatedTo([]string{"sub"})
 	if !status {
 		t.Errorf("IsRelatedTo false")
 	}
@@ -60,7 +60,7 @@ func Test_Validator(t *testing.T) {
 	if !status {
 		t.Errorf("IsIdentifiedBy false")
 	}
-	status = validator.IsPermittedFor("example.com")
+	status = validator.IsPermittedFor([]string{"example.com"})
 	if !status {
 		t.Errorf("IsPermittedFor false")
 	}
@@ -172,7 +172,7 @@ func Test_Validator_Error(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		status := validator.IsPermittedFor("example123.com")
+		status := validator.IsPermittedFor([]string{"example123.com"})
 		if status {
 			t.Errorf("IsPermittedFor true")
 		}
@@ -180,11 +180,11 @@ func Test_Validator_Error(t *testing.T) {
 		if status {
 			t.Errorf("IsIdentifiedBy true")
 		}
-		status = validator.IsRelatedTo("sub22")
+		status = validator.IsRelatedTo([]string{"sub22"})
 		if status {
 			t.Errorf("IsRelatedTo true")
 		}
-		status = validator.HasBeenIssuedBy("iss22")
+		status = validator.HasBeenIssuedBy([]string{"iss22"})
 		if status {
 			t.Errorf("HasBeenIssuedBy true")
 		}
@@ -201,7 +201,7 @@ func Test_Validator_Error(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		status := validator.IsPermittedFor("example123.com")
+		status := validator.IsPermittedFor([]string{"example123.com"})
 		if status {
 			t.Errorf("IsPermittedFor true")
 		}
@@ -209,11 +209,11 @@ func Test_Validator_Error(t *testing.T) {
 		if status {
 			t.Errorf("IsIdentifiedBy true")
 		}
-		status = validator.IsRelatedTo("sub22")
+		status = validator.IsRelatedTo([]string{"sub22"})
 		if status {
 			t.Errorf("IsRelatedTo true")
 		}
-		status = validator.HasBeenIssuedBy("iss22")
+		status = validator.HasBeenIssuedBy([]string{"iss22"})
 		if status {
 			t.Errorf("HasBeenIssuedBy true")
 		}
