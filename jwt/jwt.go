@@ -64,6 +64,7 @@ const (
 
 var (
 	ErrJWTInvalidType           = errors.New("go-jwt: invalid type for claim")
+	ErrJWTHeaderInvalidType     = errors.New("go-jwt: invalid type for header")
 	ErrJWTSignerInvalid         = errors.New("go-jwt: Signer invalid")
 	ErrJWTEncoderInvalid        = errors.New("go-jwt: Encoder invalid")
 	ErrJWTTokenInvalid          = errors.New("go-jwt: Token invalid")

@@ -7,4 +7,3 @@ type ISigned[S any] interface {
 func Sign[S any](SigningMethod ISigned[S], claims any, key S) (string, error) {
 	return SigningMethod.Sign(claims, key)
 }
-

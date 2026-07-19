@@ -1645,5 +1645,3 @@ func Test_SigningMethodEdDSA_Parse_No_Type_With_Function(t *testing.T) {
 	}
 
 }
-
-

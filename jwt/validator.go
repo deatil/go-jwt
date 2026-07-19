@@ -33,7 +33,7 @@ func (v *Validator) IsPermittedFor(audiences []string) bool {
 		for _, audience := range audiences {
 			if val == audience {
 				return true
-			}	
+			}
 		}
 	}
 
@@ -77,7 +77,7 @@ func (v *Validator) HasBeenIssuedBy(issuers []string) bool {
 	for _, issuer := range issuers {
 		if val == issuer {
 			return true
-		}	
+		}
 	}
 
 	return false

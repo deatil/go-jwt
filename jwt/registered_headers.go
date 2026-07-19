@@ -3,11 +3,11 @@ package jwt
 // RegisteredHeaders are a structured version of the JWT Headers Set,
 type RegisteredHeaders struct {
 	// type
-	Type        string `json:"typ,omitempty"`
+	Type string `json:"typ,omitempty"`
 	// algorithm
-	Algorithm   string `json:"alg,omitempty"`
+	Algorithm string `json:"alg,omitempty"`
 	// key id
-	KeyID       string `json:"kid,omitempty"`
+	KeyID string `json:"kid,omitempty"`
 	// content type
 	ContentType string `json:"cty,omitempty"`
 }
@@ -27,4 +27,3 @@ func (h RegisteredHeaders) GetKeyID() (string, error) {
 func (h RegisteredHeaders) GetContentType() (string, error) {
 	return h.ContentType, nil
 }
-

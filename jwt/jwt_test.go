@@ -2142,31 +2142,31 @@ func Test_NewJWT_Error2(t *testing.T) {
 }
 
 func Test_RegisteredHeaders(t *testing.T) {
-	c := RegisteredHeaders{
-		Type: "typ",
-		Algorithm: "algo",
-		KeyID: "kida",
+	h := RegisteredHeaders{
+		Type:        "typ",
+		Algorithm:   "algo",
+		KeyID:       "kida",
 		ContentType: "ctyaa",
 	}
 
 	var val string
 
-	val, _ = c.GetType()
+	val, _ = h.GetType()
 	if val != "typ" {
 		t.Errorf("GetType got %s, want %s", val, "typ")
 	}
 
-	val, _ = c.GetAlgorithm()
+	val, _ = h.GetAlgorithm()
 	if val != "algo" {
 		t.Errorf("GetAlgorithm got %s, want %s", val, "algo")
 	}
 
-	val, _ = c.GetKeyID()
+	val, _ = h.GetKeyID()
 	if val != "kida" {
 		t.Errorf("GetKeyID got %s, want %s", val, "kida")
 	}
 
-	val, _ = c.GetContentType()
+	val, _ = h.GetContentType()
 	if val != "ctyaa" {
 		t.Errorf("GetContentType got %s, want %s", val, "ctyaa")
 	}

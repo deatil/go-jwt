@@ -42,7 +42,7 @@ func (m MapHeaders) parseString(key string) (string, error) {
 
 	data, ok = raw.(string)
 	if !ok {
-		return "", NewError(fmt.Sprintf("%s is invalid", key), ErrJWTInvalidType)
+		return "", NewError(fmt.Sprintf("%s is invalid", key), ErrJWTHeaderInvalidType)
 	}
 
 	return data, nil

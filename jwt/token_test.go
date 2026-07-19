@@ -6,7 +6,7 @@ import (
 
 func Test_Token(t *testing.T) {
 	var header = RegisteredHeaders{
-		Type: "JWT",
+		Type:      "JWT",
 		Algorithm: "ES256",
 	}
 	var claims = map[string]string{
@@ -148,7 +148,7 @@ func Test_Token(t *testing.T) {
 
 func Test_Token2(t *testing.T) {
 	var header = RegisteredHeaders{
-		Type: "JWE",
+		Type:      "JWE",
 		Algorithm: "ES256",
 	}
 	var claims = map[string]string{
@@ -193,9 +193,9 @@ func Test_Token2(t *testing.T) {
 
 func Test_Token3(t *testing.T) {
 	var header = RegisteredHeaders{
-		Type: "JWE",
+		Type:      "JWE",
 		Algorithm: "ES256",
-		KeyID: "kids",
+		KeyID:     "kids",
 	}
 	var claims = map[string]string{
 		"aud": "example.com",

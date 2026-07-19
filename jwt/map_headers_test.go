@@ -5,13 +5,14 @@ import (
 )
 
 func Test_MapHeaders_GET_Datas(t *testing.T) {
-	claims := MapHeaders{
+	headers := MapHeaders{
 		"typ0": int64(1751173981),
-		"typ": "typ test",
-		"alg": "alg test",
-		"kid": "kid test",
-		"cty": "cty test",
+		"typ":  "typ test",
+		"alg":  "alg test",
+		"kid":  "kid test",
+		"cty":  "cty test",
 
+		"inty":   int64(1751173981),
 		"string": "string test",
 		"strings": []string{
 			"string1 test",
@@ -19,14 +20,14 @@ func Test_MapHeaders_GET_Datas(t *testing.T) {
 		},
 	}
 
-	_, err := claims.GetType()
+	_, err := headers.GetType()
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// =================
 
-	res1, err := claims.GetType()
+	res1, err := headers.GetType()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -38,7 +39,7 @@ func Test_MapHeaders_GET_Datas(t *testing.T) {
 
 	// =================
 
-	res, err := claims.GetAlgorithm()
+	res, err := headers.GetAlgorithm()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -50,7 +51,7 @@ func Test_MapHeaders_GET_Datas(t *testing.T) {
 
 	// =================
 
-	res, err = claims.GetKeyID()
+	res, err = headers.GetKeyID()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -62,7 +63,7 @@ func Test_MapHeaders_GET_Datas(t *testing.T) {
 
 	// =================
 
-	res, err = claims.GetContentType()
+	res, err = headers.GetContentType()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -74,7 +75,7 @@ func Test_MapHeaders_GET_Datas(t *testing.T) {
 
 	// =================
 
-	res, err = claims.GetString("string")
+	res, err = headers.GetString("string")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -86,14 +87,20 @@ func Test_MapHeaders_GET_Datas(t *testing.T) {
 
 	// =================
 
-	_, err = claims.GetString("typ0")
+	_, err = headers.GetString("typ0")
 	if err == nil {
-		t.Fatal("GetString should return error")
+		t.Fatal("GetString(typ0) should return error")
 	}
 
-	_, err = claims.GetString("strings")
+	_, err = headers.GetString("strings")
 	if err == nil {
-		t.Fatal("GetString should return error")
+		t.Fatal("GetString(strings) should return error")
+	}
+
+	_, err = headers.GetString("inty")
+	checkerr := "go-jwt: invalid type for header: inty is invalid"
+	if err.Error() != checkerr {
+		t.Fatalf("GetString(inty) got %s, want %s", err, checkerr)
 	}
 }
 
@@ -150,7 +157,3 @@ func Test_MapHeaders_parseString(t *testing.T) {
 		})
 	}
 }
-
-
-
-

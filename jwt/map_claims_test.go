@@ -15,6 +15,7 @@ func Test_MapClaims_GET_Datas(t *testing.T) {
 		"iss": "iss test",
 		"sub": "sub test",
 
+		"inty":   int64(1751173985),
 		"date":   int64(1751173961),
 		"string": "string test",
 		"strings": []string{
@@ -167,6 +168,13 @@ func Test_MapClaims_GET_Datas(t *testing.T) {
 		t.Errorf("GetString, got %v, want %v", res, checkres)
 	}
 
+	// =================
+
+	_, err = claims.GetString("inty")
+	checkerr := "go-jwt: invalid type for claim: inty is invalid"
+	if err.Error() != checkerr {
+		t.Fatalf("GetString(inty) got %s, want %s", err, checkerr)
+	}
 }
 
 func Test_MapClaims_GET_Datas_error(t *testing.T) {
