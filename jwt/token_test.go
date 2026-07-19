@@ -5,9 +5,9 @@ import (
 )
 
 func Test_Token(t *testing.T) {
-	var header = TokenHeader{
-		Typ: "JWT",
-		Alg: "ES256",
+	var header = RegisteredHeaders{
+		Type: "JWT",
+		Algorithm: "ES256",
 	}
 	var claims = map[string]string{
 		"aud": "example.com",
@@ -52,11 +52,13 @@ func Test_Token(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if header2.Typ != "JWT" {
-		t.Errorf("GetHeader type got %s, want %s", header2.Typ, "JWT")
+	typ, _ := header2.GetType()
+	if typ != "JWT" {
+		t.Errorf("GetHeader type got %s, want %s", typ, "JWT")
 	}
-	if header2.Alg != "ES256" {
-		t.Errorf("GetHeader Alg got %s, want %s", header2.Alg, "ES256")
+	alg, _ := header2.GetAlgorithm()
+	if alg != "ES256" {
+		t.Errorf("GetHeader Alg got %s, want %s", alg, "ES256")
 	}
 
 	claims2, err := token2.GetClaims()
@@ -89,11 +91,13 @@ func Test_Token(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if header3.Typ != "JWT" {
-		t.Errorf("GetHeader type got %s, want %s", header3.Typ, "JWT")
+	typ22, _ := header3.GetType()
+	if typ22 != "JWT" {
+		t.Errorf("GetHeader type got %s, want %s", typ22, "JWT")
 	}
-	if header3.Alg != "ES256" {
-		t.Errorf("GetHeader Alg got %s, want %s", header3.Alg, "ES256")
+	alg22, _ := header3.GetAlgorithm()
+	if alg22 != "ES256" {
+		t.Errorf("GetHeader Alg got %s, want %s", alg22, "ES256")
 	}
 
 	claims3, err := token3.GetClaims()
@@ -143,9 +147,9 @@ func Test_Token(t *testing.T) {
 }
 
 func Test_Token2(t *testing.T) {
-	var header = TokenHeader{
-		Typ: "JWE",
-		Alg: "ES256",
+	var header = RegisteredHeaders{
+		Type: "JWE",
+		Algorithm: "ES256",
 	}
 	var claims = map[string]string{
 		"aud": "example.com",
@@ -188,10 +192,10 @@ func Test_Token2(t *testing.T) {
 }
 
 func Test_Token3(t *testing.T) {
-	var header = TokenHeader{
-		Typ: "JWE",
-		Alg: "ES256",
-		Kid: "kids",
+	var header = RegisteredHeaders{
+		Type: "JWE",
+		Algorithm: "ES256",
+		KeyID: "kids",
 	}
 	var claims = map[string]string{
 		"aud": "example.com",
@@ -223,8 +227,9 @@ func Test_Token3(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if header2.Kid != header.Kid {
-		t.Errorf("GetHeader Kid got %s, want %s", header2.Kid, header.Kid)
+	kid, _ := header2.GetKeyID()
+	if kid != header.KeyID {
+		t.Errorf("GetHeader Kid got %s, want %s", kid, header.KeyID)
 	}
 
 	// ================
@@ -257,28 +262,28 @@ func Test_Token3(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if header3.Typ != header.Typ {
-		t.Errorf("GetHeadersT Typ got %s, want %s", header3.Typ, header.Typ)
+	if header3.Typ != header.Type {
+		t.Errorf("GetHeadersT Typ got %s, want %s", header3.Typ, header.Type)
 	}
-	if header3.Alg != header.Alg {
-		t.Errorf("GetHeadersT Alg got %s, want %s", header3.Alg, header.Alg)
+	if header3.Alg != header.Algorithm {
+		t.Errorf("GetHeadersT Alg got %s, want %s", header3.Alg, header.Algorithm)
 	}
-	if header3.Kid != header.Kid {
-		t.Errorf("GetHeadersT Kid got %s, want %s", header3.Kid, header.Kid)
+	if header3.Kid != header.KeyID {
+		t.Errorf("GetHeadersT Kid got %s, want %s", header3.Kid, header.KeyID)
 	}
 
 	header33, err := token2.GetHeaders()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if header33["typ"] != header.Typ {
-		t.Errorf("GetHeaders Typ got %s, want %s", header33["typ"], header.Typ)
+	if header33["typ"] != header.Type {
+		t.Errorf("GetHeaders Typ got %s, want %s", header33["typ"], header.Type)
 	}
-	if header33["alg"] != header.Alg {
-		t.Errorf("GetHeaders Alg got %s, want %s", header33["alg"], header.Alg)
+	if header33["alg"] != header.Algorithm {
+		t.Errorf("GetHeaders Alg got %s, want %s", header33["alg"], header.Algorithm)
 	}
-	if header33["kid"] != header.Kid {
-		t.Errorf("GetHeaders Kid got %s, want %s", header33["kid"], header.Kid)
+	if header33["kid"] != header.KeyID {
+		t.Errorf("GetHeaders Kid got %s, want %s", header33["kid"], header.KeyID)
 	}
 
 }

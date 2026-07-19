@@ -1359,7 +1359,8 @@ func Test_SigningMethodHS256_Parse_With_Encoder2_Error3(t *testing.T) {
 			return nil, err
 		}
 
-		if header.Alg != "HS257" {
+		alg, _ := header.GetAlgorithm()
+		if alg != "HS257" {
 			return nil, errors.New("should alg HS257")
 		}
 

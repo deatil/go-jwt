@@ -9,7 +9,7 @@ import (
 	"github.com/deatil/go-jwt/encoder"
 )
 
-const Version = "1.0.20003"
+const Version = "1.0.20005"
 
 var (
 	// Hmac
@@ -177,9 +177,9 @@ func (jwt *JWT[S, V]) SignLength() int {
 
 // Sign implements token signing for the Signer.
 func (jwt *JWT[S, V]) Sign(claims any, signKey S) (string, error) {
-	header := TokenHeader{
-		Typ: "JWT",
-		Alg: jwt.signer.Alg(),
+	header := RegisteredHeaders{
+		Type:      "JWT",
+		Algorithm: jwt.signer.Alg(),
 	}
 
 	return jwt.SignWithHeader(header, claims, signKey)
@@ -220,11 +220,19 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 		return nil, err
 	}
 
-	if len(header.Typ) > 0 && header.Typ != "JWT" {
+	typ, err := header.GetType()
+	if err != nil {
+		return nil, err
+	}
+	if len(typ) > 0 && typ != "JWT" {
 		return nil, ErrJWTTypeInvalid
 	}
 
-	if header.Alg != jwt.signer.Alg() {
+	alg, err := header.GetAlgorithm()
+	if err != nil {
+		return nil, err
+	}
+	if alg != jwt.signer.Alg() {
 		return nil, ErrJWTAlgoInvalid
 	}
 
@@ -245,7 +253,7 @@ func (jwt *JWT[S, V]) Build() *Builder[S] {
 }
 
 // get token header from token string
-func GetTokenHeader(tokenString string, encoder ...IEncoder) (TokenHeader, error) {
+func GetTokenHeader(tokenString string, encoder ...IEncoder) (MapHeaders, error) {
 	var useEncoder IEncoder
 	if len(encoder) > 0 {
 		useEncoder = encoder[0]

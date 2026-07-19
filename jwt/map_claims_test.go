@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func Test_GET_Datas(t *testing.T) {
+func Test_MapClaims_GET_Datas(t *testing.T) {
 	claims := MapClaims{
 		"exp": float64(1751173980),
 		"nbf": float64(1751173985),
@@ -169,7 +169,7 @@ func Test_GET_Datas(t *testing.T) {
 
 }
 
-func Test_GET_Datas_error(t *testing.T) {
+func Test_MapClaims_GET_Datas_error(t *testing.T) {
 	claims := MapClaims{
 		"exp": json.Number("1751173980"),
 		"iat": int(1751173981),

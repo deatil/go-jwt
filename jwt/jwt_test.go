@@ -474,8 +474,9 @@ func Test_GetTokenHeader(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if header.Alg != "ES256" {
-		t.Errorf("GetTokenHeader Alg got %s, want %s", header.Alg, "ES256")
+	alg, _ := header.GetAlgorithm()
+	if alg != "ES256" {
+		t.Errorf("GetTokenHeader Alg got %s, want %s", alg, "ES256")
 	}
 
 }
@@ -1624,11 +1625,13 @@ func Test_SigningMethodEdDSA_type(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if header2.Typ != "" {
-		t.Errorf("GetClaims typ got %s", header2.Typ)
+	typ, _ := header2.GetType()
+	if typ != "" {
+		t.Errorf("GetClaims typ got %s", typ)
 	}
-	if header2.Alg != header["alg"] {
-		t.Errorf("GetClaims alg got %s, want %s", header2.Alg, header["alg"])
+	alg1, _ := header2.GetAlgorithm()
+	if alg1 != header["alg"] {
+		t.Errorf("GetClaims alg got %s, want %s", alg1, header["alg"])
 	}
 
 	claims2, err := parsed.GetClaims()
@@ -2101,8 +2104,9 @@ func Test_GetTokenHeader_WithEncoder(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if header.Alg != "ES256" {
-		t.Errorf("GetTokenHeader Alg got %s, want %s", header.Alg, "ES256")
+	alg, _ := header.GetAlgorithm()
+	if alg != "ES256" {
+		t.Errorf("GetTokenHeader Alg got %s, want %s", alg, "ES256")
 	}
 
 }
@@ -2135,4 +2139,35 @@ func Test_NewJWT_Error2(t *testing.T) {
 	}()
 
 	_ = NewJWT[*rsa.PrivateKey, *rsa.PublicKey](SigningRS256, nil)
+}
+
+func Test_RegisteredHeaders(t *testing.T) {
+	c := RegisteredHeaders{
+		Type: "typ",
+		Algorithm: "algo",
+		KeyID: "kida",
+		ContentType: "ctyaa",
+	}
+
+	var val string
+
+	val, _ = c.GetType()
+	if val != "typ" {
+		t.Errorf("GetType got %s, want %s", val, "typ")
+	}
+
+	val, _ = c.GetAlgorithm()
+	if val != "algo" {
+		t.Errorf("GetAlgorithm got %s, want %s", val, "algo")
+	}
+
+	val, _ = c.GetKeyID()
+	if val != "kida" {
+		t.Errorf("GetKeyID got %s, want %s", val, "kida")
+	}
+
+	val, _ = c.GetContentType()
+	if val != "ctyaa" {
+		t.Errorf("GetContentType got %s, want %s", val, "ctyaa")
+	}
 }

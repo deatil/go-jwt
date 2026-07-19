@@ -51,15 +51,25 @@ func Parse[V any](tokenString string, keyFunc func(t *Token) (key V, err error),
 		return nil, err
 	}
 
+	typ, err := header.GetType()
+	if err != nil {
+		return nil, err
+	}
+
 	// if token type not empty and not equal JWT, return error
-	if len(header.Typ) > 0 && header.Typ != "JWT" {
+	if len(typ) > 0 && typ != "JWT" {
 		return nil, ErrJWTTypeInvalid
+	}
+
+	alg, err := header.GetAlgorithm()
+	if err != nil {
+		return nil, err
 	}
 
 	// Verify signing method is in the required set
 	if parserOpt.ValidMethods != nil {
 		var signingMethodValid = false
-		var alg = header.Alg
+
 		for _, m := range parserOpt.ValidMethods {
 			if m == alg {
 				signingMethodValid = true
@@ -72,7 +82,7 @@ func Parse[V any](tokenString string, keyFunc func(t *Token) (key V, err error),
 		}
 	}
 
-	signingMethod := GetSigningMethod(header.Alg)
+	signingMethod := GetSigningMethod(alg)
 	if signingMethod == nil {
 		return nil, ErrJWTMethodExists
 	}

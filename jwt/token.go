@@ -6,13 +6,6 @@ import (
 
 const tokenDelimiter = "."
 
-// Token Header data.
-type TokenHeader struct {
-	Typ string `json:"typ"`
-	Alg string `json:"alg"`
-	Kid string `json:"kid,omitempty"`
-}
-
 // Token represents a JWT Token.
 type Token struct {
 	raw       string // full token string
@@ -148,40 +141,15 @@ func (t *Token) GetPartCount() int {
 	return len(strings.Split(t.raw, tokenDelimiter))
 }
 
-// return token TokenHeader struct
-func (t *Token) GetHeader() (TokenHeader, error) {
-	var parsedHeader map[string]any
-	err := t.encoder.JSONDecode(t.header, &parsedHeader)
+// return token MapHeaders struct
+func (t *Token) GetHeader() (MapHeaders, error) {
+	var dst MapHeaders
+	err := t.encoder.JSONDecode(t.header, &dst)
 	if err != nil {
-		return TokenHeader{}, err
+		return map[string]any{}, err
 	}
 
-	var typ = ""
-	if val, ok := parsedHeader["typ"]; ok {
-		if typVal, ok := val.(string); ok {
-			typ = typVal
-		}
-	}
-
-	var alg = ""
-	if val, ok := parsedHeader["alg"]; ok {
-		if algVal, ok := val.(string); ok {
-			alg = algVal
-		}
-	}
-
-	var kid = ""
-	if val, ok := parsedHeader["kid"]; ok {
-		if kidVal, ok := val.(string); ok {
-			kid = kidVal
-		}
-	}
-
-	return TokenHeader{
-		Typ: typ,
-		Alg: alg,
-		Kid: kid,
-	}, nil
+	return dst, nil
 }
 
 // return token header map

@@ -253,19 +253,19 @@ func (m MapClaims) parseClaimsString(key string) (ClaimStrings, error) {
 // parseString tries to parse a key in the map claims type as a [string] type.
 func (m MapClaims) parseString(key string) (string, error) {
 	var (
-		ok  bool
-		raw any
-		iss string
+		ok   bool
+		raw  any
+		data string
 	)
 	raw, ok = m[key]
 	if !ok {
 		return "", nil
 	}
 
-	iss, ok = raw.(string)
+	data, ok = raw.(string)
 	if !ok {
 		return "", NewError(fmt.Sprintf("%s is invalid", key), ErrJWTInvalidType)
 	}
 
-	return iss, nil
+	return data, nil
 }
