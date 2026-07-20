@@ -9,7 +9,7 @@ import (
 	"github.com/deatil/go-jwt/encoder"
 )
 
-const Version = "1.0.20006"
+const Version = "1.0.20007"
 
 var (
 	// Hmac
@@ -46,22 +46,6 @@ var (
 	SigningMethodNone = NewJWT[[]byte, []byte](SigningNone, JWTEncoder)
 )
 
-const (
-	// Defines the list of headers that are registered in the IANA "JSON Web Token Headers" registry
-	RegisteredHeadersType       = "typ"
-	RegisteredHeadersAlgorithm  = "alg"
-	RegisteredHeadersEncryption = "enc"
-
-	// Defines the list of claims that are registered in the IANA "JSON Web Token Claims" registry
-	RegisteredClaimsAudience       = "aud"
-	RegisteredClaimsExpirationTime = "exp"
-	RegisteredClaimsID             = "jti"
-	RegisteredClaimsIssuedAt       = "iat"
-	RegisteredClaimsIssuer         = "iss"
-	RegisteredClaimsNotBefore      = "nbf"
-	RegisteredClaimsSubject        = "sub"
-)
-
 var (
 	ErrJWTInvalidType           = errors.New("go-jwt: invalid type for claim")
 	ErrJWTHeaderInvalidType     = errors.New("go-jwt: invalid type for header")
@@ -76,11 +60,13 @@ var (
 	ErrJWTVerifyFail            = errors.New("go-jwt: Verify fail")
 )
 
-// jwt default encoder
-var JWTEncoder = encoder.NewJoseEncoder()
+var (
+	// jwt default encoder
+	JWTEncoder = encoder.NewJoseEncoder()
 
-// jwt encoder for strict decoding
-var JWTStrictEncoder = encoder.NewJoseEncoder(encoder.WithStrictDecoding())
+	// jwt encoder for strict decoding
+	JWTStrictEncoder = encoder.NewJoseEncoder(encoder.WithStrictDecoding())
+)
 
 // jwt sing algo interface
 type ISignAlgo interface {

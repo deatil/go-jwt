@@ -2171,3 +2171,25 @@ func Test_RegisteredHeaders(t *testing.T) {
 		t.Errorf("GetContentType got %s, want %s", val, "ctyaa")
 	}
 }
+
+func testEqStr(t *testing.T, e, a string) {
+	if e != a {
+		t.Errorf("equal got %s, want %s", a, e)
+	}
+}
+
+func Test_RegisteredsStd(t *testing.T) {
+	testEqStr(t, "typ", RegisteredStdHeaders.Type)
+	testEqStr(t, "alg", RegisteredStdHeaders.Algorithm)
+	testEqStr(t, "kid", RegisteredStdHeaders.KeyID)
+	testEqStr(t, "cty", RegisteredStdHeaders.ContentType)
+	testEqStr(t, "enc", RegisteredStdHeaders.Encryption)
+
+	testEqStr(t, "aud", RegisteredStdClaims.Audience)
+	testEqStr(t, "exp", RegisteredStdClaims.ExpirationTime)
+	testEqStr(t, "jti", RegisteredStdClaims.ID)
+	testEqStr(t, "iat", RegisteredStdClaims.IssuedAt)
+	testEqStr(t, "iss", RegisteredStdClaims.Issuer)
+	testEqStr(t, "nbf", RegisteredStdClaims.NotBefore)
+	testEqStr(t, "sub", RegisteredStdClaims.Subject)
+}

@@ -23,8 +23,8 @@ func Test_SigningMethodES256_Builder(t *testing.T) {
 	s := SigningMethodES256.New()
 
 	b := s.Build()
-	b.WithHeader(RegisteredHeadersType, "JWT")
-	b.WithHeader(RegisteredHeadersAlgorithm, s.Alg())
+	b.WithHeader(RegisteredStdHeaders.Type, "JWT")
+	b.WithHeader(RegisteredStdHeaders.Algorithm, s.Alg())
 	b.PermittedFor(NewClaimSingleString("audience"))
 	b.ExpiresAt(NewNumericDate(exp))
 	b.IdentifiedBy("JwtId")

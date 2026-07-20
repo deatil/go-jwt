@@ -31,66 +31,66 @@ func (b *Builder[S]) WithClaim(name string, value any) *Builder[S] {
 
 // Configures the header type
 func (b *Builder[S]) HeaderType(value any) *Builder[S] {
-	b.headers[RegisteredHeadersType] = value
+	b.headers[RegisteredStdHeaders.Type] = value
 	return b
 }
 
 // Configures the header algorithm
 func (b *Builder[S]) HeaderAlgo(value any) *Builder[S] {
-	b.headers[RegisteredHeadersAlgorithm] = value
+	b.headers[RegisteredStdHeaders.Algorithm] = value
 	return b
 }
 
 // Configures the audience
 func (b *Builder[S]) PermittedFor(audiences ClaimStrings) *Builder[S] {
-	b.claims[RegisteredClaimsAudience] = audiences
+	b.claims[RegisteredStdClaims.Audience] = audiences
 	return b
 }
 
 // Configures the expiration time, expirTime
 func (b *Builder[S]) ExpiresAt(expiration *NumericDate) *Builder[S] {
-	b.claims[RegisteredClaimsExpirationTime] = expiration
+	b.claims[RegisteredStdClaims.ExpirationTime] = expiration
 	return b
 }
 
 // Configures the token id JwtId
 func (b *Builder[S]) IdentifiedBy(id string) *Builder[S] {
-	b.claims[RegisteredClaimsID] = id
+	b.claims[RegisteredStdClaims.ID] = id
 	return b
 }
 
 // Configures the time that the token was issued
 func (b *Builder[S]) IssuedAt(issuedAt *NumericDate) *Builder[S] {
-	b.claims[RegisteredClaimsIssuedAt] = issuedAt
+	b.claims[RegisteredStdClaims.IssuedAt] = issuedAt
 	return b
 }
 
 // Configures the issuer
 func (b *Builder[S]) IssuedBy(issuer string) *Builder[S] {
-	b.claims[RegisteredClaimsIssuer] = issuer
+	b.claims[RegisteredStdClaims.Issuer] = issuer
 	return b
 }
 
 // Configures the time before which the token cannot be accepted
 func (b *Builder[S]) CanOnlyBeUsedAfter(notBefore *NumericDate) *Builder[S] {
-	b.claims[RegisteredClaimsNotBefore] = notBefore
+	b.claims[RegisteredStdClaims.NotBefore] = notBefore
 	return b
 }
 
 // Configures the subject
 func (b *Builder[S]) RelatedTo(subject string) *Builder[S] {
-	b.claims[RegisteredClaimsSubject] = subject
+	b.claims[RegisteredStdClaims.Subject] = subject
 	return b
 }
 
 // Returns the resultant token
 func (b *Builder[S]) GetToken(key S) (*Token, error) {
 	headers := b.headers
-	if _, ok := headers[RegisteredHeadersType]; !ok {
-		headers[RegisteredHeadersType] = "JWT"
+	if _, ok := headers[RegisteredStdHeaders.Type]; !ok {
+		headers[RegisteredStdHeaders.Type] = "JWT"
 	}
-	if _, ok := headers[RegisteredHeadersAlgorithm]; !ok {
-		headers[RegisteredHeadersAlgorithm] = b.signer.Alg()
+	if _, ok := headers[RegisteredStdHeaders.Algorithm]; !ok {
+		headers[RegisteredStdHeaders.Algorithm] = b.signer.Alg()
 	}
 
 	t := NewToken(b.encoder)
