@@ -168,6 +168,11 @@ func (t *Token) GetHeadersT(dst any) error {
 	return t.encoder.JSONDecode(t.header, dst)
 }
 
+// return token header raw
+func (t *Token) GetHeaderRaw() []byte {
+	return t.header
+}
+
 // return token claims map
 func (t *Token) GetClaims() (MapClaims, error) {
 	var dst MapClaims
@@ -182,6 +187,11 @@ func (t *Token) GetClaims() (MapClaims, error) {
 // return token claims with custom type
 func (t *Token) GetClaimsT(dst any) error {
 	return t.encoder.JSONDecode(t.claims, dst)
+}
+
+// return token claims raw
+func (t *Token) GetClaimsRaw() []byte {
+	return t.claims
 }
 
 // return token signature

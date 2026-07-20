@@ -234,6 +234,20 @@ func Test_Token3(t *testing.T) {
 
 	// ================
 
+	headerRaw := token2.GetHeaderRaw()
+	headerRawCheck := `{"typ":"JWE","alg":"ES256","kid":"kids"}`
+	if string(headerRaw) != headerRawCheck {
+		t.Errorf("GetHeaderRaw() got %s, want %s", string(headerRaw), headerRawCheck)
+	}
+
+	claimsRaw := token2.GetClaimsRaw()
+	claimsRawCheck := `{"aud":"example.com","iat":"foo"}`
+	if string(claimsRaw) != claimsRawCheck {
+		t.Errorf("GetClaimsRaw() got %s, want %s", string(claimsRaw), claimsRawCheck)
+	}
+
+	// ================
+
 	type claimsT struct {
 		Aud string
 		Iat string
