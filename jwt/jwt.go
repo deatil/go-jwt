@@ -9,7 +9,7 @@ import (
 	"github.com/deatil/go-jwt/encoder"
 )
 
-const Version = "1.0.20007"
+const Version = "1.0.20008"
 
 var (
 	// Hmac
@@ -150,6 +150,11 @@ func (jwt JWT[S, V]) New() *JWT[S, V] {
 func (jwt *JWT[S, V]) WithEncoder(encoder IEncoder) *JWT[S, V] {
 	jwt.encoder = encoder
 	return jwt
+}
+
+// return a JWT signer
+func (jwt *JWT[S, V]) GetSigner() ISigner[S, V] {
+	return jwt.signer
 }
 
 // Signer algo name.

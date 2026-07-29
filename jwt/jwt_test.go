@@ -2193,3 +2193,14 @@ func Test_RegisteredsStd(t *testing.T) {
 	testEqStr(t, "nbf", RegisteredStdClaims.NotBefore)
 	testEqStr(t, "sub", RegisteredStdClaims.Subject)
 }
+
+func Test_GetSigner(t *testing.T) {
+	p := SigningMethodPS256.New()
+	testEqStr(t, "PS256", p.GetSigner().Alg())
+
+	p1 := SigningMethodHS256.New()
+	testEqStr(t, "HS256", p1.GetSigner().Alg())
+
+	p2 := SigningMethodES256.New()
+	testEqStr(t, "ES256", p2.GetSigner().Alg())
+}
