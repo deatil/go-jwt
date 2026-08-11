@@ -2204,3 +2204,188 @@ func Test_GetSigner(t *testing.T) {
 	p2 := SigningMethodES256.New()
 	testEqStr(t, "ES256", p2.GetSigner().Alg())
 }
+
+func Test_SigningMethodES384_Check_With_PEM_pkcs8_Key(t *testing.T) {
+	var prikey = `
+-----BEGIN PRIVATE KEY-----
+MIG/AgEAMBAGByqGSM49AgEGBSuBBAAiBIGnMIGkAgEBBDCKkU3/bJJS2nV+u4FS
+gCLgcaNaDnyB7sEEhXvCLf4DJiLWplxb/lNdHKtEVbx828OgBwYFK4EEACKhZANi
+AATOXjuGfhl/4JylsxuaEw4fxIOXle0hJD1AJODcC8e3KJSMG5MGhKLQPvo2IZAd
+9IK7byRArzegzwtMjAnGzE9oIXnCm7JczuyX4sRPoL8d+RNtc7ZVjEL/srgTWohW
+A3s=
+-----END PRIVATE KEY-----
+    `
+	var pubkey = `
+-----BEGIN PUBLIC KEY-----
+MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEzl47hn4Zf+CcpbMbmhMOH8SDl5XtISQ9
+QCTg3AvHtyiUjBuTBoSi0D76NiGQHfSCu28kQK83oM8LTIwJxsxPaCF5wpuyXM7s
+l+LET6C/HfkTbXO2VYxC/7K4E1qIVgN7
+-----END PUBLIC KEY-----
+    `
+	var tokenStr = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzM4NCJ9.eyJmb28iOiJiYXIifQ.GeAljd7NH1LQ363xqAb7G608EvXX3svYTMwjcmEVnTapGF7Y4puGIVW4TeXsMij9646Gi_HJ3ghAqgHvWh5CMyvQFOQThyVy7CVxhtrn3GFgse1Kz8wOd0_X_XtOvCsF"
+
+	prikeyBytes, _ := ParsePEM([]byte(prikey))
+	pubkeyBytes, _ := ParsePEM([]byte(pubkey))
+
+	privateKey, err := ParseECPrivateKeyFromDer(prikeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseECPublicKeyFromDer(pubkeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims := map[string]string{
+		"foo": "bar",
+	}
+
+	s := SigningMethodES384.New()
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Errorf("Sign length got %d", len(tokenString))
+	}
+
+	p := SigningMethodES384.New()
+	parsed, err := p.Parse(tokenStr, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["foo"].(string) != claims["foo"] {
+		t.Errorf("GetClaims foo got %s, want %s", claims2["foo"].(string), claims["foo"])
+	}
+
+}
+
+func Test_SigningMethodES512_Check_With_PEM_pkcs8_Key(t *testing.T) {
+	var prikey = `
+-----BEGIN PRIVATE KEY-----
+MIH3AgEAMBAGByqGSM49AgEGBSuBBAAjBIHfMIHcAgEBBEIAyYKP3zmWUSvKgv9B
+YFSQ8SNvCUWQ+ac4o8xxVxQ0xJJYi5r86HoOcPafRhA08FpL5QsbH09t7SIb4/u3
+SRoaHamgBwYFK4EEACOhgYkDgYYABAHlKXMgRKArgvYmeANJpFSbOlD51GpU/jnQ
+zhWoomjv4MT/Urz4tTzkMY1gWNIpMFNYKzczdT6QWcaCvYx80fN20ACwZYQpDhb4
+lAo3rKovPU5wBzwGfMDMX3WYaPCglREuk1mV13TLW5xsv0SbKOoHQuaGiQ8Vb2W0
+QQwS8iecuQQq8g==
+-----END PRIVATE KEY-----
+    `
+	var pubkey = `
+-----BEGIN PUBLIC KEY-----
+MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQB5SlzIESgK4L2JngDSaRUmzpQ+dRq
+VP450M4VqKJo7+DE/1K8+LU85DGNYFjSKTBTWCs3M3U+kFnGgr2MfNHzdtAAsGWE
+KQ4W+JQKN6yqLz1OcAc8BnzAzF91mGjwoJURLpNZldd0y1ucbL9EmyjqB0LmhokP
+FW9ltEEMEvInnLkEKvI=
+-----END PUBLIC KEY-----
+    `
+	var tokenStr = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzUxMiJ9.eyJmb28iOiJiYXIifQ.AdHc_BALB2aBPnEl0FLQtOLgJLqmbxgF9npNd19TZTYwqHmZZ0_eizbagmjJVxpImzXSi-DYezLQDbwN_4iJrvlxAILX9SSrsHh0zbkJAjMAIJDMkZ7nfR7KgCNqvyT7JgEN41i6juk1n8uP3edFptYa1QxnLEG4v6_-NJdOl1xQVtZA"
+
+	prikeyBytes, _ := ParsePEM([]byte(prikey))
+	pubkeyBytes, _ := ParsePEM([]byte(pubkey))
+
+	privateKey, err := ParseECPrivateKeyFromDer(prikeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseECPublicKeyFromDer(pubkeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims := map[string]string{
+		"foo": "bar",
+	}
+
+	s := SigningMethodES512.New()
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Errorf("Sign length got %d", len(tokenString))
+	}
+
+	p := SigningMethodES512.New()
+	parsed, err := p.Parse(tokenStr, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["foo"].(string) != claims["foo"] {
+		t.Errorf("GetClaims foo got %s, want %s", claims2["foo"].(string), claims["foo"])
+	}
+
+}
+
+func Test_SigningMethodEdDSA_Check_With_PEM_pkcs8_Key(t *testing.T) {
+	var prikey = `
+-----BEGIN PRIVATE KEY-----
+MC4CAQAwBQYDK2VwBCIEIK3jWwBPmk1J4dynA3CjSfOLP9seazHZYZ6MCqCU+n0f
+-----END PRIVATE KEY-----
+    `
+	var pubkey = `
+-----BEGIN PUBLIC KEY-----
+MCowBQYDK2VwAyEAj/CWF9RnNKe/L0jHWHpUICXDowaNYLbj7Ck/wdzTvE4=
+-----END PUBLIC KEY-----
+    `
+	var tokenStr = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJmb28iOiJiYXIifQ.AMI_8S4nuqBQ8Y7MLrU_iyDXDJcd651Y7eDR3AO98tfDGKkkp2MJj-yQoZzdbjeYrl3ocotlmor3Otwf1PUbCQ"
+
+	prikeyBytes, _ := ParsePEM([]byte(prikey))
+	pubkeyBytes, _ := ParsePEM([]byte(pubkey))
+
+	privateKey, err := ParseEdPrivateKeyFromDer(prikeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseEdPublicKeyFromDer(pubkeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims := map[string]string{
+		"foo": "bar",
+	}
+
+	s := SigningMethodEdDSA.New()
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Errorf("Sign length got %d", len(tokenString))
+	}
+
+	p := SigningMethodEdDSA.New()
+	parsed, err := p.Parse(tokenStr, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["foo"].(string) != claims["foo"] {
+		t.Errorf("GetClaims foo got %s, want %s", claims2["foo"].(string), claims["foo"])
+	}
+
+}
