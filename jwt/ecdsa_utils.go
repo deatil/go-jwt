@@ -11,7 +11,26 @@ var (
 	ErrNotECPrivateKey = errors.New("go-jwt: key is not a valid ECDSA private key")
 )
 
-// ParseECPrivateKeyFromDer parses a PEM encoded Elliptic Curve Private Key Structure
+// ParseECPrivateKeyFromPEM parses a PEM encoded Elliptic Curve Private Key Structure
+func ParseECPrivateKeyFromPEM(key []byte) (*ecdsa.PrivateKey, error) {
+	der, err := ParsePEM(key)
+	if err != nil {
+		return nil, err
+	}
+
+	return ParseECPrivateKeyFromDer(der)
+}
+
+// ParseECPublicKeyFromPEM parses a PEM encoded PKCS1 or PKCS8 public key
+func ParseECPublicKeyFromPEM(key []byte) (*ecdsa.PublicKey, error) {
+	der, err := ParsePEM(key)
+	if err != nil {
+		return nil, err
+	}
+	
+	return ParseECPublicKeyFromDer(der)
+}
+
 func ParseECPrivateKeyFromDer(der []byte) (*ecdsa.PrivateKey, error) {
 	var err error
 
@@ -29,7 +48,6 @@ func ParseECPrivateKeyFromDer(der []byte) (*ecdsa.PrivateKey, error) {
 	return nil, ErrNotECPrivateKey
 }
 
-// ParseECPublicKeyFromDer parses a PEM encoded PKCS1 or PKCS8 public key
 func ParseECPublicKeyFromDer(der []byte) (*ecdsa.PublicKey, error) {
 	var err error
 

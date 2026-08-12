@@ -323,3 +323,64 @@ func Test_ParseECKeyFromDer(t *testing.T) {
 		t.Error("ParseECPublicKeyFromDer should return error")
 	}
 }
+
+func Test_SigningES256_Check_With_PEM_pkcs8_Key(t *testing.T) {
+	var prikey = `
+-----BEGIN PRIVATE KEY-----
+MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQg/DkEwUlK8nWyB30J
+RyxjU42bu//wSrGj2szLE/ybKMqgCgYIKoZIzj0DAQehRANCAAROkh8yLuhNymC1
+t5DSS6XNiUAotBK3Wl84ZQe0e9x7wwSyy547EIdYkqqX+wn4mslJ+o67kBaUOoaq
+nvtkDskL
+-----END PRIVATE KEY-----
+    `
+	var pubkey = `
+-----BEGIN PUBLIC KEY-----
+MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAETpIfMi7oTcpgtbeQ0kulzYlAKLQS
+t1pfOGUHtHvce8MEssueOxCHWJKql/sJ+JrJSfqOu5AWlDqGqp77ZA7JCw==
+-----END PUBLIC KEY-----
+    `
+
+	prikeyBytes, _ := ParsePEM([]byte(prikey))
+	pubkeyBytes, _ := ParsePEM([]byte(pubkey))
+
+	privateKey, err := ParseECPrivateKeyFromDer(prikeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseECPublicKeyFromDer(pubkeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	h := SigningES256
+
+	var msg = "test-data"
+
+	signed, err := h.Sign([]byte(msg), privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	veri, err := h.Verify([]byte(msg), signed, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !veri {
+		t.Error("Verify fail")
+	}
+
+	// ========
+
+	signed2 := "c732644e4fa95675537d506001ff690695041db49bfc28bcacf5482af09089bfbfb2fd60c4117589c5b786b31976d8e006e2d3d479e9aca297dda0b5d3df13b2"
+
+	veri2, err := h.Verify([]byte(msg), fromHex(signed2), publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if !veri2 {
+		t.Error("Verify 2 fail")
+	}
+}

@@ -11,7 +11,26 @@ var (
 	ErrNotRSAPublicKey  = errors.New("go-jwt: key is not a valid RSA public key")
 )
 
-// ParseRSAPrivateKeyFromDer parses a PEM encoded PKCS1 or PKCS8 private key
+// ParseRSAPrivateKeyFromPEM parses a PEM encoded PKCS1 or PKCS8 private key
+func ParseRSAPrivateKeyFromPEM(key []byte) (*rsa.PrivateKey, error) {
+	der, err := ParsePEM(key)
+	if err != nil {
+		return nil, err
+	}
+
+	return ParseRSAPrivateKeyFromDer(der)
+}
+
+// ParseRSAPublicKeyFromPEM parses a PEM encoded PKCS1 or PKCS8 public key
+func ParseRSAPublicKeyFromPEM(key []byte) (*rsa.PublicKey, error) {
+	der, err := ParsePEM(key)
+	if err != nil {
+		return nil, err
+	}
+
+	return ParseRSAPublicKeyFromDer(der)
+}
+
 func ParseRSAPrivateKeyFromDer(der []byte) (*rsa.PrivateKey, error) {
 	var err error
 
@@ -29,7 +48,6 @@ func ParseRSAPrivateKeyFromDer(der []byte) (*rsa.PrivateKey, error) {
 	return nil, ErrNotRSAPrivateKey
 }
 
-// ParseRSAPublicKeyFromDer parses a PEM encoded PKCS1 or PKCS8 public key
 func ParseRSAPublicKeyFromDer(der []byte) (*rsa.PublicKey, error) {
 	var err error
 

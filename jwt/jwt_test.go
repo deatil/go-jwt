@@ -1786,15 +1786,12 @@ RIQzNasYSoRQHQ/6S6Ps8tpMcT+KvIIC8W/e9k0W7Cm72M1P9jU7SLf/vg==
     `
 	var tokenStr = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJmb28iOiJiYXIifQ.feG39E-bn8HXAKhzDZq7yEAPWYDhZlwTn3sePJnU9VrGMmwdXAIEyoOnrjreYlVM_Z4N13eK9-TmMTWyfKJtHQ"
 
-	prikeyBytes, _ := ParsePEM([]byte(prikey))
-	pubkeyBytes, _ := ParsePEM([]byte(pubkey))
-
-	privateKey, err := ParseECPrivateKeyFromDer(prikeyBytes)
+	privateKey, err := ParseECPrivateKeyFromPEM([]byte(prikey))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	publicKey, err := ParseECPublicKeyFromDer(pubkeyBytes)
+	publicKey, err := ParseECPublicKeyFromPEM([]byte(pubkey))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2003,15 +2000,12 @@ t1pfOGUHtHvce8MEssueOxCHWJKql/sJ+JrJSfqOu5AWlDqGqp77ZA7JCw==
     `
 	var tokenStr = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJmb28iOiJiYXIifQ.WDolEPRIhE9t5azDM_iepn9ezk0dIuExOKFYFAdVS1QC3iOyWM__4ZEAiLgCkGuaPo0ftVQCsCYItjKgVZHgGQ"
 
-	prikeyBytes, _ := ParsePEM([]byte(prikey))
-	pubkeyBytes, _ := ParsePEM([]byte(pubkey))
-
-	privateKey, err := ParseECPrivateKeyFromDer(prikeyBytes)
+	privateKey, err := ParseECPrivateKeyFromPEM([]byte(prikey))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	publicKey, err := ParseECPublicKeyFromDer(pubkeyBytes)
+	publicKey, err := ParseECPublicKeyFromPEM([]byte(pubkey))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2346,15 +2340,12 @@ MCowBQYDK2VwAyEAj/CWF9RnNKe/L0jHWHpUICXDowaNYLbj7Ck/wdzTvE4=
     `
 	var tokenStr = "eyJ0eXAiOiJKV1QiLCJhbGciOiJFZERTQSJ9.eyJmb28iOiJiYXIifQ.AMI_8S4nuqBQ8Y7MLrU_iyDXDJcd651Y7eDR3AO98tfDGKkkp2MJj-yQoZzdbjeYrl3ocotlmor3Otwf1PUbCQ"
 
-	prikeyBytes, _ := ParsePEM([]byte(prikey))
-	pubkeyBytes, _ := ParsePEM([]byte(pubkey))
-
-	privateKey, err := ParseEdPrivateKeyFromDer(prikeyBytes)
+	privateKey, err := ParseEdPrivateKeyFromPEM([]byte(prikey))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	publicKey, err := ParseEdPublicKeyFromDer(pubkeyBytes)
+	publicKey, err := ParseEdPublicKeyFromPEM([]byte(pubkey))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2374,6 +2365,196 @@ MCowBQYDK2VwAyEAj/CWF9RnNKe/L0jHWHpUICXDowaNYLbj7Ck/wdzTvE4=
 	}
 
 	p := SigningMethodEdDSA.New()
+	parsed, err := p.Parse(tokenStr, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["foo"].(string) != claims["foo"] {
+		t.Errorf("GetClaims foo got %s, want %s", claims2["foo"].(string), claims["foo"])
+	}
+
+}
+
+func Test_SigningMethodRS256_From_PEM(t *testing.T) {
+	var prikey = `
+-----BEGIN PRIVATE KEY-----
+MIIEowIBAAKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdr
+j8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aY
+w9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQ
+tzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2B
+rClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2Xr
+HhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohB
+TSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARd
+pd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQABAoIB
+AQCwia1k7+2oZ2d3n6agCAbqIE1QXfCmh41ZqJHbOY3oRQ
+G3X1wpcGH4Gk+O+zDVTV2JszdcOt7E5dAyMaomETAhRxB7
+hlIOnEN7WKm+dGNrKRvV0wDU5ReFMRHg31/Lnu8c+5BvGj
+ZX+ky9POIhFFYJqwCRlopGSUIxmVj5rSgtzk3iWOQXr+ah
+1bjEXvlxDOWkHN6YfpV5ThdEKdBIPGEVqa63r9n2h+qazK
+rtiRqJqGnOrHzOECYbRFYhexsNFz7YT02xdfSHn7gMIvab
+DDP/Qp0PjE1jdouiMaFHYnLBbgvlnZW9yuVf/rpXTUq/nj
+xIXMmvmEyyvSDnFcFikB8pAoGBAPF77hK4m3/rdGT7X8a/
+gwvZ2R121aBcdPwEaUhvj/36dx596zvYmEOjrWfZhF083/
+nYWE2kVquj2wjs+otCLfifEEgXcVPTnEOPO9Zg3uNSL0nNQ
+ghjFuD3iGLTUBCtM66oTe0jLSslHe8gLGEQqyMzHOzYxNq
+ibxcOZIe8Qt0NAoGBAO+UI5+XWjWEgDmvyC3TrOSf/KCGjt
+u0TSv30ipv27bDLMrpvPmD/5lpptTFwcxvVhCs2b+chCjlg
+hFSWFbBULBrfci2FtliClOVMYrlNBdUSJhf3aYSG2Doe6Bg
+t1n2CpNn/iu37Y3NfemZBJA7hNl4dYe+f+uzM87cdQ214+j
+rAoGAXA0XxX8ll2+ToOLJsaNTOvNB9h9Uc5qK5X5w+7G7O9
+98BN2PC/MWp8H+2fVqpXgNENpNXttkRm1hk1dych86Eunfd
+PuqsX+as44oCyJGFHVBnWpm33eWQw9YqANRI+pCJzP08I5W
+K3osnPiwshd+hR54yjgfYhBFNI7B95PmEQkCgYBzFSz7h1+
+s34Ycr8SvxsOBWxymG5zaCsUbPsL04aCgLScCHb9J+E86aV
+bbVFdglYa5Id7DPTL61ixhl7WZjujspeXZGSbmq0Kcnckbm
+DgqkLECiOJW2NHP/j0McAkDLL4tysF8TLDO8gvuvzNC+WQ6
+drO2ThrypLVZQ+ryeBIPmwKBgEZxhqa0gVvHQG/7Od69KWj
+4eJP28kq13RhKay8JOoN0vPmspXJo1HY3CKuHRG+AP579dn
+cdUnOMvfXOtkdM4vk0+hWASBQzM9xzVcztCa+koAugjVaLS
+9A+9uQoqEeVNTckxx0S2bYevRy7hGQmUJTyQm3j1zEUR5jp
+dbL83Fbq
+-----END PRIVATE KEY-----
+    `
+	var pubkey = `
+-----BEGIN PUBLIC KEY-----
+MIIBCgKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rF
+kEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mC
+pz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZ
+tDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn
+/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpY
+VaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1
+AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5L
+dYKtznTuy7wIDAQAB
+-----END PUBLIC KEY-----
+    `
+
+	privateKey, err := ParseRSAPrivateKeyFromPEM([]byte(prikey))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseRSAPublicKeyFromPEM([]byte(pubkey))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	s := SigningMethodRS256.New()
+
+	claims := map[string]string{
+		"aud": "example.com",
+		"sub": "foo",
+	}
+
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	p := SigningMethodRS256.New()
+	parsed, err := p.Parse(tokenString, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["aud"].(string) != claims["aud"] {
+		t.Errorf("GetClaims aud got %s, want %s", claims2["aud"].(string), claims["aud"])
+	}
+	if claims2["sub"].(string) != claims["sub"] {
+		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
+	}
+
+}
+
+func Test_SigningMethodRS256_Check_With_PEM_pkcs8_Key(t *testing.T) {
+	var prikey = `
+-----BEGIN PRIVATE KEY-----
+MIIEowIBAAKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdr
+j8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aY
+w9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQ
+tzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2B
+rClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2Xr
+HhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohB
+TSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARd
+pd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQABAoIB
+AQCwia1k7+2oZ2d3n6agCAbqIE1QXfCmh41ZqJHbOY3oRQ
+G3X1wpcGH4Gk+O+zDVTV2JszdcOt7E5dAyMaomETAhRxB7
+hlIOnEN7WKm+dGNrKRvV0wDU5ReFMRHg31/Lnu8c+5BvGj
+ZX+ky9POIhFFYJqwCRlopGSUIxmVj5rSgtzk3iWOQXr+ah
+1bjEXvlxDOWkHN6YfpV5ThdEKdBIPGEVqa63r9n2h+qazK
+rtiRqJqGnOrHzOECYbRFYhexsNFz7YT02xdfSHn7gMIvab
+DDP/Qp0PjE1jdouiMaFHYnLBbgvlnZW9yuVf/rpXTUq/nj
+xIXMmvmEyyvSDnFcFikB8pAoGBAPF77hK4m3/rdGT7X8a/
+gwvZ2R121aBcdPwEaUhvj/36dx596zvYmEOjrWfZhF083/
+nYWE2kVquj2wjs+otCLfifEEgXcVPTnEOPO9Zg3uNSL0nNQ
+ghjFuD3iGLTUBCtM66oTe0jLSslHe8gLGEQqyMzHOzYxNq
+ibxcOZIe8Qt0NAoGBAO+UI5+XWjWEgDmvyC3TrOSf/KCGjt
+u0TSv30ipv27bDLMrpvPmD/5lpptTFwcxvVhCs2b+chCjlg
+hFSWFbBULBrfci2FtliClOVMYrlNBdUSJhf3aYSG2Doe6Bg
+t1n2CpNn/iu37Y3NfemZBJA7hNl4dYe+f+uzM87cdQ214+j
+rAoGAXA0XxX8ll2+ToOLJsaNTOvNB9h9Uc5qK5X5w+7G7O9
+98BN2PC/MWp8H+2fVqpXgNENpNXttkRm1hk1dych86Eunfd
+PuqsX+as44oCyJGFHVBnWpm33eWQw9YqANRI+pCJzP08I5W
+K3osnPiwshd+hR54yjgfYhBFNI7B95PmEQkCgYBzFSz7h1+
+s34Ycr8SvxsOBWxymG5zaCsUbPsL04aCgLScCHb9J+E86aV
+bbVFdglYa5Id7DPTL61ixhl7WZjujspeXZGSbmq0Kcnckbm
+DgqkLECiOJW2NHP/j0McAkDLL4tysF8TLDO8gvuvzNC+WQ6
+drO2ThrypLVZQ+ryeBIPmwKBgEZxhqa0gVvHQG/7Od69KWj
+4eJP28kq13RhKay8JOoN0vPmspXJo1HY3CKuHRG+AP579dn
+cdUnOMvfXOtkdM4vk0+hWASBQzM9xzVcztCa+koAugjVaLS
+9A+9uQoqEeVNTckxx0S2bYevRy7hGQmUJTyQm3j1zEUR5jp
+dbL83Fbq
+-----END PRIVATE KEY-----
+    `
+	var pubkey = `
+-----BEGIN PUBLIC KEY-----
+MIIBCgKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rF
+kEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mC
+pz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZ
+tDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn
+/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpY
+VaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1
+AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5L
+dYKtznTuy7wIDAQAB
+-----END PUBLIC KEY-----
+    `
+	var tokenStr = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJmb28iOiJiYXIifQ.FhkiHkoESI_cG3NPigFrxEk9Z60_oXrOT2vGm9Pn6RDgYNovYORQmmA0zs1AoAOf09ly2Nx2YAg6ABqAYga1AcMFkJljwxTT5fYphTuqpWdy4BELeSYJx5Ty2gmr8e7RonuUztrdD5WfPqLKMm1Ozp_T6zALpRmwTIW0QPnaBXaQD90FplAg46Iy1UlDKr-Eupy0i5SLch5Q-p2ZpaL_5fnTIUDlxC3pWhJTyx_71qDI-mAA_5lE_VdroOeflG56sSmDxopPEG3bFlSu1eowyBfxtu0_CuVd-M42RU75Zc4Gsj6uV77MBtbMrf4_7M_NUTSgoIF3fRqxrj0NzihIBg"
+
+	privateKey, err := ParseRSAPrivateKeyFromPEM([]byte(prikey))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseRSAPublicKeyFromPEM([]byte(pubkey))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims := map[string]string{
+		"foo": "bar",
+	}
+
+	s := SigningMethodRS256.New()
+	tokenString, err := s.Sign(claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Errorf("Sign length got %d", len(tokenString))
+	}
+
+	p := SigningMethodRS256.New()
 	parsed, err := p.Parse(tokenStr, publicKey)
 	if err != nil {
 		t.Fatal(err)
