@@ -175,6 +175,18 @@ func Test_MapClaims_GET_Datas(t *testing.T) {
 	if err.Error() != checkerr {
 		t.Fatalf("GetString(inty) got %s, want %s", err, checkerr)
 	}
+
+	// =================
+
+	res55, err := claims.GetAny("iss")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	checkres = "iss test"
+	if res55.(string) != checkres {
+		t.Errorf("GetAny, got %v, want %v", res55.(string), checkres)
+	}
 }
 
 func Test_MapClaims_GET_Datas_error(t *testing.T) {

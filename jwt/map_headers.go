@@ -28,6 +28,15 @@ func (m MapHeaders) GetString(name string) (string, error) {
 	return m.parseString(name)
 }
 
+func (m MapHeaders) GetAny(name string) (any, error) {
+	v, ok := m[name]
+	if !ok {
+		return nil, NewError(fmt.Sprintf("%s is not exists", name), ErrJWTHeaderInvalidType)
+	}
+
+	return v, nil
+}
+
 // parseString tries to parse a key in the map headers type as a [string] type.
 func (m MapHeaders) parseString(key string) (string, error) {
 	var (

@@ -102,6 +102,18 @@ func Test_MapHeaders_GET_Datas(t *testing.T) {
 	if err.Error() != checkerr {
 		t.Fatalf("GetString(inty) got %s, want %s", err, checkerr)
 	}
+
+	// =================
+
+	res55, err := headers.GetAny("string")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	checkres = "string test"
+	if res55.(string) != checkres {
+		t.Errorf("GetAny, got %v, want %v", res55.(string), checkres)
+	}
 }
 
 func Test_MapHeaders_parseString(t *testing.T) {

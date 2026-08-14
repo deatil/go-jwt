@@ -9,7 +9,7 @@ import (
 	"github.com/deatil/go-jwt/encoder"
 )
 
-const Version = "1.0.20010"
+const Version = "1.0.20011"
 
 var (
 	// Hmac

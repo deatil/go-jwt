@@ -27,7 +27,7 @@ func ParseECPublicKeyFromPEM(key []byte) (*ecdsa.PublicKey, error) {
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return ParseECPublicKeyFromDer(der)
 }
 

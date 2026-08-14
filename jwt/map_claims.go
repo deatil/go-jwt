@@ -189,6 +189,15 @@ func (m MapClaims) GetString(name string) (string, error) {
 	return m.parseString(name)
 }
 
+func (m MapClaims) GetAny(name string) (any, error) {
+	v, ok := m[name]
+	if !ok {
+		return nil, NewError(fmt.Sprintf("%s is not exists", name), ErrJWTInvalidType)
+	}
+
+	return v, nil
+}
+
 // parseNumericDate tries to parse a key in the map claims type as a number date.
 func (m MapClaims) parseNumericDate(key string) (*NumericDate, error) {
 	v, ok := m[key]
