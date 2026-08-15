@@ -2570,3 +2570,32 @@ dYKtznTuy7wIDAQAB
 	}
 
 }
+
+func Test_SigningMethodPS256_Check2(t *testing.T) {
+	var pubkey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4f5wg5l2hKsTeNem/V41fGnJm6gOdrj8ym3rFkEU/wT8RDtnSgFEZOQpHEgQ7JL38xUfU0Y3g6aYw9QT0hJ7mCpz9Er5qLaMXJwZxzHzAahlfA0icqabvJOMvQtzD6uQv6wPEyZtDTWiQi9AXwBpHssPnpYGIn20ZZuNlX2BrClciHhCPUIIZOQn/MmqTD31jSyjoQoV7MhhMTATKJx2XrHhR+1DcKJzQBSTAGnpYVaqpsARap+nwRipr3nUTuxyGohBTSmjJ2usSeQXHI3bODIRe1AuTyHceAbewn8b462yEWKARdpd9AjQW5SIVPfdsz5B6GlYQ5LdYKtznTuy7wIDAQAB"
+	var tokenStr = "eyJ0eXAiOiJKV1QiLCJhbGciOiJQUzI1NiJ9.eyJpc3MiOiJqb2UiLCJleHAiOjEzMDA4MTkzODAsImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ.GIXxlCsbPsCVLyJdGVL0mz5Yg_40HEZSZIQwgdc02sPAnMfy29ZbbWCt5PAyv8KkbLZPx4kTgYwANhVm4_ggUJ25HARteMJBMbS-bxXlYlxjMxNy6yFj5unqQLicjCrQaN1UOw5GTmBjVssqQtTuZnlMduECq7uorsn5QoqIK3z01kiWjWpdo_SKJJ2Afeg0SqY7rx5jH_QVTLIzyuoMahQ8hDsqjcFjku2ncbZ3I0oJ0IZsiWxF21TmjxZRkPTe1LtYLSF_gaWucYJU_YOm5OWnlXjywMFq0ItQEUXMxO9OxUGjkISiAdUNwHkNRyZBFhmFmHjjMX8EPKsY99AAaw"
+
+	var pubkeyBytes = fromBase64(pubkey)
+
+	publicKey, err := ParseRSAPublicKeyFromDer(pubkeyBytes)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	p := SigningMethodPS256.New()
+	parsed, err := p.Parse(tokenStr, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	check := "joe"
+	if claims2["iss"].(string) != check {
+		t.Errorf("GetClaims foo got %s, want %s", claims2["foo"].(string), check)
+	}
+
+}
