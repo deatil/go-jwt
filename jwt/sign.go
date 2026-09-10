@@ -1,9 +1,13 @@
 package jwt
 
+import (
+	"io"
+)
+
 type ISigned[S any] interface {
-	Sign(claims any, signKey S) (string, error)
+	Sign(random io.Reader, claims any, signKey S) (string, error)
 }
 
-func Sign[S any](SigningMethod ISigned[S], claims any, key S) (string, error) {
-	return SigningMethod.Sign(claims, key)
+func Sign[S any](SigningMethod ISigned[S], random io.Reader, claims any, key S) (string, error) {
+	return SigningMethod.Sign(random, claims, key)
 }

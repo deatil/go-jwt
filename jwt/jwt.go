@@ -5,11 +5,12 @@ import (
 	"crypto/ed25519"
 	"crypto/rsa"
 	"errors"
+	"io"
 
 	"github.com/deatil/go-jwt/encoder"
 )
 
-const Version = "1.0.20011"
+const Version = "1.0.30001"
 
 var (
 	// Hmac
@@ -82,7 +83,7 @@ type ISigning[S any] interface {
 	ISignAlgo
 
 	// sign function
-	Sign(msg []byte, signKey S) ([]byte, error)
+	Sign(random io.Reader, msg []byte, signKey S) ([]byte, error)
 }
 
 // jwt verifying driver interface
@@ -98,7 +99,7 @@ type ISigner[S any, V any] interface {
 	ISignAlgo
 
 	// sign function
-	Sign(msg []byte, signKey S) ([]byte, error)
+	Sign(random io.Reader, msg []byte, signKey S) ([]byte, error)
 
 	// verify function
 	Verify(msg []byte, signature []byte, verifyKey V) (bool, error)
@@ -168,17 +169,17 @@ func (jwt *JWT[S, V]) SignLength() int {
 }
 
 // Sign implements token signing for the Signer.
-func (jwt *JWT[S, V]) Sign(claims any, signKey S) (string, error) {
+func (jwt *JWT[S, V]) Sign(random io.Reader, claims any, signKey S) (string, error) {
 	header := RegisteredHeaders{
 		Type:      "JWT",
 		Algorithm: jwt.signer.Alg(),
 	}
 
-	return jwt.SignWithHeader(header, claims, signKey)
+	return jwt.SignWithHeader(random, header, claims, signKey)
 }
 
 // SignWithHeader implements token signing for the Signer.
-func (jwt *JWT[S, V]) SignWithHeader(header any, claims any, signKey S) (string, error) {
+func (jwt *JWT[S, V]) SignWithHeader(random io.Reader, header any, claims any, signKey S) (string, error) {
 	t := NewToken(jwt.encoder)
 	t.SetHeader(header)
 	t.SetClaims(claims)
@@ -188,7 +189,7 @@ func (jwt *JWT[S, V]) SignWithHeader(header any, claims any, signKey S) (string,
 		return "", err
 	}
 
-	signature, err := jwt.signer.Sign([]byte(signingString), signKey)
+	signature, err := jwt.signer.Sign(random, []byte(signingString), signKey)
 	if err != nil {
 		return "", err
 	}

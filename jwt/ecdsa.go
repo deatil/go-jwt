@@ -3,8 +3,8 @@ package jwt
 import (
 	"crypto"
 	"crypto/ecdsa"
-	"crypto/rand"
 	"errors"
+	"io"
 	"math/big"
 )
 
@@ -57,11 +57,11 @@ func (s *SignECDSA) SignLength() int {
 }
 
 // Sign implements token signing for the Signer.
-func (s *SignECDSA) Sign(msg []byte, key *ecdsa.PrivateKey) ([]byte, error) {
+func (s *SignECDSA) Sign(random io.Reader, msg []byte, key *ecdsa.PrivateKey) ([]byte, error) {
 	hasher := s.Hash.New()
 	hasher.Write([]byte(msg))
 
-	rr, ss, err := ecdsa.Sign(rand.Reader, key, hasher.Sum(nil))
+	rr, ss, err := ecdsa.Sign(random, key, hasher.Sum(nil))
 	if err != nil {
 		return nil, err
 	}

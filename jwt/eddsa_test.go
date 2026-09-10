@@ -26,7 +26,7 @@ func Test_SigningEdDSA(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	signed, err := h.Sign([]byte(msg), privateKey)
+	signed, err := h.Sign(rand.Reader, []byte(msg), privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -62,7 +62,7 @@ func Test_SigningED25519(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	signed, err := h.Sign([]byte(msg), privateKey)
+	signed, err := h.Sign(rand.Reader, []byte(msg), privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -99,7 +99,7 @@ func Test_SigningEdDSA_with_der_key(t *testing.T) {
 
 	var msg = "test-data"
 
-	signed, err := h.Sign([]byte(msg), privateKey)
+	signed, err := h.Sign(rand.Reader, []byte(msg), privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}

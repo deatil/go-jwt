@@ -39,6 +39,7 @@ go get -u github.com/deatil/go-jwt
 package main
 
 import (
+	"crypto/rand"
     "fmt"
 
     "github.com/deatil/go-jwt/jwt"
@@ -51,8 +52,8 @@ func main() {
     }
     key := []byte("test-key")
 
-    s := jwt.SigningMethodHMD5.New()
-    tokenString, err := s.Sign(claims, key)
+    s := jwt.SigningMethodHS256.New()
+    tokenString, err := s.Sign(rand.Reader, claims, key)
     if err != nil {
         fmt.Printf("Sign: %s \n", err.Error())
         return
@@ -60,7 +61,9 @@ func main() {
 
     fmt.Printf("Signed: %s \n", tokenString)
 
-    p := jwt.SigningMethodHMD5.New()
+    // ==========
+
+    p := jwt.SigningMethodHS256.New()
     parsedToken, err := p.Parse(tokenString, key)
     if err != nil {
         fmt.Printf("Parse: %s \n", err.Error())
@@ -69,7 +72,7 @@ func main() {
 
     claims2, err := parsedToken.GetClaims()
     if err != nil {
-        fmt.Printf("GetClaims: %s \n", err.Error())
+        fmt.Printf("GetClaims error: %s \n", err.Error())
         return
     }
 
@@ -162,8 +165,8 @@ package jwt
 import (
     "errors"
     "crypto"
-    "crypto/rand"
     "crypto/ecdsa"
+    "io"
     "math/big"
 
     "github.com/deatil/go-jwt/jwt"
@@ -172,7 +175,7 @@ import (
 var (
     SigningES256 = NewSignECDSA(crypto.SHA256, 32, "ES256")
 
-    // use the struct
+    // use the signing method
     SigningMethodES256 = jwt.NewJWT[*ecdsa.PrivateKey, *ecdsa.PublicKey](SigningES256, jwt.JWTEncoder)
 )
 
@@ -198,11 +201,11 @@ func (s *SignECDSA) SignLength() int {
     return 2*s.KeySize
 }
 
-func (s *SignECDSA) Sign(msg []byte, key *ecdsa.PrivateKey) ([]byte, error) {
+func (s *SignECDSA) Sign(random io.Reader, msg []byte, key *ecdsa.PrivateKey) ([]byte, error) {
     hasher := s.Hash.New()
     hasher.Write([]byte(msg))
 
-    rr, ss, err := ecdsa.Sign(rand.Reader, key, hasher.Sum(nil))
+    rr, ss, err := ecdsa.Sign(random, key, hasher.Sum(nil))
     if err != nil {
         return nil, err
     }

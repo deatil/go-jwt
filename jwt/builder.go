@@ -1,5 +1,9 @@
 package jwt
 
+import (
+	"io"
+)
+
 // This class makes easier the token creation process
 type Builder[S any] struct {
 	headers map[string]any
@@ -84,7 +88,7 @@ func (b *Builder[S]) RelatedTo(subject string) *Builder[S] {
 }
 
 // Returns the resultant token
-func (b *Builder[S]) GetToken(key S) (*Token, error) {
+func (b *Builder[S]) GetToken(random io.Reader, key S) (*Token, error) {
 	headers := b.headers
 	if _, ok := headers[RegisteredStdHeaders.Type]; !ok {
 		headers[RegisteredStdHeaders.Type] = "JWT"
@@ -102,7 +106,7 @@ func (b *Builder[S]) GetToken(key S) (*Token, error) {
 		return nil, err
 	}
 
-	signature, err := b.signer.Sign([]byte(signingString), key)
+	signature, err := b.signer.Sign(random, []byte(signingString), key)
 	if err != nil {
 		return nil, err
 	}

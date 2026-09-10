@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"errors"
+	"io"
 )
 
 var (
@@ -38,7 +39,7 @@ func (s *SignNone) SignLength() int {
 }
 
 // Sign implements token signing for the Signer.
-func (s *SignNone) Sign(msg []byte, key []byte) ([]byte, error) {
+func (s *SignNone) Sign(random io.Reader, msg []byte, key []byte) ([]byte, error) {
 	return nil, nil
 }
 

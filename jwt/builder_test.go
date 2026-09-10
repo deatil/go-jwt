@@ -33,7 +33,7 @@ func Test_SigningMethodES256_Builder(t *testing.T) {
 	b.CanOnlyBeUsedAfter(NewNumericDate(nbf))
 	b.RelatedTo("subject")
 
-	token, err := b.GetToken(privateKey)
+	token, err := b.GetToken(rand.Reader, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -105,7 +105,7 @@ func Test_SigningMethodES256_Builder2(t *testing.T) {
 	b.RelatedTo("subject")
 	b.WithClaim("userid", "test")
 
-	token, err := b.GetToken(privateKey)
+	token, err := b.GetToken(rand.Reader, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -193,7 +193,7 @@ func Test_SigningMethodES256_Builder3(t *testing.T) {
 	b.RelatedTo("subject")
 	b.WithClaim("userid", "test")
 
-	token, err := b.GetToken(privateKey)
+	token, err := b.GetToken(rand.Reader, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}

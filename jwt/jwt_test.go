@@ -17,7 +17,7 @@ func Test_SigningMethodHMD5(t *testing.T) {
 	key := []byte("test-key")
 
 	s := SigningMethodHMD5.New()
-	tokenString, err := s.Sign(claims, key)
+	tokenString, err := s.Sign(rand.Reader, claims, key)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -64,7 +64,7 @@ func Test_SigningMethodHSHA1(t *testing.T) {
 	key := []byte("test-key")
 
 	s := SigningMethodHSHA1.New()
-	tokenString, err := s.Sign(claims, key)
+	tokenString, err := s.Sign(rand.Reader, claims, key)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -111,7 +111,7 @@ func Test_SigningMethodHS224(t *testing.T) {
 	key := []byte("test-key")
 
 	s := SigningMethodHS224.New()
-	tokenString, err := s.Sign(claims, key)
+	tokenString, err := s.Sign(rand.Reader, claims, key)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -158,7 +158,7 @@ func Test_SigningMethodHS256(t *testing.T) {
 	key := []byte("test-key")
 
 	s := SigningMethodHS256.New()
-	tokenString, err := s.Sign(claims, key)
+	tokenString, err := s.Sign(rand.Reader, claims, key)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -205,7 +205,7 @@ func Test_SigningMethodHS384(t *testing.T) {
 	key := []byte("test-key")
 
 	s := SigningMethodHS384.New()
-	tokenString, err := s.Sign(claims, key)
+	tokenString, err := s.Sign(rand.Reader, claims, key)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -252,7 +252,7 @@ func Test_SigningMethodHS512(t *testing.T) {
 	key := []byte("test-key")
 
 	s := SigningMethodHS512.New()
-	tokenString, err := s.Sign(claims, key)
+	tokenString, err := s.Sign(rand.Reader, claims, key)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -299,7 +299,7 @@ func Test_SigningMethodNone(t *testing.T) {
 	key := []byte("")
 
 	s := SigningMethodNone.New()
-	tokenString, err := s.Sign(claims, key)
+	tokenString, err := s.Sign(rand.Reader, claims, key)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -350,7 +350,7 @@ func Test_SigningMethodHS256_Check(t *testing.T) {
 	keyBytes := fromHex(key)
 
 	s := SigningMethodHS256.New()
-	tokenString, err := s.Sign(claims, keyBytes)
+	tokenString, err := s.Sign(rand.Reader, claims, keyBytes)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -388,7 +388,7 @@ func Test_SigningMethodHS384_Check(t *testing.T) {
 	keyBytes := fromHex(key)
 
 	s := SigningMethodHS384.New()
-	tokenString, err := s.Sign(claims, keyBytes)
+	tokenString, err := s.Sign(rand.Reader, claims, keyBytes)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -426,7 +426,7 @@ func Test_SigningMethodHS512_Check(t *testing.T) {
 	keyBytes := fromHex(key)
 
 	s := SigningMethodHS512.New()
-	tokenString, err := s.Sign(claims, keyBytes)
+	tokenString, err := s.Sign(rand.Reader, claims, keyBytes)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -489,7 +489,7 @@ func Test_SigningMethodBLAKE2B(t *testing.T) {
 	key := []byte("12345678901234567890as1234567890")
 
 	s := SigningMethodBLAKE2B.New()
-	tokenString, err := s.Sign(claims, key)
+	tokenString, err := s.Sign(rand.Reader, claims, key)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -540,7 +540,7 @@ func Test_SigningMethodBLAKE2B_Check(t *testing.T) {
 	keyBytes := fromHex(key)
 
 	s := SigningMethodBLAKE2B.New()
-	tokenString, err := s.Sign(claims, keyBytes)
+	tokenString, err := s.Sign(rand.Reader, claims, keyBytes)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -642,7 +642,7 @@ func Test_SigningMethodEdDSA_signWithHeader(t *testing.T) {
 		"tuy": "data123",
 	}
 
-	tokenString, err := s.SignWithHeader(header, claims, privateKey)
+	tokenString, err := s.SignWithHeader(rand.Reader, header, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -709,7 +709,7 @@ func Test_SigningMethodEdDSA(t *testing.T) {
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -748,7 +748,7 @@ func Test_SigningMethodES256(t *testing.T) {
 	}
 
 	s := SigningMethodES256.New()
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -788,7 +788,7 @@ func Test_SigningMethodES384(t *testing.T) {
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -828,7 +828,7 @@ func Test_SigningMethodES512(t *testing.T) {
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -877,7 +877,7 @@ func Test_SigningMethodRS256(t *testing.T) {
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -926,7 +926,7 @@ func Test_SigningMethodRS384(t *testing.T) {
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -975,7 +975,7 @@ func Test_SigningMethodRS512(t *testing.T) {
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1024,7 +1024,7 @@ func Test_SigningMethodPS256(t *testing.T) {
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1073,7 +1073,7 @@ func Test_SigningMethodPS384(t *testing.T) {
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1122,7 +1122,7 @@ func Test_SigningMethodPS512(t *testing.T) {
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1161,7 +1161,7 @@ func Test_SigningMethodEdDSA_Check(t *testing.T) {
 		"foo": "bar",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1224,7 +1224,7 @@ func Test_SigningMethodES256_Check(t *testing.T) {
 	}
 
 	s := SigningMethodES256.New()
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1273,7 +1273,7 @@ func Test_SigningMethodES384_Check(t *testing.T) {
 	}
 
 	s := SigningMethodES384.New()
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1322,7 +1322,7 @@ func Test_SigningMethodES512_Check(t *testing.T) {
 	}
 
 	s := SigningMethodES512.New()
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1595,7 +1595,7 @@ func Test_SigningMethodEdDSA_type(t *testing.T) {
 		"alg": "EdDSA",
 	}
 
-	tokenString, err := s.SignWithHeader(header, claims, privateKey)
+	tokenString, err := s.SignWithHeader(rand.Reader, header, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1664,7 +1664,7 @@ func Test_SigningMethodEdDSA_JWTTypeInvalid(t *testing.T) {
 	}
 
 	s := SigningMethodEdDSA.New()
-	tokenString, err := s.SignWithHeader(header, claims, privateKey)
+	tokenString, err := s.SignWithHeader(rand.Reader, header, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1702,7 +1702,7 @@ func Test_SigningMethodEdDSA_JWTAlgoInvalid(t *testing.T) {
 	}
 
 	s := SigningMethodEdDSA.New()
-	tokenString, err := s.SignWithHeader(header, claims, privateKey)
+	tokenString, err := s.SignWithHeader(rand.Reader, header, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1744,7 +1744,7 @@ func Test_SigningMethodES256_with_RegisteredClaims(t *testing.T) {
 		Subject: "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1801,7 +1801,7 @@ RIQzNasYSoRQHQ/6S6Ps8tpMcT+KvIIC8W/e9k0W7Cm72M1P9jU7SLf/vg==
 	}
 
 	s := SigningMethodES256.New()
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1851,7 +1851,7 @@ func Test_SigningMethodRS256_with_pkcs8_key(t *testing.T) {
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1900,7 +1900,7 @@ func Test_SigningMethodPS256_with_pkcs8_key(t *testing.T) {
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2015,7 +2015,7 @@ t1pfOGUHtHvce8MEssueOxCHWJKql/sJ+JrJSfqOu5AWlDqGqp77ZA7JCw==
 	}
 
 	s := SigningMethodES256.New()
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2050,7 +2050,7 @@ func Test_SigningMethodHS224_WithEncoder(t *testing.T) {
 
 	s := SigningMethodHS224.New()
 	s.WithEncoder(JWTEncoder)
-	tokenString, err := s.Sign(claims, key)
+	tokenString, err := s.Sign(rand.Reader, claims, key)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2236,7 +2236,7 @@ l+LET6C/HfkTbXO2VYxC/7K4E1qIVgN7
 	}
 
 	s := SigningMethodES384.New()
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2301,7 +2301,7 @@ FW9ltEEMEvInnLkEKvI=
 	}
 
 	s := SigningMethodES512.New()
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2355,7 +2355,7 @@ MCowBQYDK2VwAyEAj/CWF9RnNKe/L0jHWHpUICXDowaNYLbj7Ck/wdzTvE4=
 	}
 
 	s := SigningMethodEdDSA.New()
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2451,7 +2451,7 @@ dYKtznTuy7wIDAQAB
 		"sub": "foo",
 	}
 
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -2545,7 +2545,7 @@ dYKtznTuy7wIDAQAB
 	}
 
 	s := SigningMethodRS256.New()
-	tokenString, err := s.Sign(claims, privateKey)
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}

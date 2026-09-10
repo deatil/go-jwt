@@ -30,7 +30,7 @@ func Test_SigningRS256(t *testing.T) {
 
 	publicKey := &privateKey.PublicKey
 
-	signed, err := h.Sign([]byte(msg), privateKey)
+	signed, err := h.Sign(rand.Reader, []byte(msg), privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -68,7 +68,7 @@ func Test_SigningRS384(t *testing.T) {
 
 	publicKey := &privateKey.PublicKey
 
-	signed, err := h.Sign([]byte(msg), privateKey)
+	signed, err := h.Sign(rand.Reader, []byte(msg), privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -106,7 +106,7 @@ func Test_SigningRS512(t *testing.T) {
 
 	publicKey := &privateKey.PublicKey
 
-	signed, err := h.Sign([]byte(msg), privateKey)
+	signed, err := h.Sign(rand.Reader, []byte(msg), privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -143,7 +143,7 @@ func Test_SigningRS256_with_der_key(t *testing.T) {
 
 	var msg = "test-data"
 
-	signed, err := h.Sign([]byte(msg), privateKey)
+	signed, err := h.Sign(rand.Reader, []byte(msg), privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -180,7 +180,7 @@ func Test_SigningRS384_with_der_key(t *testing.T) {
 
 	var msg = "test-data"
 
-	signed, err := h.Sign([]byte(msg), privateKey)
+	signed, err := h.Sign(rand.Reader, []byte(msg), privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -217,7 +217,7 @@ func Test_SigningRS512_with_der_key(t *testing.T) {
 
 	var msg = "test-data"
 
-	signed, err := h.Sign([]byte(msg), privateKey)
+	signed, err := h.Sign(rand.Reader, []byte(msg), privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -254,7 +254,7 @@ func Test_SigningRS256_check(t *testing.T) {
 
 	var msg = "test-data"
 
-	signed, err := h.Sign([]byte(msg), privateKey)
+	signed, err := h.Sign(rand.Reader, []byte(msg), privateKey)
 	if err != nil {
 		t.Fatal(err)
 	}

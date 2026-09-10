@@ -3,6 +3,7 @@ package jwt
 import (
 	"crypto/ed25519"
 	"errors"
+	"io"
 )
 
 var (
@@ -46,7 +47,7 @@ func (s *SignEdDSA) SignLength() int {
 }
 
 // Sign implements token signing for the Signer.
-func (s *SignEdDSA) Sign(msg []byte, key ed25519.PrivateKey) ([]byte, error) {
+func (s *SignEdDSA) Sign(random io.Reader, msg []byte, key ed25519.PrivateKey) ([]byte, error) {
 	signed := ed25519.Sign(key, msg)
 
 	return signed, nil

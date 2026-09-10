@@ -9,6 +9,7 @@ import (
 	"crypto/sha512"
 	"errors"
 	"hash"
+	"io"
 )
 
 var (
@@ -67,7 +68,7 @@ func (s *SignHmac) SignLength() int {
 }
 
 // Sign implements token signing for the Signer.
-func (s *SignHmac) Sign(msg []byte, key []byte) ([]byte, error) {
+func (s *SignHmac) Sign(random io.Reader, msg []byte, key []byte) ([]byte, error) {
 	mac := hmac.New(s.Hash, key)
 	mac.Write(msg)
 

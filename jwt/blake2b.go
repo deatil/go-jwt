@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"hash"
+	"io"
 
 	"golang.org/x/crypto/blake2b"
 )
@@ -48,7 +49,7 @@ func (s *SignBlake2b) SignLength() int {
 }
 
 // Sign implements token signing for the Signer.
-func (s *SignBlake2b) Sign(msg []byte, key []byte) ([]byte, error) {
+func (s *SignBlake2b) Sign(random io.Reader, msg []byte, key []byte) ([]byte, error) {
 	if len(key)*8 < 256 {
 		return nil, ErrVerifyKeyTooShort
 	}

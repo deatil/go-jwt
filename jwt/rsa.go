@@ -2,8 +2,8 @@ package jwt
 
 import (
 	"crypto"
-	"crypto/rand"
 	"crypto/rsa"
+	"io"
 )
 
 var (
@@ -51,11 +51,11 @@ func (s *SignRSA) SignLength() int {
 }
 
 // Sign implements token signing for the Signer.
-func (s *SignRSA) Sign(msg []byte, key *rsa.PrivateKey) ([]byte, error) {
+func (s *SignRSA) Sign(random io.Reader, msg []byte, key *rsa.PrivateKey) ([]byte, error) {
 	hasher := s.Hash.New()
 	hasher.Write([]byte(msg))
 
-	sigBytes, err := rsa.SignPKCS1v15(rand.Reader, key, s.Hash, hasher.Sum(nil))
+	sigBytes, err := rsa.SignPKCS1v15(random, key, s.Hash, hasher.Sum(nil))
 	if err != nil {
 		return nil, err
 	}

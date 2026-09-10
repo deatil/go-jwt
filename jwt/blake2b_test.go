@@ -22,7 +22,7 @@ func Test_SigningBLAKE2B(t *testing.T) {
 	var key = "12345678901234567890as1234567890"
 	var sign = "d40bb120a0915ab65e0051fca93854775bd1380a1fb012ebd5c5df361159937e"
 
-	signed, err := h.Sign([]byte(msg), []byte(key))
+	signed, err := h.Sign(nil, []byte(msg), []byte(key))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -90,7 +90,7 @@ func Test_SigningBLAKE2B_KeyTooShort(t *testing.T) {
 	var msg = "test-data"
 	var key = "test-key"
 
-	_, err := h.Sign([]byte(msg), []byte(key))
+	_, err := h.Sign(nil, []byte(msg), []byte(key))
 	if err == nil {
 		t.Error("Parse should return error")
 	}
@@ -107,7 +107,7 @@ func Test_SigningBLAKE2B_KeyTooLong(t *testing.T) {
 	var msg = "test-data"
 	var key = "test-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-datatest-data"
 
-	_, err := h.Sign([]byte(msg), []byte(key))
+	_, err := h.Sign(nil, []byte(msg), []byte(key))
 	if err == nil {
 		t.Error("Parse should return error")
 	}

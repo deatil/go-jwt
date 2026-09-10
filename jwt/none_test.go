@@ -1,6 +1,7 @@
 package jwt
 
 import (
+	"crypto/rand"
 	"fmt"
 	"testing"
 )
@@ -22,7 +23,7 @@ func Test_SigningNone(t *testing.T) {
 	var key = ""
 	var sign = ""
 
-	signed, err := h.Sign([]byte(msg), []byte(key))
+	signed, err := h.Sign(rand.Reader, []byte(msg), []byte(key))
 	if err != nil {
 		t.Fatal(err)
 	}
