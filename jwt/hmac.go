@@ -13,12 +13,12 @@ import (
 )
 
 var (
-	SigningHMD5  = NewSignHmac(md5.New, "HMD5")
-	SigningHSHA1 = NewSignHmac(sha1.New, "HSHA1")
-	SigningHS224 = NewSignHmac(sha256.New224, "HS224")
-	SigningHS256 = NewSignHmac(sha256.New, "HS256")
-	SigningHS384 = NewSignHmac(sha512.New384, "HS384")
-	SigningHS512 = NewSignHmac(sha512.New, "HS512")
+	SigningHMD5  = NewSignHmac(md5.New, "HMD5", 16)
+	SigningHSHA1 = NewSignHmac(sha1.New, "HSHA1", 20)
+	SigningHS224 = NewSignHmac(sha256.New224, "HS224", 28)
+	SigningHS256 = NewSignHmac(sha256.New, "HS256", 32)
+	SigningHS384 = NewSignHmac(sha512.New384, "HS384", 48)
+	SigningHS512 = NewSignHmac(sha512.New, "HS512", 64)
 )
 
 func init() {
@@ -48,12 +48,14 @@ var ErrSignHmacVerifyFail = errors.New("go-jwt: SignHmac Verify fail")
 type SignHmac struct {
 	Hash func() hash.Hash
 	Name string
+	Size int
 }
 
-func NewSignHmac(hash func() hash.Hash, name string) *SignHmac {
+func NewSignHmac(hash func() hash.Hash, name string, size int) *SignHmac {
 	return &SignHmac{
 		Hash: hash,
 		Name: name,
+		Size: size,
 	}
 }
 
@@ -64,7 +66,7 @@ func (s *SignHmac) Alg() string {
 
 // Signer signed bytes length.
 func (s *SignHmac) SignLength() int {
-	return s.Hash().Size()
+	return s.Size
 }
 
 // Sign implements token signing for the Signer.

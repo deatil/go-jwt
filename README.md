@@ -28,7 +28,7 @@ This library supports the parsing and verification as well as the generation and
 
 ### Download
 
-~~~go
+~~~cmd
 go get -u github.com/deatil/go-jwt
 ~~~
 
