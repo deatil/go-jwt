@@ -17,6 +17,11 @@ func fromBase64(data string) []byte {
 	return buffer
 }
 
+func fromUrlBase64(data string) []byte {
+	buffer, _ := base64.RawURLEncoding.DecodeString(data)
+	return buffer
+}
+
 func toBase64(data []byte) string {
 	res := base64.StdEncoding.EncodeToString(data)
 	return res

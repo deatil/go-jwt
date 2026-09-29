@@ -3,6 +3,7 @@ package jwt
 import (
 	"crypto/ecdsa"
 	"crypto/ed25519"
+	"crypto/mldsa"
 	"crypto/rsa"
 	"errors"
 	"io"
@@ -10,7 +11,7 @@ import (
 	"github.com/deatil/go-jwt/encoder"
 )
 
-const Version = "1.0.30001"
+const Version = "1.0.30002"
 
 var (
 	// Hmac
@@ -39,6 +40,11 @@ var (
 	// EdDSA
 	SigningMethodEdDSA   = NewJWT[ed25519.PrivateKey, ed25519.PublicKey](SigningEdDSA, JWTEncoder)
 	SigningMethodED25519 = NewJWT[ed25519.PrivateKey, ed25519.PublicKey](SigningED25519, JWTEncoder)
+
+	// MLDSA
+	SigningMethodMLDSA44 = NewJWT[*mldsa.PrivateKey, *mldsa.PublicKey](SigningMLDSA44, JWTEncoder)
+	SigningMethodMLDSA65 = NewJWT[*mldsa.PrivateKey, *mldsa.PublicKey](SigningMLDSA65, JWTEncoder)
+	SigningMethodMLDSA87 = NewJWT[*mldsa.PrivateKey, *mldsa.PublicKey](SigningMLDSA87, JWTEncoder)
 
 	// Blake2b
 	SigningMethodBLAKE2B = NewJWT[[]byte, []byte](SigningBLAKE2B, JWTEncoder)

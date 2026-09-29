@@ -145,6 +145,10 @@ The JWT library have signing methods:
  - `EdDSA`: jwt.SigningMethodEdDSA
  - `ED25519`: jwt.SigningMethodED25519
 
+ - `ML-DSA-44`: jwt.SigningMethodMLDSA44
+ - `ML-DSA-65`: jwt.SigningMethodMLDSA65
+ - `ML-DSA-87`: jwt.SigningMethodMLDSA87
+
  - `HMD5`: jwt.SigningMethodHMD5
  - `HSHA1`: jwt.SigningMethodHSHA1
  - `HS224`: jwt.SigningMethodHS224
