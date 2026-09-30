@@ -2882,7 +2882,88 @@ func Test_SigningMethodMLDSA87_Check(t *testing.T) {
 
 }
 
-func Test_SigningMethodMLDSA65_With_PEM_pkcs8_Key(t *testing.T) {
+func Test_SigningMethodMLDSA44_With_PEM_Key(t *testing.T) {
+	var prikey = `
+-----BEGIN PRIVATE KEY-----
+MDQCAQAwCwYJYIZIAWUDBAMRBCKAIPBmiRIBWe97N3Ilbp37aFah7jNzvMbhJsWq
+viXrcfzP
+-----END PRIVATE KEY-----
+    `
+	var pubkey = `
+-----BEGIN PUBLIC KEY-----
+MIIFMjALBglghkgBZQMEAxEDggUhACy1v7qduwKMRYFy3xwYzRCOX00e64AHP/ps
+TVfYeJVIFemX6CIiyXwV6qCanbT6hLfQqMs6+G3OZBjEj5zLvS6Eu/iAE2x445rm
+GBe3iHdLpJiwyRe1xg6L4CGEqjd8vwVaTI/jCruH7hAx6VbtnjZQcwnW5uC23UIu
+Fje16NvgTMNzntf3OEaKeu34KsWcXhl5FBjcZUGJlEYE6+WRcT8/1RukCE4o1OqM
+Espj88l0VkMclNn+kdeZAhwh8hAle8u+VrvUZqX+Wr6sySXysPbXjK7s2vYZOIai
+Wj8rvjcdoHdHgkWFjq82BnSkvL2X5pQvW+XGj4pNMFOWH8hHEqPABe3xyBJL+4EO
+4mVl1A7PfYLxE1zqoTZB+Zccti4B5dPYZvw6jNYHbeTOhREVKsFzgJ+YsKbYictU
+Zpdl8bZwCGXGPssSvcXF9HDEC42pwNK1niyz1pERZS6lAJMYflT64mkuwKPsWnZz
+VIG3VkVRdtsbRjzb6rmGFKk5H0GBxadpt0RIC++csBVTcDQhRrJck204BMpPrVyc
+SRFhzfu35n3i1Yow39H3dyrr0odSaVYVhA3lOXoofcswlz68SIOkab/jiqz4Ts6X
+2UPtgCJlxa0B/Bkq+7siYvDIL1iOykJwPunWILtw6bFzFsnDwxbvjOzbff1Jfkv7
+J284UiO95cbvgtkEij8aJQN56zAcoxfs4X5pYGiNPpYePRrMNYZqndl3+if9bdkh
+66lRVDUxeMJY29vSXuFaojHEebyJMrBpwZeoUBJJYzTol2He0+g9u6d1inbjlVT+
+9E/XP0lEkKfUhdkdyLM9x19YdxcFx99HLz5KOuy/B1kbru8Xs+GVuyveVzwNWsyf
+Z13wljKTtdpU2tDn6jlS3KJ7Dt5QtQfHXirncwNWTGUPk2E5ZTRMgtRhUyXoK+y0
+adVSmzPvBn+hPoO5uR4zPpIMXdIuPyv9wVknVbch3txLrkNIPf8NZ+YyQvgki8Aa
+sIep3zq8B0amVs4F9c9mKSAuGwXRNtmjHiWsfFZ7CS4BjiRNXTnT8iLH1tSRl4nM
+oZVGLntsgpGPYH+d/xYRWAxOZKD++tpNGGM0iVqBwqQM6OwiqT4vhx6GQFObEb8a
+lvTfvT6hQ/BBUnVjT5YF4L46hphJ+iW9/cBVgWdkGkbYUvbxsk3wTuqsj7J4mdgg
+LqqwCAcNFdLu/9Qw40t83rZXSYESK91d2oeZTTvCUqcTedI31ZEs8gbTMZfjfAOZ
+1+S4H3ZtWS16+CclOP5DpTaxcNmTkz8Mo8wAhRV699Gt6FYaEhZWzmpNRcnnflRu
+0tjT+SvvIv6HgJr6NsLtio41+31aJuKh9AV2BG2Udmo0CW2GJCYvDxEjzxEgRLZX
+gD3OvZrnkXg1Zx+Ww6sdLpqITZkiT6GkJWkpLxVWktIr5qrz2YTL5kCu+stxfafz
+Ec4tyETlNrZ18F/BLIzYmJvYNB/A3nK3ftEFSyDhy2b+INumOWJzD96uecv0uysn
+WMP92vvMit8B5/d90esXr2qrTYs5CAiJmQbA+n25J+5VIc6jFTWIV4gO668EK4FL
+hNldKjrHB/fh8BfVQU+Qfmz2XKH+VPjyulbSI/cthvY6c794e6DOrPg3O6jOGp1M
+FVsfMcw/pXHORkapnOWsKpgaezLQEVUiRWhcxRKwSPPj0C4m9bO17MufszVsxAOm
+worZNNVd5CeKwC1LV/plg6fhSWhfkqycXQIu8013n5Gviit5+FY=
+-----END PUBLIC KEY-----
+    `
+
+	privateKey, err := ParseMLDSAPrivateKeyFromPEM([]byte(prikey))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseMLDSAPublicKeyFromPEM([]byte(pubkey))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims := map[string]string{
+		"foo": "bar",
+	}
+
+	s := SigningMethodMLDSA44.New()
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Errorf("Sign length got %d", len(tokenString))
+	}
+
+	p := SigningMethodMLDSA44.New()
+	parsed, err := p.Parse(tokenString, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["foo"].(string) != claims["foo"] {
+		t.Errorf("GetClaims foo got %s, want %s", claims2["foo"].(string), claims["foo"])
+	}
+
+}
+
+func Test_SigningMethodMLDSA65_With_PEM_Key(t *testing.T) {
 	var prikey = `
 -----BEGIN PRIVATE KEY-----
 MDQCAQAwCwYJYIZIAWUDBAMSBCKAIBbRB15gndF8gEtIQokaAYvOTNfW9a5U3mth
@@ -2961,6 +3042,114 @@ d7I9IbCD
 	}
 
 	p := SigningMethodMLDSA65.New()
+	parsed, err := p.Parse(tokenString, publicKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims2, err := parsed.GetClaims()
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if claims2["foo"].(string) != claims["foo"] {
+		t.Errorf("GetClaims foo got %s, want %s", claims2["foo"].(string), claims["foo"])
+	}
+
+}
+
+func Test_SigningMethodMLDSA87_With_PEM_Key(t *testing.T) {
+	var prikey = `
+-----BEGIN PRIVATE KEY-----
+MDQCAQAwCwYJYIZIAWUDBAMTBCKAIJyDndFRrRdpmTm4biGGzJGW6DGvhGkkDnGd
+Rnsu6kFm
+-----END PRIVATE KEY-----
+    `
+	var pubkey = `
+-----BEGIN PUBLIC KEY-----
+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
+3NeJMfdkxY6CRHhgYoXaMa2SEpTzHA==
+-----END PUBLIC KEY-----
+    `
+
+	privateKey, err := ParseMLDSAPrivateKeyFromPEM([]byte(prikey))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	publicKey, err := ParseMLDSAPublicKeyFromPEM([]byte(pubkey))
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	claims := map[string]string{
+		"foo": "bar",
+	}
+
+	s := SigningMethodMLDSA87.New()
+	tokenString, err := s.Sign(rand.Reader, claims, privateKey)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if len(tokenString) == 0 {
+		t.Errorf("Sign length got %d", len(tokenString))
+	}
+
+	p := SigningMethodMLDSA87.New()
 	parsed, err := p.Parse(tokenString, publicKey)
 	if err != nil {
 		t.Fatal(err)
