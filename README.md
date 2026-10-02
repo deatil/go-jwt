@@ -53,7 +53,9 @@ func main() {
     key := []byte("test-key")
 
     s := jwt.SigningMethodHS256.New()
-    tokenString, err := s.Sign(rand.Reader, claims, key)
+    // ES..., PS...
+    s.WithRandom(rand.Reader)
+    tokenString, err := s.Sign(claims, key)
     if err != nil {
         fmt.Printf("Sign: %s \n", err.Error())
         return

@@ -4,6 +4,7 @@ import (
 	"crypto/ecdsa"
 	"crypto/ed25519"
 	"crypto/mldsa"
+	"crypto/rand"
 	"crypto/rsa"
 	"errors"
 	"io"
@@ -11,7 +12,7 @@ import (
 	"github.com/deatil/go-jwt/encoder"
 )
 
-const Version = "1.0.30002"
+const Version = "1.0.30005"
 
 var (
 	// Hmac
@@ -129,6 +130,7 @@ type IEncoder interface {
 type JWT[S any, V any] struct {
 	signer  ISigner[S, V]
 	encoder IEncoder
+	random  io.Reader
 }
 
 func NewJWT[S any, V any](signer ISigner[S, V], encoder IEncoder) JWT[S, V] {
@@ -150,13 +152,18 @@ func (jwt JWT[S, V]) New() *JWT[S, V] {
 	return &JWT[S, V]{
 		signer:  jwt.signer,
 		encoder: jwt.encoder,
+		random:  rand.Reader,
 	}
 }
 
 // with new encoder
-func (jwt *JWT[S, V]) WithEncoder(encoder IEncoder) *JWT[S, V] {
+func (jwt *JWT[S, V]) WithEncoder(encoder IEncoder) {
 	jwt.encoder = encoder
-	return jwt
+}
+
+// with new random
+func (jwt *JWT[S, V]) WithRandom(random io.Reader) {
+	jwt.random = random
 }
 
 // return a JWT signer
@@ -175,17 +182,17 @@ func (jwt *JWT[S, V]) SignLength() int {
 }
 
 // Sign implements token signing for the Signer.
-func (jwt *JWT[S, V]) Sign(random io.Reader, claims any, signKey S) (string, error) {
+func (jwt *JWT[S, V]) Sign(claims any, signKey S) (string, error) {
 	header := RegisteredHeaders{
 		Type:      "JWT",
 		Algorithm: jwt.signer.Alg(),
 	}
 
-	return jwt.SignWithHeader(random, header, claims, signKey)
+	return jwt.SignWithHeader(header, claims, signKey)
 }
 
 // SignWithHeader implements token signing for the Signer.
-func (jwt *JWT[S, V]) SignWithHeader(random io.Reader, header any, claims any, signKey S) (string, error) {
+func (jwt *JWT[S, V]) SignWithHeader(header any, claims any, signKey S) (string, error) {
 	t := NewToken(jwt.encoder)
 	t.SetHeader(header)
 	t.SetClaims(claims)
@@ -195,7 +202,7 @@ func (jwt *JWT[S, V]) SignWithHeader(random io.Reader, header any, claims any, s
 		return "", err
 	}
 
-	signature, err := jwt.signer.Sign(random, []byte(signingString), signKey)
+	signature, err := jwt.signer.Sign(jwt.random, []byte(signingString), signKey)
 	if err != nil {
 		return "", err
 	}
