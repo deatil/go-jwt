@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"fmt"
+	"io"
 )
 
 // jwt ParserOption for Parse function
@@ -102,4 +103,30 @@ func Parse[V any](tokenString string, keyFunc func(t *Token) (key V, err error),
 	}
 
 	return t, nil
+}
+
+type ISigned[S any] interface {
+	WithRandom(random io.Reader)
+	Sign(claims any, signKey S) (string, error)
+}
+
+func Sign[S any](SigningMethod ISigned[S], random io.Reader, claims any, key S) (string, error) {
+	s := SigningMethod
+	s.WithRandom(random)
+	return s.Sign(claims, key)
+}
+
+// get token header from token string
+func GetTokenHeader(tokenString string, encoder ...IEncoder) (MapHeaders, error) {
+	var useEncoder IEncoder
+	if len(encoder) > 0 {
+		useEncoder = encoder[0]
+	} else {
+		useEncoder = JWTEncoder
+	}
+
+	var t = NewToken(useEncoder)
+	t.Parse(tokenString)
+
+	return t.GetHeader()
 }

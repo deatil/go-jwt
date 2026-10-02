@@ -257,18 +257,3 @@ func (jwt *JWT[S, V]) Parse(tokenString string, verifyKey V) (*Token, error) {
 func (jwt *JWT[S, V]) Build() *Builder[S] {
 	return NewBuilder[S](jwt.signer, jwt.encoder)
 }
-
-// get token header from token string
-func GetTokenHeader(tokenString string, encoder ...IEncoder) (MapHeaders, error) {
-	var useEncoder IEncoder
-	if len(encoder) > 0 {
-		useEncoder = encoder[0]
-	} else {
-		useEncoder = JWTEncoder
-	}
-
-	var t = NewToken(useEncoder)
-	t.Parse(tokenString)
-
-	return t.GetHeader()
-}

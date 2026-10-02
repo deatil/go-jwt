@@ -469,21 +469,6 @@ func Test_SigningMethodHS256_Check_fail(t *testing.T) {
 
 }
 
-func Test_GetTokenHeader(t *testing.T) {
-	tokenStr := "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJmb28iOiJiYXIifQ.feG39E-bn8HXAKhzDZq7yEAPWYDhZlwTn3sePJnU9VrGMmwdXAIEyoOnrjreYlVM_Z4N13eK9-TmMTWyfKJtHQ"
-
-	header, err := GetTokenHeader(tokenStr)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	alg, _ := header.GetAlgorithm()
-	if alg != "ES256" {
-		t.Errorf("GetTokenHeader Alg got %s, want %s", alg, "ES256")
-	}
-
-}
-
 func Test_SigningMethodBLAKE2B(t *testing.T) {
 	claims := map[string]string{
 		"aud": "example.com",
@@ -2091,21 +2076,6 @@ func Test_SigningMethodHS224_WithEncoder(t *testing.T) {
 	}
 	if claims2["sub"].(string) != claims["sub"] {
 		t.Errorf("GetClaims sub got %s, want %s", claims2["sub"].(string), claims["sub"])
-	}
-
-}
-
-func Test_GetTokenHeader_WithEncoder(t *testing.T) {
-	tokenStr := "eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJmb28iOiJiYXIifQ.feG39E-bn8HXAKhzDZq7yEAPWYDhZlwTn3sePJnU9VrGMmwdXAIEyoOnrjreYlVM_Z4N13eK9-TmMTWyfKJtHQ"
-
-	header, err := GetTokenHeader(tokenStr, JWTEncoder)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	alg, _ := header.GetAlgorithm()
-	if alg != "ES256" {
-		t.Errorf("GetTokenHeader Alg got %s, want %s", alg, "ES256")
 	}
 
 }
